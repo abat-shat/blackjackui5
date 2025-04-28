@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "module": "None",
+        "target": "ES2018",
+        "noEmit": true,
+        "checkJs": true,
+        "allowJs": true,
+        "types": ["@openui5/ts-types"]
+    }
+}

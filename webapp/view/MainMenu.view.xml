@@ -1,0 +1,16 @@
+<mvc:View controllerName="abat.intern.shat.blackjackui5.controller.MainMenu"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="mainMenuPage" title="{i18n>mainMenuTitle}">
+        <content>
+            <Button
+                id="mainMenuPlayButton" 
+                text="{i18n>mainMenuPlayButton}"
+                press=".onPressPlayButton"></Button>
+            <Button 
+                id="mainMenuHighscoreButton"
+                text="{i18n>mainMenuHighscoreButton}"
+                press=".onPressHighscoreButton"></Button>
+        </content>
+    </Page>
+</mvc:View>
