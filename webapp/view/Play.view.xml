@@ -4,7 +4,63 @@
     <Page id="playPage" title="{i18n>playTitle}">
         <content>
             <HBox id="playHBox">
-                <VBox id="cardSideVBox"></VBox>
+                
+                <VBox id="cardSideVBox">
+                    <HBox id="dealerHandHBox" class="sapUiMediumMarginTop">
+                        <Image id="dealerCard1"   
+                            src="{img>/jokers/baseball_card}"></Image>
+                        <Image id="dealerCard2"  
+                            src="{img>/jokers/baseball_card}"></Image>
+                        <Image id="dealerCard3"  
+                        src="{img>/jokers/baseball_card}"></Image>
+                        <Image id="dealerCard4"  
+                        src="{img>/jokers/baseball_card}"></Image>
+                        <Image id="dealerCard5"  
+                        src="{img>/jokers/baseball_card}"></Image>
+                    </HBox>
+                    <HBox id="dealerHandTextHBox">
+                        <Text id="dealerHandTextInfo" text="{i18n>dealerHandText}"
+                            class="sapUiTinyMarginBeginEnd"></Text>
+                        <Text id="dealerHandTextOutput" text="?"></Text>
+                    </HBox>
+
+                    <HBox id="playerHandHBox" class="sapUiMediumMarginTop">
+                        <Image id="playerCard1"  
+                            src="{img>/jokers/blueprint}"></Image>
+                        <Image id="playerCard2"  
+                            src="{img>/jokers/blueprint}"></Image>
+                        <Image id="playerCard3"  
+                        src="{img>/jokers/blueprint}"></Image>
+                        <Image id="playerCard4"  
+                        src="{img>/jokers/blueprint}"></Image>
+                        <Image id="playerCard5"  
+                        src="{img>/jokers/blueprint}"></Image>
+                    </HBox>
+                    <HBox id="playerHandTextHBox">
+                        <Text id="playerHandTextInfo" text="{i18n>playerHandText}"
+                            class="sapUiTinyMarginBeginEnd"></Text>
+                        <Text id="playerHandTextOutput" text="?"></Text>
+                    </HBox>
+                    <HBox id="playerSplitHandHBox" visible="false"
+                        class="sapUiMediumMarginTop">
+                        <Image id="playerSplitCard1"  
+                            src="{img>/jokers/joker}"></Image>
+                        <Image id="playerSplitCard2"  
+                            src="{img>/jokers/joker}"></Image>
+                        <Image id="playerSplitCard3"  
+                        src="{img>/jokers/joker}"></Image>
+                        <Image id="playerSplitCard4"  
+                        src="{img>/jokers/joker}"></Image>
+                        <Image id="playerSplitCard5"  
+                        src="{img>/jokers/joker}"></Image>
+                    </HBox>
+                    <HBox id="playerSplitHandTextHBox" visible="false">
+                        <Text id="playerSplitHandTextInfo" text="{i18n>playerSplitHandText}"
+                            class="sapUiTinyMarginBeginEnd"></Text>
+                        <Text id="playerSplitHandTextOutput" text="?"></Text>
+                    </HBox>
+                    
+                </VBox>
             </HBox>
         </content>
     </Page>
