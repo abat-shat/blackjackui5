@@ -1,10 +1,10 @@
 sap.ui.define([
     "sap/ui/core/UIComponent",
-    "abat/intern/shat/blackjackui5/model/models"
+    "de/abatgroup/blackjackui5/model/models"
 ], function(UIComponent, models) {
     "use strict";
 
-    return UIComponent.extend("abat.intern.shat.blackjackui5.Component", {
+    return UIComponent.extend("de.abatgroup.blackjackui5.Component", {
         metadata: {
             manifest: "json",
             interfaces: [

@@ -1,7 +1,7 @@
 {
   "_version": "1.60.0",
   "sap.app": {
-    "id": "abat.intern.shat.blackjackui5",
+    "id": "de.abatgroup.blackjackui5",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -60,7 +60,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "abat.intern.shat.blackjackui5.i18n.i18n"
+          "bundleName": "de.abatgroup.blackjackui5.i18n.i18n"
         }
       },
       "": {
@@ -88,7 +88,7 @@
         "transition": "slide",
         "type": "View",
         "viewType": "XML",
-        "path": "abat.intern.shat.blackjackui5.view",
+        "path": "de.abatgroup.blackjackui5.view",
         "async": true
       },
       "routes": [
@@ -127,12 +127,17 @@
           "transition": "slide",
           "clearControlAggregation": false,
           "viewId": "highscorePage",
-          "viewName": "Highscore"
+          "viewName": "Highscore",
+          "options" : {
+            "settings" : {
+              "contextPath": "/HS('{Abbreviation}')"
+            }
+          }
         }
       }
     },
     "rootView": {
-      "viewName": "abat.intern.shat.blackjackui5.view.App",
+      "viewName": "de.abatgroup.blackjackui5.view.App",
       "type": "XML",
       "id": "App",
       "async": true

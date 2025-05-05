@@ -7,7 +7,7 @@ sap.ui.define([
 
 	Opa5.extendConfig({
 		arrangements: new Startup(),
-		viewNamespace: "abat.intern.shat.blackjackui5.view.",
+		viewNamespace: "de.abatgroup.blackjackui5.view.",
 		autoWait: true
 	});
 });

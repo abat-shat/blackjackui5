@@ -1,16 +1,25 @@
-<mvc:View controllerName="abat.intern.shat.blackjackui5.controller.MainMenu"
+<mvc:View controllerName="de.abatgroup.blackjackui5.controller.MainMenu"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
+    xmlns="sap.m"
+    xmlns:f="sap.f">
     <Page id="mainMenuPage" title="{i18n>mainMenuTitle}">
         <content>
-            <Button
-                id="mainMenuPlayButton" 
-                text="{i18n>mainMenuPlayButton}"
-                press=".onPressPlayButton"></Button>
-            <Button 
-                id="mainMenuHighscoreButton"
-                text="{i18n>mainMenuHighscoreButton}"
-                press=".onPressHighscoreButton"></Button>
+            <VBox id="mainMenuVBox" fitContainer="false"
+                alignItems="Center">
+                <items>
+                    <List id="mainMenuList"
+                        headerText="{i18n>mainMenuListTitle}" >
+                        <ActionListItem id="mainMenuAction1"
+                            text="{i18n>mainMenuPlayButton}"
+                            press=".onPressPlayButton" />
+                        <ActionListItem id="mainMenuAction2"
+                            text="{i18n>mainMenuHighscoreButton}"
+                            press=".onPressHighscoreButton" />
+                    </List>
+                </items>
+            </VBox>
+            
+            
         </content>
     </Page>
 </mvc:View>

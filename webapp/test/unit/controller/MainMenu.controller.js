@@ -1,7 +1,7 @@
 /*global QUnit*/
 
 sap.ui.define([
-	"abat/intern/shat/blackjackui5/controller/MainMenu.controller"
+	"de/abatgroup/blackjackui5/controller/MainMenu.controller"
 ], function (Controller) {
 	"use strict";
 

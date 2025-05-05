@@ -1,4 +1,4 @@
-<mvc:View controllerName="abat.intern.shat.blackjackui5.controller.App"
+<mvc:View controllerName="de.abatgroup.blackjackui5.controller.App"
     displayBlock="true"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">

@@ -1,10 +1,11 @@
-<mvc:View controllerName="abat.intern.shat.blackjackui5.controller.Play"
+<mvc:View controllerName="de.abatgroup.blackjackui5.controller.Play"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
     <Page id="playPage" title="{i18n>playTitle}">
         <content>
-            <Button id="randomBUtton"
-            text="button"></Button>
+            <HBox id="playHBox">
+                <VBox id="cardSideVBox"></VBox>
+            </HBox>
         </content>
     </Page>
 </mvc:View>

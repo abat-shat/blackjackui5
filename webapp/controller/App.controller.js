@@ -1,10 +1,17 @@
 sap.ui.define([
   "sap/ui/core/mvc/Controller"
-], function(BaseController) {
+],
+/**
+ * 
+ * @param {typeof sap.ui.core.mvc.Controller} BaseController 
+ * @returns 
+ */
+function(BaseController) {
   "use strict";
 
-  return BaseController.extend("abat.intern.shat.blackjackui5.controller.App", {
+  return BaseController.extend("de.abatgroup.blackjackui5.controller.App", {
       onInit() {
+        
       }
   });
 });

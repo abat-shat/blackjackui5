@@ -1,0 +1,52 @@
+<mvc:View xmlns:form="sap.ui.layout.form" controllerName="de.abatgroup.blackjackui5.controller.Highscore"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="highscorePage" title="{i18n>highscoreTitle}">
+        <content>
+            <Table id="highscoreTable"
+                width="100%"
+                items="{/Coins}"
+                growing="true"
+                growingThreshold="10"
+
+                >
+                <headerToolbar>
+                    <OverflowToolbar id="hsHeaderOT">
+                        <content>
+                            <Title id="hsHeaderTitle" text="{i18n>highscoreHeaderTitle}"></Title>
+                        </content>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column id="hsCol1">
+                        <Text id="hsColText1" text="{i18n>highscoreColumnText1}"></Text>
+                    </Column>
+                    <Column id="hsCol2">
+                        <Text id="hsColText2" text="{i18n>highscoreColumnText2}"></Text>
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem id="hsCLI1" >
+                        <cells>
+
+                            <ObjectIdentifier id="hsOI1" text="{Abbreviation}"></ObjectIdentifier>
+                            <Text id="hsText2" text="{AbatCoin}"></Text>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+
+            <!-- <Table id="highscoreUserTable"
+                width="100%"
+                items="{/Coins}"></Table> -->
+            <form:SimpleForm id="highscoreSimpleForm">
+                <Toolbar id="hsSFToolbar">
+                    <Title id="hsSFToolbarTitle" text="{i18n>highscoreSFToolbarTitle}"></Title>
+                </Toolbar>
+                <Text id="hsSFLabel1" text="{/Coins('SHAT')/Abbreviation}"></Text>
+                <Text id="hsSFLabel2" text="{/Coins('SHAT')/AbatCoin}"></Text>
+                <Text id="hsSFLabel3" text="{/Coins('SHAT')/Bonus}"></Text>
+            </form:SimpleForm>
+        </content>
+    </Page>
+</mvc:View>
