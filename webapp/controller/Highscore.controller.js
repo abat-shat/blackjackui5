@@ -17,6 +17,9 @@ function(Controller, JSONModel, MessageBox) {
 
         },
 
-
+        onPresser: function() {
+            const list = this.byId("highscoreTable").getBinding("items");
+            debugger;
+        }
     });
 });

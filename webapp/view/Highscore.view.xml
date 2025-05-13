@@ -5,7 +5,7 @@
         <content>
             <Table id="highscoreTable"
                 width="100%"
-                items="{/Coins}"
+                items="{/Coin}"
                 growing="true"
                 growingThreshold="10"
 
@@ -43,10 +43,11 @@
                 <Toolbar id="hsSFToolbar">
                     <Title id="hsSFToolbarTitle" text="{i18n>highscoreSFToolbarTitle}"></Title>
                 </Toolbar>
-                <Text id="hsSFLabel1" text="{/Coins('SHAT')/Abbreviation}"></Text>
-                <Text id="hsSFLabel2" text="{/Coins('SHAT')/AbatCoin}"></Text>
-                <Text id="hsSFLabel3" text="{/Coins('SHAT')/Bonus}"></Text>
+                <Text id="hsSFLabel1" text="{/Coin('SHAT')/Abbreviation}"></Text>
+                <Text id="hsSFLabel2" text="{/Coin('SHAT')/AbatCoin}"></Text>
+                <Text id="hsSFLabel3" text="{/Coin('SHAT')/Bonus}"></Text>
             </form:SimpleForm>
+            <Button id="hsbtn" press=".onPresser"></Button>
         </content>
     </Page>
 </mvc:View>
