@@ -14,6 +14,16 @@ function (JSONModel, Device) {
             var oModel = new JSONModel(Device);
             oModel.setDefaultBindingMode("OneWay");
             return oModel;
+        },
+
+        /**
+         * Provides relative paths to the images.
+         * @returns {sap.ui.model.json.JSONModel} The img model.
+         */
+        createImgModel: function() {
+            const imgModel = new JSONModel(sap.ui.require.toUrl("de/abatgroup/blackjackui5/model/img.json"));
+            imgModel.setDefaultBindingMode("OneWay");
+            return imgModel;
         }
     };
 

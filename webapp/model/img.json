@@ -54,8 +54,12 @@
         "AS" : "../media/cards/ace_of_spades.png"
     },
     "jokers" : {
-        "blueprint" : "../media/cards/blueprint.png",
-        "baseball_card" : "../media/cards/baseball_card.png",
-        "joker" : "../media/cards/joker.png"
+        "blueprint" : "../media/jokers/blueprint.png",
+        "baseball_card" : "../media/jokers/baseball_card.png",
+        "joker" : "../media/jokers/joker.png"
+    },
+    "decks": {
+        "green" : "../media/decks/green_deck.png",
+        "red" : "../media/decks/red_deck.png"
     }
 }

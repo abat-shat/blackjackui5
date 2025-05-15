@@ -1,23 +1,28 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
-    "sap/m/MessageBox"
+    "sap/m/MessageBox",
+    "../service/DeckService"
 ], 
 /**
  * 
  * @param {typeof sap.ui.core.mvc.Controller} Controller 
  * @param {typeof sap.ui.model.json.JSONModel} JSONModel
  * @param {typeof sap.m.MessageBox} MessageBox
+ * @param {*} DeckService
  * 
  */
-function(Controller, JSONModel, MessageBox) {
+function(Controller, JSONModel, MessageBox, DeckService) {
     "use strict";
 
     Controller.extend("de.abatgroup.blackjackui5.controller.Play", {
-        onInit: function(){
-            const imgModel = new JSONModel(sap.ui.require.toUrl("de/abatgroup/blackjackui5/model/img.json"));
-            this.getView().setModel(imgModel, "img");
-            
+        /**
+         * @type {number}
+         */
+        _availableCoin: undefined,
+        NUMBER_OF_CARDS_IN_A_HAND : 5,
+
+        onInit: function(){    
             const coinsData = {
                 "bet" : {
                     "amount" : 0
@@ -46,41 +51,40 @@ function(Controller, JSONModel, MessageBox) {
                 return;
             }
 
-            MessageBox.show(amount.toString());
+            MessageBox.information(amount.toString());
             const oDataModel = this.getView().getModel();
             const oContext = oDataModel.bindContext("/Coin('SHAT')", null, {
                 $$updateGroupId: "default"
             });
-            const availableCoin = oContext.getBoundContext().getProperty("AbatCoin");
-
-            if (amount > availableCoin) {
-                const exMsg = this.getOwnerComponent().getModel("i18n").getProperty("exceptionNotEnoughCoin")
-                return;
-            }
-
-
-
-            oContext.getBoundContext().setProperty("AbatCoin", availableCoin - amount);
-            let self = this;
-            oDataModel.submitBatch("default").then(
-                function success() {
-                    console.log("Update successful");
-                    self._setBusy(false);
-                },
-                function failed(err) {
-                    console.error("Update failed", err);
-                    self._setBusy(false);
+                if (amount > this._availableCoin) {
+                    
+                    const exMsg = this.getOwnerComponent().getModel("i18n").getProperty("exceptionNotEnoughCoin");
+                    MessageBox.show(exMsg);
+                    return;
                 }
-            );
-            this._setBusy(true);
+                const newCoinBalance =  this._availableCoin - amount;
+                console.log(newCoinBalance.toString());
+
+                oContext.getBoundContext().setProperty("AbatCoin", newCoinBalance.toString());
+                let self = this;
+                oDataModel.submitBatch("default").then(
+                    function success() {
+                        console.log("Update successful");
+                        self._setBusy(false);
+                    },
+                    function failed(err) {
+                        console.error("Update failed", err);
+                        self._setBusy(false);
+                    }
+                );
+                this._setBusy(true);
         },
         
         /**
          * 
-         * @param {typeof sap.ui.base.Event} event 
          * @param {int} amount 
          */
-        onAddToBetAmount: function(event, amount){
+        onAddToBetAmount: function(amount){
             const coinsModel = this.getView().getModel("coins");
             const currentAmount = coinsModel.getProperty("/bet/amount");
             const parsedCurrentAmount = Number(currentAmount) || 0;
@@ -97,12 +101,50 @@ function(Controller, JSONModel, MessageBox) {
             val = val.replace(/[^\d]/g, '');
             _oInput.setValue(val);
         },
+        onNewRound: function(){
+            this._resetResources();
+        },
         /**
          * 
          * @param {boolean} isBusy 
          */
         _setBusy: function(isBusy){
-            this.getView().setBusy(false);
+            this.getView().setBusy(isBusy);
+        },
+
+        _requestAvailableCoin() {
+            const oDataModel = this.getOwnerComponent().getModel();
+            const oContext = oDataModel.bindContext("/Coin('SHAT')");
+            oContext.requestObject("AbatCoin").then((availableCoin) => {
+                this._availableCoin = availableCoin;
+            })
+        },
+
+        _resetResources: function() {
+            this._requestAvailableCoin();
+            this._resetPlayerAndDealerHand();
+
+        },
+
+        _resetPlayerAndDealerHand: function() {
+
+            let dealerFacedownSrc = this.getOwnerComponent().getModel("img").getProperty("/decks/red");
+            let playerFacedownSrc = this.getOwnerComponent().getModel("img").getProperty("/decks/green");
+            let playerSplitFacedownSrc = this.getOwnerComponent().getModel("img").getProperty("/decks/green");
+            for (let index = 1; index <= this.NUMBER_OF_CARDS_IN_A_HAND; index++) {
+                this.getView().byId("dealerCard" + index).setSrc(dealerFacedownSrc);
+                this.getView().byId("playerCard" + index).setSrc(playerFacedownSrc);
+                this.getView().byId("playerSplitCard" + index).setSrc(playerSplitFacedownSrc);
+                
+            }
+            this.getView().byId("dealerCard1").setSrc(dealerFacedownSrc);
+            
+        },
+
+        onTest: function() {
+            let deck = new DeckService();
+            deck.shuffle();
+            console.log(deck.deck);
         }
     });
 });

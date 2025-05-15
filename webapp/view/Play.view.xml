@@ -84,11 +84,11 @@
                     </HBox>
                     <HBox id="coinInputFixedValueHBox">
                         <Button id="add10Button" text="10" class="sapUiTinyMarginBegin"
-                            press=".onAddToBetAmount($event, 10)"></Button>
+                            press=".onAddToBetAmount(10)"></Button>
                         <Button id="add50Button" text="50" class="sapUiTinyMarginBegin"
-                            press=".onAddToBetAmount($event, 50)"></Button>
+                            press=".onAddToBetAmount(50)"></Button>
                         <Button id="add100Button" text="100" class="sapUiTinyMarginBegin"
-                            press=".onAddToBetAmount($event, 100)"></Button>
+                            press=".onAddToBetAmount(100)"></Button>
                         
                     </HBox>
                     
@@ -116,9 +116,11 @@
                         <Button id="playNextButton" text="{i18n>playNextButton}" class="sapUiTinyMargin"
                             width="200px"></Button>
                         <Button id="newRoundButton" text="{i18n>newRoundButton}" class="sapUiTinyMargin"
-                            width="200px"></Button>
+                            width="200px"
+                            press=".onNewRound"></Button>
                         
                     </HBox>
+                    <Button id="test" press=".onTest"></Button>
                 </VBox>
             </HBox>
         </content>
