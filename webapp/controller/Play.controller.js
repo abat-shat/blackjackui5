@@ -257,7 +257,8 @@ function(Controller, JSONModel, MessageBox,
                     let dealerSrc = this._getCardImgSrc(dealerCard.toString());
                     view.byId("playerCard1").setSrc(playerSrc);
                     view.byId("dealerCard1").setSrc(dealerSrc);
-                    // enable surrender
+                    
+                    this._enableButton("surrender", true);
                     break;
                 case 1:
                     dealerCard = this._deckService.draw();
@@ -269,7 +270,9 @@ function(Controller, JSONModel, MessageBox,
                     tabletop.setProperty("/dealer/score", oldDealerValue + " + ?");
                     view.byId("playerCard2").setSrc(playerSrc);
                     // disable draw, surrender
-                    // check both player for BJ
+                    this._enableButton("surrender", false);
+                    this._enableButton("draw", false);
+                    // TODO:check both player for BJ
                     break;
                 // For split
                 case 2:
@@ -283,6 +286,10 @@ function(Controller, JSONModel, MessageBox,
             tabletop.setProperty("/draw/counter", drawCounter + 1);
 
 
+        },
+
+        onSurrender: function() {
+            //TODO
         },
 
         /* ================================================================================
