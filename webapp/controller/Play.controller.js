@@ -20,6 +20,8 @@ function(Controller, JSONModel, MessageBox,
 
     Controller.extend("de.abatgroup.blackjackui5.controller.Play", {
         NUMBER_OF_CARDS_IN_A_HAND : 5,
+        MAIN_HAND : 0,
+        SPLIT_HAND : 1,
         _deckService : undefined,
         _playerServices : [],
         _dealerService : undefined,
@@ -236,8 +238,8 @@ function(Controller, JSONModel, MessageBox,
             const tabletop = view.getModel("tabletop");
             let drawCounter = tabletop.getProperty("/draw/counter");
 
-            const playerService = this._playerServices[0];
-            const playerSplitService = this._playerServices[1];
+            const playerService = this._playerServices[this.MAIN_HAND];
+            const playerSplitService = this._playerServices[this.SPLIT_HAND];
             const playerCard = this._deckService.draw();
             let playerSrc = this._getCardImgSrc(playerCard.toString());
     
@@ -269,10 +271,11 @@ function(Controller, JSONModel, MessageBox,
                     const oldDealerValue = tabletop.getProperty("/dealer/score");
                     tabletop.setProperty("/dealer/score", oldDealerValue + " + ?");
                     view.byId("playerCard2").setSrc(playerSrc);
-                    // disable draw, surrender
+
                     this._enableButton("surrender", false);
                     this._enableButton("draw", false);
-                    // TODO:check both player for BJ
+
+                    this._checkPlayerAndDealerForBlackjack();
                     break;
                 // For split
                 case 2:
@@ -289,7 +292,22 @@ function(Controller, JSONModel, MessageBox,
         },
 
         onSurrender: function() {
-            //TODO
+            //TODO: Player surrendered.
+        },
+
+        _checkPlayerAndDealerForBlackjack: function() {
+            let isDealerBj = this._dealerService.hasBlackjack();
+            let isPlayerBj = this._playerServices[this.MAIN_HAND].hasBlackjack();
+
+            if (isDealerBj && isPlayerBj) {
+                //TODO: Push draw
+            }
+            else if (isDealerBj) {
+                //TODO: Dealer BJ
+            }
+            else if (isPlayerBj) {
+                //TODO: Player BJ
+            }
         },
 
         /* ================================================================================

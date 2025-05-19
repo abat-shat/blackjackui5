@@ -19,8 +19,15 @@ sap.ui.define([
             this._hand.cards.push(card);
             return this.#calculateTotalValue();
         }
+
         /**
-         * 
+         * Check if the hand has Blackjack, i.e. an Ace and a 10-value Card.
+         */
+        hasBlackjack(){
+            return this._hand.totalValue === Hand.LIMIT_BEFORE_BUSTED;
+        }
+        /**
+         * Calculate and save the total value of this hand.
          * @returns current total value of this hand.
          */
         #calculateTotalValue() {
@@ -64,6 +71,8 @@ sap.ui.define([
             }
             return totalValue;
         }
+
+
 
     }
 
