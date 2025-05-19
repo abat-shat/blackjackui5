@@ -12,6 +12,10 @@ sap.ui.define([], function(){
             this.#cards = [];
         }
 
+        set totalValue(value){
+            this.#totalValue = value;
+        }
+
         get totalValue() {
             return this.#totalValue;
         }

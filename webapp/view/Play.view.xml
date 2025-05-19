@@ -66,29 +66,31 @@
                     <HBox id="playerCoinHBox">
                         <Text id="playerCoinsTextInfo" text="{i18n>playerCoinsText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
-                        <Text id="playerCoinsAmount" text="?"></Text>
+                        <Text id="playerCoinsAmount" text="{coins>/bet/available}"></Text>
                     </HBox>
                     <HBox id="playerBonusHBox">
                         <Text id="playerBonusTextInfo" text="{i18n>playerBonusText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
-                        <Text id="playerBonusAmount" text="?"></Text>
+                        <Text id="playerBonusAmount" text="{coins>/bet/bonus}"></Text>
                     </HBox>
                     <HBox id="coinInputHBox">
                         <Input id="coinInput"
                             liveChange=".onCoinAmountInput"
                             description="abatCoins"
                             value="{coins>/bet/amount}"
-                            class="sapUiTinyMarginBeginEnd"></Input>
+                            class="sapUiTinyMarginBeginEnd"
+                            enabled="false"></Input>
                         <Button id="betButton" text="{i18n>betButton}" width="153px"
-                            press=".onConfirmBetCoinsAmount"></Button>
+                            press=".onConfirmBetCoinsAmount"
+                            enabled="false"></Button>
                     </HBox>
                     <HBox id="coinInputFixedValueHBox">
                         <Button id="add10Button" text="10" class="sapUiTinyMarginBegin"
-                            press=".onAddToBetAmount(10)"></Button>
+                            press=".onAddToBetAmount(10)" enabled="false"></Button>
                         <Button id="add50Button" text="50" class="sapUiTinyMarginBegin"
-                            press=".onAddToBetAmount(50)"></Button>
+                            press=".onAddToBetAmount(50)" enabled="false"></Button>
                         <Button id="add100Button" text="100" class="sapUiTinyMarginBegin"
-                            press=".onAddToBetAmount(100)"></Button>
+                            press=".onAddToBetAmount(100)" enabled="false"></Button>
                         
                     </HBox>
                     
@@ -96,25 +98,25 @@
 
                     <HBox id="playButtonGroup1">
                         <Button id="drawButton" text="{i18n>drawButton}" class="sapUiTinyMargin"
-                            width="200px"></Button>
+                            width="200px" enabled="false"></Button>
                         <Button id="surrenderButton" text="{i18n>surrenderButton}" class="sapUiTinyMargin"
-                            width="200px"></Button>
+                            width="200px" enabled="false"></Button>
                     </HBox>
                     <HBox id="playButtonGroup2">
                         <Button id="splitButton" text="{i18n>splitButton}" class="sapUiTinyMargin"
-                            width="200px"></Button>
+                            width="200px" enabled="false"></Button>
                         <Button id="doubleDownButton" text="{i18n>doubleDownButton}" class="sapUiTinyMargin"
-                            width="200px"></Button>
+                            width="200px" enabled="false"></Button>
                     </HBox>
                     <HBox id="playButtonGroup3">
                         <Button id="hitButton" text="{i18n>hitButton}" class="sapUiTinyMargin"
-                            width="200px"></Button>
+                            width="200px" enabled="false"></Button>
                         <Button id="stayButton" text="{i18n>stayButton}" class="sapUiTinyMargin"
-                            width="200px"></Button>
+                            width="200px" enabled="false"></Button>
                     </HBox>
                     <HBox id="playButtonGroup4">
-                        <Button id="playNextButton" text="{i18n>playNextButton}" class="sapUiTinyMargin"
-                            width="200px"></Button>
+                        <Button id="continueButton" text="{i18n>playNextButton}" class="sapUiTinyMargin"
+                            width="200px" enabled="false"></Button>
                         <Button id="newRoundButton" text="{i18n>newRoundButton}" class="sapUiTinyMargin"
                             width="200px"
                             press=".onNewRound"></Button>
