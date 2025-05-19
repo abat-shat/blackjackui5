@@ -21,7 +21,7 @@
                     <HBox id="dealerHandTextHBox">
                         <Text id="dealerHandTextInfo" text="{i18n>dealerHandText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
-                        <Text id="dealerHandTextOutput" text="?"></Text>
+                        <Text id="dealerHandTextOutput" text="{tabletop>/dealer/score}"></Text>
                     </HBox>
 
                     <HBox id="playerHandHBox" class="sapUiMediumMarginTop">
@@ -39,7 +39,7 @@
                     <HBox id="playerHandTextHBox">
                         <Text id="playerHandTextInfo" text="{i18n>playerHandText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
-                        <Text id="playerHandTextOutput" text="?"></Text>
+                        <Text id="playerHandTextOutput" text="{tabletop>/player/score}"></Text>
                     </HBox>
                     <HBox id="playerSplitHandHBox" visible="false"
                         class="sapUiMediumMarginTop">
@@ -57,7 +57,7 @@
                     <HBox id="playerSplitHandTextHBox" visible="false">
                         <Text id="playerSplitHandTextInfo" text="{i18n>playerSplitHandText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
-                        <Text id="playerSplitHandTextOutput" text="?"></Text>
+                        <Text id="playerSplitHandTextOutput" text="{tabletop>/player/split/score}"></Text>
                     </HBox>
                     
                 </VBox>
@@ -98,25 +98,25 @@
 
                     <HBox id="playButtonGroup1">
                         <Button id="drawButton" text="{i18n>drawButton}" class="sapUiTinyMargin"
-                            width="200px" enabled="false"></Button>
+                            width="200px" enabled="false" press=".onDraw"></Button>
                         <Button id="surrenderButton" text="{i18n>surrenderButton}" class="sapUiTinyMargin"
-                            width="200px" enabled="false"></Button>
+                            width="200px" enabled="false" press=".onSurrender"></Button>
                     </HBox>
                     <HBox id="playButtonGroup2">
                         <Button id="splitButton" text="{i18n>splitButton}" class="sapUiTinyMargin"
-                            width="200px" enabled="false"></Button>
+                            width="200px" enabled="false" press=".onSplit"></Button>
                         <Button id="doubleDownButton" text="{i18n>doubleDownButton}" class="sapUiTinyMargin"
-                            width="200px" enabled="false"></Button>
+                            width="200px" enabled="false" press=".onDoubleDown"></Button>
                     </HBox>
                     <HBox id="playButtonGroup3">
                         <Button id="hitButton" text="{i18n>hitButton}" class="sapUiTinyMargin"
-                            width="200px" enabled="false"></Button>
+                            width="200px" enabled="false" press=".onHit" ></Button>
                         <Button id="stayButton" text="{i18n>stayButton}" class="sapUiTinyMargin"
-                            width="200px" enabled="false"></Button>
+                            width="200px" enabled="false" press=".onStay" ></Button>
                     </HBox>
                     <HBox id="playButtonGroup4">
                         <Button id="continueButton" text="{i18n>playNextButton}" class="sapUiTinyMargin"
-                            width="200px" enabled="false"></Button>
+                            width="200px" enabled="false" press=".onContinue"></Button>
                         <Button id="newRoundButton" text="{i18n>newRoundButton}" class="sapUiTinyMargin"
                             width="200px"
                             press=".onNewRound"></Button>

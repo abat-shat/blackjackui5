@@ -3,7 +3,8 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "../service/DeckService",
-    "../service/PlayerHandService"
+    "../service/PlayerHandService",
+    "../service/DealerHandService"
 ], 
 /**
  * 
@@ -14,11 +15,14 @@ sap.ui.define([
  * 
  */
 function(Controller, JSONModel, MessageBox,
-         DeckService, PlayerHandService) {
+         DeckService, PlayerHandService, DealerHandService) {
     "use strict";
 
     Controller.extend("de.abatgroup.blackjackui5.controller.Play", {
         NUMBER_OF_CARDS_IN_A_HAND : 5,
+        _deckService : undefined,
+        _playerServices : [],
+        _dealerService : undefined,
         /* ================================================================================
          * View initialization
          * ================================================================================
@@ -28,12 +32,29 @@ function(Controller, JSONModel, MessageBox,
             const coinsData = {
                 "bet" : {
                     "amount" : 0,
-                    "available" : "?",
-                    "bonus" : "?",
+                    "available" : 0,
+                    "bonus" : 0
                 }
             };
             const coinsModel = new JSONModel(coinsData);
             this.getView().setModel(coinsModel, "coins");
+
+            const tabletopData = {
+                "draw" : {
+                    "counter" : 0
+                },
+                "player" : {
+                    "score" : 0,
+                    "split" : {
+                        "score" : 0
+                    }
+                },
+                "dealer" : {
+                    "score" : 0
+                }
+            };
+            const tabletopModel = new JSONModel(tabletopData);
+            this.getView().setModel(tabletopModel, "tabletop");
         },
 
         onUsername: function(){
@@ -52,18 +73,30 @@ function(Controller, JSONModel, MessageBox,
          */
 
         onNewRound: function(){
-            this._resetResources();
+            this._resetViewResources();
+            this._resetServiceResources();
         },
-
-        _resetResources: function() {
+        /**
+         * Reset FE resources
+         */
+        _resetViewResources: function() {
             this._requestAvailableAndBonusCoin();
             this._resetPlayerAndDealerHand();
             this._resetAllPlayButtons();
             this._enableBettingOptions(true);
-
+            //TODO: reset json
+        },
+        /**
+         * Reset BE resources
+         */
+        _resetServiceResources: function() {
+            this._deckService = new DeckService();
+            this._deckService.shuffle();
+            this._dealerService = new DealerHandService();
+            this._playerServices.push(new PlayerHandService());
         },
 
-        _requestAvailableAndBonusCoin() {
+        _requestAvailableAndBonusCoin: function() {
             const oDataModel = this.getOwnerComponent().getModel();
             const oContext = oDataModel.bindContext("/Coin('SHAT')");
             const coinModel = this.getView().getModel("coins");
@@ -113,7 +146,7 @@ function(Controller, JSONModel, MessageBox,
             
             if (this._subtractUserCoinInOData()) {
                 this._enableBettingOptions(false);
-
+                this._enableButton("draw", true);
             }
         },
         
@@ -194,7 +227,64 @@ function(Controller, JSONModel, MessageBox,
             this._setBusy(true);
             return true;
         },
-        
+        /* ================================================================================
+         * on Drawing Phase.
+         * ================================================================================
+         */
+        onDraw: function() {
+            const view = this.getView();
+            const tabletop = view.getModel("tabletop");
+            let drawCounter = tabletop.getProperty("/draw/counter");
+
+            const playerService = this._playerServices[0];
+            const playerSplitService = this._playerServices[1];
+            const playerCard = this._deckService.draw();
+            let playerSrc = this._getCardImgSrc(playerCard.toString());
+    
+            let dealerCard;
+            let playerValue; 
+            let dealerValue;
+
+            switch (drawCounter) {
+                case 0:
+                    dealerCard = this._deckService.draw();
+                    playerValue = playerService.addCard(playerCard);
+                    dealerValue = this._dealerService.addCard(dealerCard);
+                    tabletop.setProperty("/player/score", playerValue);
+
+                    tabletop.setProperty("/dealer/score", dealerValue);
+                    
+                    let dealerSrc = this._getCardImgSrc(dealerCard.toString());
+                    view.byId("playerCard1").setSrc(playerSrc);
+                    view.byId("dealerCard1").setSrc(dealerSrc);
+                    // enable surrender
+                    break;
+                case 1:
+                    dealerCard = this._deckService.draw();
+                    playerValue = playerService.addCard(playerCard);
+                    dealerValue = this._dealerService.addCard(dealerCard);
+                    tabletop.setProperty("/player/score", playerValue);
+
+                    const oldDealerValue = tabletop.getProperty("/dealer/score");
+                    tabletop.setProperty("/dealer/score", oldDealerValue + " + ?");
+                    view.byId("playerCard2").setSrc(playerSrc);
+                    // disable draw, surrender
+                    // check both player for BJ
+                    break;
+                // For split
+                case 2:
+
+                    break;
+                default:
+                    MessageBox.error("How the hell did this happen");
+                    break;
+            }
+
+            tabletop.setProperty("/draw/counter", drawCounter + 1);
+
+
+        },
+
         /* ================================================================================
          * Helper functions.
          * ================================================================================
@@ -227,6 +317,14 @@ function(Controller, JSONModel, MessageBox,
          */
         _enableButton: function(buttonName ,isEnabled) {
             this.getView().byId(buttonName + "Button").setEnabled(isEnabled);
+        },
+        /**
+         * 
+         * @param {string} sCard Card representation in string. Ex: 2S is 2 of Spades
+         * @returns Relative path to the corresponding card image.
+         */
+        _getCardImgSrc: function(sCard){
+            return this.getOwnerComponent().getModel("img").getProperty("/cards/" + sCard);
         },
 
         onTest: function() {
