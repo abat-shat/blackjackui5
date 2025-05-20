@@ -20,10 +20,12 @@ function(Controller, JSONModel, MessageBox,
 
     Controller.extend("de.abatgroup.blackjackui5.controller.Play", {
         NUMBER_OF_CARDS_IN_A_HAND : 5,
+        DEALER_HAND: -1,
         MAIN_HAND : 0,
         SPLIT_HAND : 1,
         _deckService : undefined,
         _playerServices : [],
+        _playerServicesConcluded : [],
         _dealerService : undefined,
         /* ================================================================================
          * View initialization
@@ -32,10 +34,13 @@ function(Controller, JSONModel, MessageBox,
 
         onInit: function(){    
             const coinsData = {
-                "bet" : {
-                    "amount" : 0,
+                "user" : {
                     "available" : 0,
                     "bonus" : 0
+                },
+                "bet" : {
+                    "amount" : 0,
+                    "split" : 0
                 }
             };
             const coinsModel = new JSONModel(coinsData);
@@ -47,12 +52,14 @@ function(Controller, JSONModel, MessageBox,
                 },
                 "player" : {
                     "score" : 0,
+                    "cardCount" : 0,
                     "split" : {
                         "score" : 0
                     }
                 },
                 "dealer" : {
-                    "score" : 0
+                    "score" : 0,
+                    "cardCount" : 0
                 }
             };
             const tabletopModel = new JSONModel(tabletopData);
@@ -82,6 +89,7 @@ function(Controller, JSONModel, MessageBox,
          * Reset FE resources
          */
         _resetViewResources: function() {
+            //TODO: maybe not needed
             this._requestAvailableAndBonusCoin();
             this._resetPlayerAndDealerHand();
             this._resetAllPlayButtons();
@@ -101,12 +109,11 @@ function(Controller, JSONModel, MessageBox,
         _requestAvailableAndBonusCoin: function() {
             const oDataModel = this.getOwnerComponent().getModel();
             const oContext = oDataModel.bindContext("/Coin('SHAT')");
-            const coinModel = this.getView().getModel("coins");
             oContext.requestObject("AbatCoin").then((availableCoin) => {
-                coinModel.setProperty("/bet/available", availableCoin);
+                this.coins().setProperty("/user/available", availableCoin);
             });
             oContext.requestObject("Bonus").then((bonus) => {
-                coinModel.setProperty("/bet/bonus", bonus);
+                this.coins().setProperty("/user/bonus", bonus);
             });
         },
 
@@ -146,7 +153,7 @@ function(Controller, JSONModel, MessageBox,
          */
         onConfirmBetCoinsAmount: function(){
             
-            if (this._subtractUserCoinInOData()) {
+            if (this._isBetSuccessful()) {
                 this._enableBettingOptions(false);
                 this._enableButton("draw", true);
             }
@@ -157,10 +164,9 @@ function(Controller, JSONModel, MessageBox,
          * @param {int} amount 
          */
         onAddToBetAmount: function(amount){
-            const coinsModel = this.getView().getModel("coins");
-            const currentAmount = coinsModel.getProperty("/bet/amount");
+            const currentAmount = this.coins().getProperty("/bet/amount");
             const parsedCurrentAmount = Number(currentAmount) || 0;
-            coinsModel.setProperty("/bet/amount/", parsedCurrentAmount + amount);
+            this.coins().setProperty("/bet/amount/", parsedCurrentAmount + amount);
             
         },
         /**
@@ -182,51 +188,25 @@ function(Controller, JSONModel, MessageBox,
          * False if the user inputted a value <= 0
          * or user does not have enough coin.
          */
-        _subtractUserCoinInOData: function() {
-            const coinsModel = this.getView().getModel("coins");
-            const amount = Number(coinsModel.getProperty("/bet/amount"));
+        _isBetSuccessful: function() {
+            const amount = Number(this.coins().getProperty("/bet/amount"));
             if (amount <= 0) {
-                const exMsg = this.getOwnerComponent().getModel("i18n").getProperty("exceptionSmallerThanZero")
+                const exMsg = this.i18n().getProperty("exceptionSmallerThanZero")
                 MessageBox.error(exMsg);
                 return false;
             }
 
-            const oDataModel = this.getView().getModel();
-            const oContext = oDataModel.bindContext("/Coin('SHAT')", null, {
-                $$updateGroupId: "availableCoin"
-            });
-            const availableCoin = Number(coinsModel.getProperty("/bet/available"));
-            const bonusCoin = Number(coinsModel.getProperty("/bet/bonus"));
+            
+            const availableCoin = Number(this.coins().getProperty("/user/available"));
+            const bonusCoin = Number(this.coins().getProperty("/user/bonus"));
             if (amount > (availableCoin + bonusCoin)) {
                 
-                const exMsg = this.getOwnerComponent().getModel("i18n").getProperty("exceptionNotEnoughCoin");
+                const exMsg = this.i18n().getProperty("exceptionNotEnoughCoin");
                 MessageBox.error(exMsg);
                 return false;
             }
-
-            const newBonusBalance = bonusCoin - amount;
-            if (newBonusBalance >= 0) {
-                // bonus is enough
-                oContext.getBoundContext().setProperty("Bonus", newBonusBalance.toString());
-            } else {
-                // subtract availableCoin as well
-                oContext.getBoundContext().setProperty("Bonus", "0");
-                const newCoinBalance = availableCoin + newBonusBalance;
-                oContext.getBoundContext().setProperty("AbatCoin", newCoinBalance.toString());
-            }
             
-            let self = this;
-            oDataModel.submitBatch("availableCoin").then(
-                function success() {
-                    console.log("Update successful");
-                    self._setBusy(false);
-                },
-                function failed(err) {
-                    console.error("Update failed", err);
-                    self._setBusy(false);
-                }
-            );
-            this._setBusy(true);
+            this._updateCoinsInOData(availableCoin, bonusCoin, amount);
             return true;
         },
         /* ================================================================================
@@ -235,8 +215,7 @@ function(Controller, JSONModel, MessageBox,
          */
         onDraw: function() {
             const view = this.getView();
-            const tabletop = view.getModel("tabletop");
-            let drawCounter = tabletop.getProperty("/draw/counter");
+            let drawCounter = this.tabletop().getProperty("/draw/counter");
 
             const playerService = this._playerServices[this.MAIN_HAND];
             const playerSplitService = this._playerServices[this.SPLIT_HAND];
@@ -252,9 +231,11 @@ function(Controller, JSONModel, MessageBox,
                     dealerCard = this._deckService.draw();
                     playerValue = playerService.addCard(playerCard);
                     dealerValue = this._dealerService.addCard(dealerCard);
-                    tabletop.setProperty("/player/score", playerValue);
+                    this.tabletop().setProperty("/player/cardCount", 1);
+                    this.tabletop().setProperty("/dealer/cardCount", 1);
+                    this.tabletop().setProperty("/player/score", playerValue);
 
-                    tabletop.setProperty("/dealer/score", dealerValue);
+                    this.tabletop().setProperty("/dealer/score", dealerValue);
                     
                     let dealerSrc = this._getCardImgSrc(dealerCard.toString());
                     view.byId("playerCard1").setSrc(playerSrc);
@@ -266,19 +247,27 @@ function(Controller, JSONModel, MessageBox,
                     dealerCard = this._deckService.draw();
                     playerValue = playerService.addCard(playerCard);
                     dealerValue = this._dealerService.addCard(dealerCard);
-                    tabletop.setProperty("/player/score", playerValue);
+                    this.tabletop().setProperty("/player/cardCount", 2);
+                    this.tabletop().setProperty("/dealer/cardCount", 2);
+                    this.tabletop().setProperty("/player/score", playerValue);
 
-                    const oldDealerValue = tabletop.getProperty("/dealer/score");
-                    tabletop.setProperty("/dealer/score", oldDealerValue + " + ?");
+                    const oldDealerValue = this.tabletop().getProperty("/dealer/score");
+                    this.tabletop().setProperty("/dealer/score", oldDealerValue + " + ?");
                     view.byId("playerCard2").setSrc(playerSrc);
 
                     this._enableButton("surrender", false);
                     this._enableButton("draw", false);
 
+                    this._enableButton("split", true);
+                    this._enableButton("doubleDown", true);
+                    this._enableButton("hit", true);
+                    this._enableButton("stay", true);
+
                     this._checkPlayerAndDealerForBlackjack();
                     break;
                 // For split
                 case 2:
+                case 3:
 
                     break;
                 default:
@@ -286,7 +275,7 @@ function(Controller, JSONModel, MessageBox,
                     break;
             }
 
-            tabletop.setProperty("/draw/counter", drawCounter + 1);
+            this.tabletop().setProperty("/draw/counter", drawCounter + 1);
 
 
         },
@@ -309,6 +298,98 @@ function(Controller, JSONModel, MessageBox,
                 //TODO: Player BJ
             }
         },
+
+        /* ================================================================================
+         * on Playing Phase.
+         * ================================================================================
+         */
+        onHit: function() {
+            const currentHand = this._playerServices[0];
+            const card = this._deckService.draw();
+            const cardSrc = this._getCardImgSrc(card.toString());
+            let totalValue = currentHand.addCard(card);
+            
+            let cardCount = this.tabletop().getProperty("/player/cardCount") + 1;
+            this.tabletop().setProperty("/player/cardCount", cardCount);
+
+            // again due to bad design choices
+            if (this._isCurrentHandMainHand()) {
+                this.tabletop().setProperty("/player/score", totalValue);
+                this.getView().byId("playerCard" + cardCount).setSrc(cardSrc);
+            } else {
+                this.tabletop().setProperty("/player/split/score", totalValue);
+                this.getView().byId("playerSplitCard" + cardCount).setSrc(cardSrc);
+            }
+            let afterHit = currentHand.checkAfterHit();
+            switch (afterHit) {
+                case PlayerHandService.AfterHit.PLAYER_BUSTED:
+                    console.log(afterHit)
+                    // TODO: Player busted. Set Hand as concluded
+                    break;
+                case PlayerHandService.AfterHit.PLAYER_CHARLIE:
+                    // TODO: player charlie. set hand as concluded
+                    console.log(afterHit)
+                    
+                    break;
+                default:
+                    break;
+            }
+
+            this._enableButton("doubleDown", false);
+            this._enableButton("split", false);
+
+        },
+        
+        onStay: function() {
+            const currentHand = this._playerServices.shift();
+            this._playerServicesConcluded.push(currentHand);
+
+            if (this._playerServices.length != 0) {
+                this.tabletop().setProperty("/players/cardCount", 2);
+                this._enableButton("doubleDown", true);
+            }
+            else {
+                this._enableButton("hit", false);
+                this._enableButton("stay", false);
+                this._enableButton("doubleDown", false);
+                this._enableButton("split", false);
+            }
+
+        },
+
+        onDoubleDown: function() {
+            if (this._isDoubleDownSuccessful()) {
+                
+            }
+        },
+
+        onSplit: function() {},
+
+        _addCardToPlayerHand: function() {
+            
+        },
+
+        _isDoubleDownSuccessful: function(){
+            let amount;
+            if (this._isCurrentHandMainHand()) {
+                amount = Number(this.coins().getProperty("/bet/amount"));
+            }
+            else {
+                amount = Number(this.coins().getProperty("/bet/split"));
+            }
+            
+            const availableCoin = Number(this.coins().getProperty("/user/available"));
+            const bonusCoin = Number(this.coins().getProperty("/user/bonus"));
+            if (amount > (availableCoin + bonusCoin)) {
+                
+                const exMsg = this.i18n().getProperty("exceptionNotEnoughCoin");
+                MessageBox.error(exMsg);
+                return false;
+            }
+            
+            this._updateCoinsInOData(availableCoin, bonusCoin, amount);
+            return true;
+        }
 
         /* ================================================================================
          * Helper functions.
@@ -351,10 +432,69 @@ function(Controller, JSONModel, MessageBox,
         _getCardImgSrc: function(sCard){
             return this.getOwnerComponent().getModel("img").getProperty("/cards/" + sCard);
         },
+        /**
+         * Update user's coin in the OData. The model coins will be automatically
+         * updated if the update succeeded.
+         * @param {int} availableCoin   from coins>/user/available.
+         * @param {int} bonusCoin   from coins>/user/bonus.
+         * @param {int} amount to be subtracted.
+         */
+        _updateCoinsInOData: function(availableCoin, bonusCoin, amount) {           
+            const oDataModel = this.getView().getModel();
+            const oContext = oDataModel.bindContext("/Coin('SHAT')", null, {
+                $$updateGroupId: "availableCoin"
+            });
+ 
+            const newBonusBalance = bonusCoin - amount;
+            if (newBonusBalance >= 0) {
+                // bonus is enough
+                oContext.getBoundContext().setProperty("Bonus", newBonusBalance.toString());
+            } else {
+                // subtract availableCoin as well
+                oContext.getBoundContext().setProperty("Bonus", "0");
+                const newCoinBalance = availableCoin + newBonusBalance;
+                oContext.getBoundContext().setProperty("AbatCoin", newCoinBalance.toString());
+            }
+           
+            let self = this;
+            oDataModel.submitBatch("availableCoin").then(
+                function success() {
+                    console.log("Update successful");
+                    self._setBusy(false);
+                    self._requestAvailableAndBonusCoin();
+                },
+                function failed(err) {
+                    console.error("Update failed", err);
+                    self._setBusy(false);
+                }
+            );
+            this._setBusy(true);
+            return true;
+        },
+        /**
+         * Check which hand is being worked on.
+         * @returns True if Main Hand
+         * 
+         * False if Split Hand
+         */
+        _isCurrentHandMainHand: function(){
+            return this._playerServicesConcluded.length == 0;
+        },
+
+        tabletop() {
+            return this.getView().getModel("tabletop");
+        },
+
+        coins() {
+            return this.getView().getModel("coins");
+        },
+
+        i18n() {
+            return this.getOwnerComponent().getModel("i18n");
+        },
 
         onTest: function() {
-            let playerHand = new PlayerHandService();
-            playerHand.test();
+            this.getView().byId("playerHandTextOutput").setText("100");
         }
     });
 });

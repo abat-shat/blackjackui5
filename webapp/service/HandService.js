@@ -27,6 +27,12 @@ sap.ui.define([
             return this._hand.totalValue === Hand.LIMIT_BEFORE_BUSTED;
         }
         /**
+         * Check if the hand is busted, i.e. over 21.
+         */
+        isBusted(){
+            return this._hand.isBusted();
+        }
+        /**
          * Calculate and save the total value of this hand.
          * @returns current total value of this hand.
          */

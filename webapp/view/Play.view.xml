@@ -57,7 +57,7 @@
                     <HBox id="playerSplitHandTextHBox" visible="false">
                         <Text id="playerSplitHandTextInfo" text="{i18n>playerSplitHandText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
-                        <Text id="playerSplitHandTextOutput" text="{tabletop>/player/split/score}"></Text>
+                        <Text id="playerSplitHandTextOutput" text="{tabletop>/player/score}"></Text>
                     </HBox>
                     
                 </VBox>
@@ -66,12 +66,12 @@
                     <HBox id="playerCoinHBox">
                         <Text id="playerCoinsTextInfo" text="{i18n>playerCoinsText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
-                        <Text id="playerCoinsAmount" text="{coins>/bet/available}"></Text>
+                        <Text id="playerCoinsAmount" text="{coins>/user/available}"></Text>
                     </HBox>
                     <HBox id="playerBonusHBox">
                         <Text id="playerBonusTextInfo" text="{i18n>playerBonusText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
-                        <Text id="playerBonusAmount" text="{coins>/bet/bonus}"></Text>
+                        <Text id="playerBonusAmount" text="{coins>/user/bonus}"></Text>
                     </HBox>
                     <HBox id="coinInputHBox">
                         <Input id="coinInput"
