@@ -20,7 +20,6 @@ function(Controller, JSONModel, MessageBox,
 
     Controller.extend("de.abatgroup.blackjackui5.controller.Play", {
         NUMBER_OF_CARDS_IN_A_HAND : 5,
-        DEALER_HAND: -1,
         MAIN_HAND : 0,
         SPLIT_HAND : 1,
         _deckService : undefined,
@@ -195,19 +194,9 @@ function(Controller, JSONModel, MessageBox,
                 MessageBox.error(exMsg);
                 return false;
             }
-
             
-            const availableCoin = Number(this.coins().getProperty("/user/available"));
-            const bonusCoin = Number(this.coins().getProperty("/user/bonus"));
-            if (amount > (availableCoin + bonusCoin)) {
-                
-                const exMsg = this.i18n().getProperty("exceptionNotEnoughCoin");
-                MessageBox.error(exMsg);
-                return false;
-            }
+            return this._updateCoinsInOData(amount);
             
-            this._updateCoinsInOData(availableCoin, bonusCoin, amount);
-            return true;
         },
         /* ================================================================================
          * on Drawing Phase.
@@ -304,36 +293,8 @@ function(Controller, JSONModel, MessageBox,
          * ================================================================================
          */
         onHit: function() {
-            const currentHand = this._playerServices[0];
-            const card = this._deckService.draw();
-            const cardSrc = this._getCardImgSrc(card.toString());
-            let totalValue = currentHand.addCard(card);
-            
-            let cardCount = this.tabletop().getProperty("/player/cardCount") + 1;
-            this.tabletop().setProperty("/player/cardCount", cardCount);
-
-            // again due to bad design choices
-            if (this._isCurrentHandMainHand()) {
-                this.tabletop().setProperty("/player/score", totalValue);
-                this.getView().byId("playerCard" + cardCount).setSrc(cardSrc);
-            } else {
-                this.tabletop().setProperty("/player/split/score", totalValue);
-                this.getView().byId("playerSplitCard" + cardCount).setSrc(cardSrc);
-            }
-            let afterHit = currentHand.checkAfterHit();
-            switch (afterHit) {
-                case PlayerHandService.AfterHit.PLAYER_BUSTED:
-                    console.log(afterHit)
-                    // TODO: Player busted. Set Hand as concluded
-                    break;
-                case PlayerHandService.AfterHit.PLAYER_CHARLIE:
-                    // TODO: player charlie. set hand as concluded
-                    console.log(afterHit)
-                    
-                    break;
-                default:
-                    break;
-            }
+            this._addCardToPlayerHand();
+            this._checkForBustAndCharlie();
 
             this._enableButton("doubleDown", false);
             this._enableButton("split", false);
@@ -359,14 +320,52 @@ function(Controller, JSONModel, MessageBox,
 
         onDoubleDown: function() {
             if (this._isDoubleDownSuccessful()) {
-                
+                this._addCardToPlayerHand();
+                this._checkForBustAndCharlie();
+                this.onStay();
             }
         },
 
-        onSplit: function() {},
+        onSplit: function() {
+            if (this._isSplitSuccessful()) {
+                
+            }
+
+        },
 
         _addCardToPlayerHand: function() {
+            const card = this._deckService.draw();
+            const cardSrc = this._getCardImgSrc(card.toString());
+            let totalValue = this._playerServices[0].addCard(card);
             
+            let cardCount = this.tabletop().getProperty("/player/cardCount") + 1;
+            this.tabletop().setProperty("/player/cardCount", cardCount);
+
+            // again due to bad design choices
+            if (this._isCurrentHandMainHand()) {
+                this.tabletop().setProperty("/player/score", totalValue);
+                this.getView().byId("playerCard" + cardCount).setSrc(cardSrc);
+            } else {
+                this.tabletop().setProperty("/player/split/score", totalValue);
+                this.getView().byId("playerSplitCard" + cardCount).setSrc(cardSrc);
+            }
+        },
+
+        _checkForBustAndCharlie: function() {
+            let afterHit = this._playerServices[0].checkAfterHit();
+            switch (afterHit) {
+                case PlayerHandService.AfterHit.PLAYER_BUSTED:
+                    console.log(afterHit)
+                    // TODO: Player busted. Set Hand as concluded
+                    break;
+                case PlayerHandService.AfterHit.PLAYER_CHARLIE:
+                    // TODO: player charlie. set hand as concluded
+                    console.log(afterHit)
+                    
+                    break;
+                default:
+                    break;
+            }
         },
 
         _isDoubleDownSuccessful: function(){
@@ -378,18 +377,33 @@ function(Controller, JSONModel, MessageBox,
                 amount = Number(this.coins().getProperty("/bet/split"));
             }
             
-            const availableCoin = Number(this.coins().getProperty("/user/available"));
-            const bonusCoin = Number(this.coins().getProperty("/user/bonus"));
-            if (amount > (availableCoin + bonusCoin)) {
-                
-                const exMsg = this.i18n().getProperty("exceptionNotEnoughCoin");
-                MessageBox.error(exMsg);
+            if (!this._updateCoinsInOData(amount)) {
+                if (this._isCurrentHandMainHand()) {
+                    this.coins().setProperty("/bet/amount", amount * 2);
+                }
+                else {
+                    this.coins().setProperty("/bet/split", amount * 2);
+                }
                 return false;
             }
-            
-            this._updateCoinsInOData(availableCoin, bonusCoin, amount);
+
             return true;
-        }
+
+            
+            
+        },
+
+        _isSplitSuccessful: function() {
+            let amount = Number(this.coins().getProperty("/bet/amount"));
+            
+            if (!this._updateCoinsInOData(amount)) {
+                return false;
+            } 
+
+            this.coins().setProperty("/bet/split", amount);
+            return true;
+            
+        },
 
         /* ================================================================================
          * Helper functions.
@@ -435,11 +449,19 @@ function(Controller, JSONModel, MessageBox,
         /**
          * Update user's coin in the OData. The model coins will be automatically
          * updated if the update succeeded.
-         * @param {int} availableCoin   from coins>/user/available.
-         * @param {int} bonusCoin   from coins>/user/bonus.
          * @param {int} amount to be subtracted.
+         * @returns if update was successful
          */
-        _updateCoinsInOData: function(availableCoin, bonusCoin, amount) {           
+        _updateCoinsInOData: function(amount) {
+            const availableCoin = Number(this.coins().getProperty("/user/available"));
+            const bonusCoin = Number(this.coins().getProperty("/user/bonus"));
+            if (amount > (availableCoin + bonusCoin)) {
+                
+                const exMsg = this.i18n().getProperty("exceptionNotEnoughCoin");
+                MessageBox.error(exMsg);
+                return false;
+            }
+
             const oDataModel = this.getView().getModel();
             const oContext = oDataModel.bindContext("/Coin('SHAT')", null, {
                 $$updateGroupId: "availableCoin"
@@ -457,6 +479,7 @@ function(Controller, JSONModel, MessageBox,
             }
            
             let self = this;
+            debugger;
             oDataModel.submitBatch("availableCoin").then(
                 function success() {
                     console.log("Update successful");
@@ -465,10 +488,13 @@ function(Controller, JSONModel, MessageBox,
                 },
                 function failed(err) {
                     console.error("Update failed", err);
+                    MessageBox.error(self.i18n().getProperty("exceptionSubmitBatchFailed"));
                     self._setBusy(false);
+                    // TODO: handle refund
                 }
             );
             this._setBusy(true);
+            console.log("updated");
             return true;
         },
         /**
@@ -480,6 +506,10 @@ function(Controller, JSONModel, MessageBox,
         _isCurrentHandMainHand: function(){
             return this._playerServicesConcluded.length == 0;
         },
+        /* ================================================================================
+         * Model getters.
+         * ================================================================================
+         */
 
         tabletop() {
             return this.getView().getModel("tabletop");
