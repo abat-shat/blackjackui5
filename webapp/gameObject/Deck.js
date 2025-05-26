@@ -18,6 +18,14 @@ sap.ui.define(["./Card"],
             get cards(){
                 return this.#cards;
             }
+
+            manipulateBlackjack(){
+                const ace = new Card("A", "S");
+                const two = new Card("2", "S");
+                const ten = new Card("K", "S");
+
+                this.#cards.unshift(ace, two, ten);
+            }
         }
         return Deck;
 });

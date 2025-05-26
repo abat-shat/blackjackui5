@@ -40,37 +40,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          */
 
         onInit: function(){    
-            const coinsData = {
-                "user" : {
-                    "available" : 0,
-                    "bonus" : 0
-                },
-                "bet" : {
-                    "amount" : 0,
-                    "split" : 0
-                }
-            };
-            const coinsModel = new JSONModel(coinsData);
-            this.getView().setModel(coinsModel, "coins");
-
-            const tabletopData = {
-                "draw" : {
-                    "counter" : 0
-                },
-                "player" : {
-                    "score" : 0,
-                    "cardCount" : 0,
-                    "split" : {
-                        "score" : 0
-                    }
-                },
-                "dealer" : {
-                    "score" : 0,
-                    "cardCount" : 0
-                }
-            };
-            const tabletopModel = new JSONModel(tabletopData);
-            this.getView().setModel(tabletopModel, "tabletop");
+            this._resetModel();
         },
 
         onUsername: function(){
@@ -349,6 +319,10 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 //TODO: Player BJ
                 this.onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_HAS_BLACKJACK);
             }
+
+            if (isDealerBj || isPlayerBj) {
+                this._playerServices.pop();
+            }
         },
 
         /* ================================================================================
@@ -557,12 +531,12 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                     break;
                 case this.PREMATURE_CONCLUSION.DEALER_HAS_BLACKJACK:
                     msg = this.i18n().getText("dealerHasBlackjack");
-                    debugger;
+
                     break;
                 case this.PREMATURE_CONCLUSION.PLAYER_HAS_BLACKJACK:
                     amount = Math.round(betAmount * 1.5);
                     msg = this.i18n().getText("playerHasBlackjack", [amount]);
-                    debugger;
+
                     break;
                 case this.PREMATURE_CONCLUSION.PLAYER_SURRENDERED:
                     amount = Math.round(betAmount * 0.5);
@@ -771,9 +745,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         },
 
         onTest: function() {
-            let a = [];
-            a.push(1, 2, 3);
-            console.log(a);
+            this._deckService.manipulateBlackjack();
         }
     });
 });

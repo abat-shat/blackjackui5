@@ -21,6 +21,13 @@ sap.ui.define([
                 this.#cut();
             }
         }
+        /**
+         * stricly for testing.
+         * TODO: remove this.
+         */
+        manipulateBlackjack(){
+            this.#deck.manipulateBlackjack();
+        }
 
         #cut(){
             let deckLength = this.#deck.cards.length;
