@@ -28,7 +28,8 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             DEALER_HAS_BLACKJACK : "DEALER_HAS_BLACKJACK",
             PLAYER_HAS_BLACKJACK : "PLAYER_HAS_BLACKJACK",
             PLAYER_SURRENDERED : "PLAYER_SURRENDERED",
-            PLAYER_HANDS_CONCLUDED : "PLAYER_HANDS_CONCLUDED"
+            PLAYER_HANDS_CONCLUDED : "PLAYER_HANDS_CONCLUDED",
+            BOTH_HANDS_BLACKJACK : "BOTH_HANDS_BLACKJACK"
         },
         _deckService : undefined,
         _playerServices : [],
@@ -116,6 +117,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             this._deckService.shuffle();
             this._dealerService = new DealerHandService();
             this._playerServices.push(new PlayerHandService());
+            this._playerServicesConcluded.length = 0;
         },
 
         _requestAvailableAndBonusCoin: function() {
@@ -272,7 +274,10 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                     playerValue = playerService.addCard(playerCard);
                     this.tabletop().setProperty("/player/score", playerValue);
                     view.byId("playerCard2").setSrc(playerSrc);
-                    //check for BJ
+                    if (playerService.checkForBlackjack()) {
+                        this._onMainHandBlackjack();
+                    }
+                    
                     break;
                 case 3:
                     playerValue = playerSplitService.addCard(playerCard);
@@ -285,6 +290,9 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                     this._enableButton("stay", true);
 
                     //check for BJ
+                    if (playerSplitService.checkForBlackjack()) {
+                        this._onSplitHandBlackjack();
+                    }
 
                     break;
                 default:
@@ -298,7 +306,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         },
 
         onSurrender: function() {
-            this.onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_SURRENDERED);
+            this._onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_SURRENDERED);
             this._enableButton("surrender", false);
         },
 
@@ -308,16 +316,16 @@ function(Controller, JSONModel, MessageBox, MessageToast,
 
             if (isDealerBj && isPlayerBj) {
                 //TODO: Push draw
-                this.onPrematureRoundEnd(this.PREMATURE_CONCLUSION.BOTH_HAS_BLACKJACK);
+                this._onPrematureRoundEnd(this.PREMATURE_CONCLUSION.BOTH_HAS_BLACKJACK);
 
             }
             else if (isDealerBj) {
                 //TODO: Dealer BJ
-                this.onPrematureRoundEnd(this.PREMATURE_CONCLUSION.DEALER_HAS_BLACKJACK);
+                this._onPrematureRoundEnd(this.PREMATURE_CONCLUSION.DEALER_HAS_BLACKJACK);
             }
             else if (isPlayerBj) {
                 //TODO: Player BJ
-                this.onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_HAS_BLACKJACK);
+                this._onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_HAS_BLACKJACK);
             }
 
             if (isDealerBj || isPlayerBj) {
@@ -382,15 +390,13 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 console.log(splitResult)
                 this._playerServices.push(splitHand);
 
-
                 //UI stuff
                 // remove 2nd card from main
                 let playerFacedownSrc = this.getOwnerComponent().getModel("img").getProperty("/decks/green");
                 this.getView().byId("playerCard2").setSrc(playerFacedownSrc);
                 this.tabletop().setProperty("/player/score", splitResult[1]);
                 
-                
-                //add 1st card to split 
+                //add 1st card to split
                 const cardSrc = this._getCardImgSrc(splitResult[0].toString());
                 this.getView().byId("playerSplitCard1").setSrc(cardSrc);
                 this.tabletop().setProperty("/player/split/score", splitResult[2]);
@@ -432,7 +438,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 this.onStay();
                 if (this._playerServices.length == 0) {
                     //TODO
-                    this.onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_HANDS_CONCLUDED);
+                    this._onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_HANDS_CONCLUDED);
                 }
                 return true;
             }
@@ -520,7 +526,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          * ================================================================================
          */
 
-        onPrematureRoundEnd: function(reason) {
+        _onPrematureRoundEnd: function(reason) {
             let betAmount = Number(this.coins().getProperty("/bet/amount"));
             let msg;
             let amount = 0;
@@ -560,7 +566,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                     if (secondHand) {
                         switch (secondHand.result) {
                             case PlayerHandService.Result.PLAYER_BUSTED:
-                                msg += this.i18n().getText("splitHandBusted");
+                                msg += "\n" + this.i18n().getText("splitHandBusted");
                                 break;
                             case PlayerHandService.Result.PLAYER_CHARLIE:
                                 betAmount = Number(this.coins().getProperty("/bet/split"));
@@ -573,6 +579,16 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                                 break;
                         }   
                     }
+                    break;
+                case this.PREMATURE_CONCLUSION.BOTH_HANDS_BLACKJACK:
+                    amount = Math.round(Number(betAmount) * 1.5);
+                    msg = this.i18n().getText("resolveMainHandBlackjack", [amount]);
+
+                    let splitAmount = this.coins().getProperty("/bet/split");
+                    let bjSplitAmount = Math.round(Number(splitAmount) * 1.5);
+                    msg += "\n" + this.i18n().getText("splitHandBlackjack", [bjSplitAmount]);
+                    amount += bjSplitAmount;
+                    break;
                 default:
                     break;
                 
@@ -582,6 +598,29 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             this._addCoinsToPlayer(amount);
             this._resetAllPlayButtons();
             this._enableButton("newRound", true);
+        },
+        _onMainHandBlackjack: function() {
+            let playerService = this._playerServices.shift();
+            this._playerServicesConcluded.push(playerService);
+            let amount = this.coins().getProperty("/bet/amount");
+            let bjAmount = Math.round(Number(amount) * 1.5);
+            let msg = this.i18n().getText("promiseMainHandBlackjack", [bjAmount]);
+            MessageToast.show(msg);
+        },
+        _onSplitHandBlackjack: function() {
+            this._playerServices.pop();
+            if (this._playerServices.length == 0) {
+                this._onPrematureRoundEnd(this.PREMATURE_CONCLUSION.BOTH_HANDS_BLACKJACK);
+            }
+            else {
+                let splitAmount = this.coins().getProperty("/bet/split");
+                let bjSplitAmount = Math.round(Number(splitAmount) * 1.5);
+                let msg = this.i18n().getText("splitHandBlackjack", [bjSplitAmount]);
+                MessageToast.show(msg);
+                this._addCoinsToPlayer(bjSplitAmount);
+            }
+
+            
         },
         /**
          * 
@@ -744,8 +783,11 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             return this.getOwnerComponent().getModel("i18n").getResourceBundle();
         },
 
-        onTest: function() {
-            this._deckService.manipulateBlackjack();
+        onTest: function() {      
+            // this._deckService.manipulateSplitBlackjack();
+            // this._deckService.manipulateBothBlackjack();
+            // this._deckService.manipulateBlackjack();
+
         }
     });
 });

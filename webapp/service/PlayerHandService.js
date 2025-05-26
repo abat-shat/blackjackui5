@@ -8,7 +8,8 @@ sap.ui.define([
         #result;
         static Result = {
             PLAYER_BUSTED : "PLAYER_BUSTED",
-            PLAYER_CHARLIE : "PLAYER_CHARLIE"
+            PLAYER_CHARLIE : "PLAYER_CHARLIE",
+            PLAYER_BLACKJACK : "PLAYER_BLACKJACK"
         }
         /**
          * check if player is busted,
@@ -65,6 +66,15 @@ sap.ui.define([
 
         set result(value) {
             this.#result = value;
+        }
+
+        checkForBlackjack() {
+            if (this.hasBlackjack()) {
+                this.#result = PlayerHandService.Result.PLAYER_BLACKJACK;
+                return true;
+            }
+
+            return false;
         }
     }
 
