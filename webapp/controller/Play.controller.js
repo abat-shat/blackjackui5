@@ -63,6 +63,13 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             this._resetModel();
             this._resetViewResources();
             this._resetServiceResources();
+            console.log("services");
+            
+            console.log(this._playerServices);
+            console.log("concluded");
+            
+            console.log(this._playerServicesConcluded);
+            
             
         },
         _resetModel: function(){
@@ -102,12 +109,12 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          * Reset FE resources
          */
         _resetViewResources: function() {
-            //TODO: maybe not needed
+           
             this._requestAvailableAndBonusCoin();
             this._resetPlayerAndDealerHand();
             this._resetAllPlayButtons();
             this._enableBettingOptions(true);
-            //TODO: reset json
+            
         },
         /**
          * Reset BE resources
@@ -116,6 +123,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             this._deckService = new DeckService();
             this._deckService.shuffle();
             this._dealerService = new DealerHandService();
+            this._playerServices.length = 0;
             this._playerServices.push(new PlayerHandService());
             this._playerServicesConcluded.length = 0;
         },
@@ -495,6 +503,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                     this._addCardToDealerHand();
                     break;
                 case DealerHandService.DealerAction.DEALER_STAY:
+                    //Dealer stood. conclude game.
                     console.log(this._playerServicesConcluded);
                     break;
                 case DealerHandService.DealerAction.DEALER_BUSTED:
@@ -786,7 +795,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         onTest: function() {      
             // this._deckService.manipulateSplitBlackjack();
             // this._deckService.manipulateBothBlackjack();
-            // this._deckService.manipulateBlackjack();
+            this._deckService.manipulateBlackjack();
 
         }
     });
