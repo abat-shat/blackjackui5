@@ -64,10 +64,6 @@ sap.ui.define([
             return this.#result;
         }
 
-        set result(value) {
-            this.#result = value;
-        }
-
         checkForBlackjack() {
             if (this.hasBlackjack()) {
                 this.#result = PlayerHandService.Result.PLAYER_BLACKJACK;
@@ -75,6 +71,27 @@ sap.ui.define([
             }
 
             return false;
+        }
+
+        calculateResult(dealer, betAmount) {
+            let results = [];
+            let resultI18nText;
+            let amount = 0;
+
+            if (this._hand.totalValue < dealer._hand.totalValue) {
+                resultI18nText = "mainHandLost";
+            } 
+            else if (this._hand.totalValue > dealer._hand.totalValue) {
+                resultI18nText = "mainHandWon";
+                amount = betAmount * 2;
+            }
+            else {
+                resultI18nText = "mainHandPush";
+                amount = betAmount;
+            }
+
+            results.push(resultI18nText, amount);
+            return results;
         }
     }
 

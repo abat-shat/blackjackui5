@@ -62,14 +62,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         onNewRound: function(){
             this._resetModel();
             this._resetViewResources();
-            this._resetServiceResources();
-            console.log("services");
-            
-            console.log(this._playerServices);
-            console.log("concluded");
-            
-            console.log(this._playerServicesConcluded);
-            
+            this._resetServiceResources();            
             
         },
         _resetModel: function(){
@@ -502,18 +495,8 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 case DealerHandService.DealerAction.DEALER_HIT:
                     this._addCardToDealerHand();
                     break;
-                case DealerHandService.DealerAction.DEALER_STAY:
-                    //Dealer stood. conclude game.
-                    console.log(this._playerServicesConcluded);
-                    break;
-                case DealerHandService.DealerAction.DEALER_BUSTED:
-                    // TODO: dealer busted. conclude game
-                    console.log(this._playerServicesConcluded);
-                    break;
-                case DealerHandService.DealerAction.DEALER_CHARLIE:    
-                    // TODO: dealer charlie. bbno$
-                    break;
                 default:
+                    this._onRoundEnd(dealerAction);
                     break;
             }
         },
@@ -608,6 +591,77 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             this._resetAllPlayButtons();
             this._enableButton("newRound", true);
         },
+        _onRoundEnd: function(dealerAction) {
+            let mainHand = this._playerServicesConcluded[this.MAIN_HAND];
+            let splitHand = this._playerServicesConcluded[this.SPLIT_HAND];
+            let betAmount = Number(this.coins().getProperty("/bet/amount"));
+            let splitAmount = Number(this.coins().getProperty("/bet/split"));
+            let amount = 0;
+            let tempAmount = 0;
+            let msg;
+            let result;
+
+            switch (mainHand.result) {
+                case PlayerHandService.Result.PLAYER_BLACKJACK:
+                    tempAmount = Math.round(betAmount * 1.5);
+                    msg = this.i18n().getText("resolveMainHandBlackjack", [tempAmount]);
+                    break;
+                case PlayerHandService.Result.PLAYER_BUSTED:
+                    msg = this.i18n().getText("mainHandBusted");
+                    break;
+                case PlayerHandService.Result.PLAYER_CHARLIE:
+                    tempAmount = betAmount * 2;
+                    msg = this.i18n().getText("resolveMainHandCharlie", [tempAmount]);
+                    break;
+                default:
+                    switch (dealerAction) {
+                        case DealerHandService.DealerAction.DEALER_STAY:
+                            result = mainHand.calculateResult(this._dealerService, betAmount);
+                            break;
+                        case DealerHandService.DealerAction.DEALER_BUSTED:
+                            tempAmount = betAmount * 2;
+                            msg = this.i18n().getText("dealerBustedMainHand", [tempAmount]);
+                            break;
+                        case DealerHandService.DealerAction.DEALER_CHARLIE:    
+                            msg = this.i18n().getText("dealerCharlie");
+                            break;
+                    }
+                    break;
+            }
+            amount += tempAmount;
+
+
+
+            if (mainHand.result == PlayerHandService.Result.PLAYER_BLACKJACK) {
+                amount = Math.round(Number(betAmount) * 1.5);
+                msg = this.i18n().getText("resolveMainHandBlackjack", [amount]);
+            }
+            else {
+                switch (dealerAction) {
+                    case DealerHandService.DealerAction.DEALER_STAY:
+                        //Dealer stood. conclude game.
+                        console.log(this._playerServicesConcluded);
+                        break;
+                    case DealerHandService.DealerAction.DEALER_BUSTED:
+                        // TODO: dealer busted. conclude game
+                        console.log(this._playerServicesConcluded);
+                        break;
+                    case DealerHandService.DealerAction.DEALER_CHARLIE:    
+                        // TODO: dealer charlie. bbno$
+                        break;
+                
+                    default:
+                        break;
+                }
+            }
+
+
+            MessageToast.show(msg);
+            this._addCoinsToPlayer(amount);
+            this._resetAllPlayButtons();
+            this._enableButton("newRound", true);
+        },
+
         _onMainHandBlackjack: function() {
             let playerService = this._playerServices.shift();
             this._playerServicesConcluded.push(playerService);
