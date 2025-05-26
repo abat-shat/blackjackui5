@@ -2,6 +2,7 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
+    "sap/m/MessageToast",
     "../service/DeckService",
     "../service/PlayerHandService",
     "../service/DealerHandService"
@@ -14,7 +15,7 @@ sap.ui.define([
  * @param {*} DeckService
  * 
  */
-function(Controller, JSONModel, MessageBox,
+function(Controller, JSONModel, MessageBox, MessageToast,
          DeckService, PlayerHandService, DealerHandService) {
     "use strict";
 
@@ -22,6 +23,13 @@ function(Controller, JSONModel, MessageBox,
         NUMBER_OF_CARDS_IN_A_HAND : 5,
         MAIN_HAND : 0,
         SPLIT_HAND : 1,
+        PREMATURE_CONCLUSION : {
+            BOTH_HAS_BLACKJACK : "BOTH_HAS_BLACKJACK",
+            DEALER_HAS_BLACKJACK : "DEALER_HAS_BLACKJACK",
+            PLAYER_HAS_BLACKJACK : "PLAYER_HAS_BLACKJACK",
+            PLAYER_SURRENDERED : "PLAYER_SURRENDERED",
+            PLAYER_HANDS_CONCLUDED : "PLAYER_HANDS_CONCLUDED"
+        },
         _deckService : undefined,
         _playerServices : [],
         _playerServicesConcluded : [],
@@ -81,8 +89,43 @@ function(Controller, JSONModel, MessageBox,
          */
 
         onNewRound: function(){
+            this._resetModel();
             this._resetViewResources();
             this._resetServiceResources();
+            
+        },
+        _resetModel: function(){
+            const coinsData = {
+                "user" : {
+                    "available" : 0,
+                    "bonus" : 0
+                },
+                "bet" : {
+                    "amount" : 0,
+                    "split" : 0
+                }
+            };
+            const coinsModel = new JSONModel(coinsData);
+            this.getView().setModel(coinsModel, "coins");
+
+            const tabletopData = {
+                "draw" : {
+                    "counter" : 0
+                },
+                "player" : {
+                    "score" : 0,
+                    "cardCount" : 0,
+                    "split" : {
+                        "score" : 0
+                    }
+                },
+                "dealer" : {
+                    "score" : 0,
+                    "cardCount" : 0
+                }
+            };
+            const tabletopModel = new JSONModel(tabletopData);
+            this.getView().setModel(tabletopModel, "tabletop");
         },
         /**
          * Reset FE resources
@@ -191,12 +234,12 @@ function(Controller, JSONModel, MessageBox,
         _isBetSuccessful: function() {
             const amount = Number(this.coins().getProperty("/bet/amount"));
             if (amount <= 0) {
-                const exMsg = this.i18n().getProperty("exceptionSmallerThanZero")
+                const exMsg = this.i18n().getText("exceptionSmallerThanZero")
                 MessageBox.error(exMsg);
                 return false;
             }
             
-            return this._updateCoinsInOData(amount);
+            return this._subtractCoinsFromPlayer(amount);
             
         },
         /* ================================================================================
@@ -285,7 +328,7 @@ function(Controller, JSONModel, MessageBox,
         },
 
         onSurrender: function() {
-            //TODO: Player surrendered.
+            this.onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_SURRENDERED);
             this._enableButton("surrender", false);
         },
 
@@ -295,12 +338,16 @@ function(Controller, JSONModel, MessageBox,
 
             if (isDealerBj && isPlayerBj) {
                 //TODO: Push draw
+                this.onPrematureRoundEnd(this.PREMATURE_CONCLUSION.BOTH_HAS_BLACKJACK);
+
             }
             else if (isDealerBj) {
                 //TODO: Dealer BJ
+                this.onPrematureRoundEnd(this.PREMATURE_CONCLUSION.DEALER_HAS_BLACKJACK);
             }
             else if (isPlayerBj) {
                 //TODO: Player BJ
+                this.onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_HAS_BLACKJACK);
             }
         },
 
@@ -342,10 +389,13 @@ function(Controller, JSONModel, MessageBox,
         onDoubleDown: function() {
             if (this._isDoubleDownSuccessful()) {
                 this._addCardToPlayerHand();
-                this._checkForBustAndCharlie();
-                this.onStay();
-                this._enableButton("split", false);
-                this._enableButton("surrender", false);
+                
+                if (!this._checkForBustAndCharlie()) {
+                    this.onStay();
+                    this._enableButton("split", false);
+                    this._enableButton("surrender", false);    
+                }
+                
             }
             
         },
@@ -397,22 +447,23 @@ function(Controller, JSONModel, MessageBox,
                 this.getView().byId("playerSplitCard" + cardCount).setSrc(cardSrc);
             }
         },
-
+        /**
+         * Check the player's current hand, and write the result in the hand service.
+         * 
+         * If all players hands are processed, the round ends.
+         * @returns True if player's current Hand really is busted or has 5 cards.
+         */
         _checkForBustAndCharlie: function() {
-            let afterHit = this._playerServices[0].checkAfterHit();
-            switch (afterHit) {
-                case PlayerHandService.AfterHit.PLAYER_BUSTED:
-                    console.log(afterHit)
-                    // TODO: Player busted. Set Hand as concluded
-                    break;
-                case PlayerHandService.AfterHit.PLAYER_CHARLIE:
-                    // TODO: player charlie. set hand as concluded
-                    console.log(afterHit)
-                    
-                    break;
-                default:
-                    break;
+            if (this._playerServices[0].checkAfterHit()) {
+                this.onStay();
+                if (this._playerServices.length == 0) {
+                    //TODO
+                    this.onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_HANDS_CONCLUDED);
+                }
+                return true;
             }
+
+            return false;
         },
 
         _isDoubleDownSuccessful: function(){
@@ -424,7 +475,7 @@ function(Controller, JSONModel, MessageBox,
                 amount = Number(this.coins().getProperty("/bet/split"));
             }
             
-            if (!this._updateCoinsInOData(amount)) {
+            if (!this._subtractCoinsFromPlayer(amount)) {
                 if (this._isCurrentHandMainHand()) {
                     this.coins().setProperty("/bet/amount", amount * 2);
                 }
@@ -443,7 +494,7 @@ function(Controller, JSONModel, MessageBox,
         _isSplitSuccessful: function() {
             let amount = Number(this.coins().getProperty("/bet/amount"));
             
-            if (!this._updateCoinsInOData(amount)) {
+            if (!this._subtractCoinsFromPlayer(amount)) {
                 return false;
             } 
 
@@ -488,6 +539,107 @@ function(Controller, JSONModel, MessageBox,
 
             this.tabletop().setProperty("/dealer/score", totalValue);
             this.getView().byId("dealerCard" + cardCount).setSrc(cardSrc);
+        },
+
+        /* ================================================================================
+         * on End Phase.
+         * ================================================================================
+         */
+
+        onPrematureRoundEnd: function(reason) {
+            let betAmount = Number(this.coins().getProperty("/bet/amount"));
+            let msg;
+            let amount = 0;
+            switch (reason) {
+                case this.PREMATURE_CONCLUSION.BOTH_HAS_BLACKJACK:
+                    amount = betAmount;
+                    msg = this.i18n().getText("bothHasBlackjack", [amount]);
+                    break;
+                case this.PREMATURE_CONCLUSION.DEALER_HAS_BLACKJACK:
+                    msg = this.i18n().getText("dealerHasBlackjack");
+                    debugger;
+                    break;
+                case this.PREMATURE_CONCLUSION.PLAYER_HAS_BLACKJACK:
+                    amount = Math.round(betAmount * 1.5);
+                    msg = this.i18n().getText("playerHasBlackjack", [amount]);
+                    debugger;
+                    break;
+                case this.PREMATURE_CONCLUSION.PLAYER_SURRENDERED:
+                    amount = Math.round(betAmount * 0.5);
+                    msg = this.i18n().getText("playerSurrendered", [amount]);
+                    break;
+                case this.PREMATURE_CONCLUSION.PLAYER_HANDS_CONCLUDED:
+                    let firstHandResult = this._playerServicesConcluded.shift().result;
+                    switch (firstHandResult) {
+                        case PlayerHandService.Result.PLAYER_BUSTED:
+                            msg = this.i18n().getText("mainHandBusted");
+                            break;
+                        case PlayerHandService.Result.PLAYER_CHARLIE:
+                            amount = betAmount * 2;
+                            msg = this.i18n().getText("mainHandCharlie", [amount]);
+                            break;
+                        default:
+                            MessageBox.error("Hand is not prematurely ended. Rewrite logic.");
+                            break;
+                    }
+                    let secondHand = this._playerServicesConcluded.shift();
+                    if (secondHand) {
+                        switch (secondHand.result) {
+                            case PlayerHandService.Result.PLAYER_BUSTED:
+                                msg += this.i18n().getText("splitHandBusted");
+                                break;
+                            case PlayerHandService.Result.PLAYER_CHARLIE:
+                                betAmount = Number(this.coins().getProperty("/bet/split"));
+                                let splitAmount = betAmount * 2;
+                                msg = this.i18n().getText("splitHandCharlie", [splitAmount]);
+                                amount += splitAmount;
+                                break;
+                            default:
+                                MessageBox.error("Hand is not prematurely ended. Rewrite logic.");
+                                break;
+                        }   
+                    }
+                default:
+                    break;
+                
+            }
+            this._revealDealerCard();
+            MessageToast.show(msg);
+            this._addCoinsToPlayer(amount);
+            this._resetAllPlayButtons();
+            this._enableButton("newRound", true);
+        },
+        /**
+         * 
+         * @param {int} amount 
+         */
+        _addCoinsToPlayer: function(amount) {
+            if (amount == 0) {
+                return;
+            }
+
+            const oDataModel = this.getView().getModel();
+            const oContext = oDataModel.bindContext("/Coin('SHAT')", null, {
+                $$updateGroupId: "addCoin"
+            });
+            let abatCoin = this.coins().getProperty("/user/available");
+            let newCoinBalance = Number(abatCoin) + amount; 
+            oContext.getBoundContext().setProperty("AbatCoin", newCoinBalance.toString());
+            let self = this;
+            oDataModel.submitBatch("addCoin").then(
+                function success() {
+                    console.log("Update successful");
+                    self._setBusy(false);
+                    self._requestAvailableAndBonusCoin();
+                },
+                function failed(err) {
+                    console.error("Update failed", err);
+                    MessageBox.error(self.i18n().getText("exceptionSubmitBatchFailedRefundPlayer", [newCoinBalance, 'SHAT']));
+                    self._setBusy(false);
+                }
+            );
+            this._setBusy(true);
+            console.log("updated");
         },
 
         /* ================================================================================
@@ -537,12 +689,12 @@ function(Controller, JSONModel, MessageBox,
          * @param {int} amount to be subtracted.
          * @returns if update was successful
          */
-        _updateCoinsInOData: function(amount) {
+        _subtractCoinsFromPlayer: function(amount) {
             const availableCoin = Number(this.coins().getProperty("/user/available"));
             const bonusCoin = Number(this.coins().getProperty("/user/bonus"));
             if (amount > (availableCoin + bonusCoin)) {
                 
-                const exMsg = this.i18n().getProperty("exceptionNotEnoughCoin");
+                const exMsg = this.i18n().getText("exceptionNotEnoughCoin");
                 MessageBox.error(exMsg);
                 return false;
             }
@@ -572,7 +724,7 @@ function(Controller, JSONModel, MessageBox,
                 },
                 function failed(err) {
                     console.error("Update failed", err);
-                    MessageBox.error(self.i18n().getProperty("exceptionSubmitBatchFailed"));
+                    MessageBox.error(self.i18n().getText("exceptionSubmitBatchFailed"));
                     self._setBusy(false);
                     // TODO: handle refund
                 }
@@ -615,7 +767,7 @@ function(Controller, JSONModel, MessageBox,
         },
 
         i18n() {
-            return this.getOwnerComponent().getModel("i18n");
+            return this.getOwnerComponent().getModel("i18n").getResourceBundle();
         },
 
         onTest: function() {

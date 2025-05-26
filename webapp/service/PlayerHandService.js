@@ -4,10 +4,11 @@ sap.ui.define([
     "use strict";
 
     class PlayerHandService extends HandService {
-        static AfterHit = {
-            PLAYER_BUSTED : "busted",
-            PLAYER_CHARLIE : "charlie",
-            CONTINUE : "continue"
+        /** @type {string} */
+        #result;
+        static Result = {
+            PLAYER_BUSTED : "PLAYER_BUSTED",
+            PLAYER_CHARLIE : "PLAYER_CHARLIE"
         }
         /**
          * check if player is busted,
@@ -16,14 +17,16 @@ sap.ui.define([
          */
         checkAfterHit() {
             if (this.isBusted()) {
-                return PlayerHandService.AfterHit.PLAYER_BUSTED;    
+                this.#result = PlayerHandService.Result.PLAYER_BUSTED;
+                return true;    
             }
 
             if (this.isCharlie()) {
-                return PlayerHandService.AfterHit.PLAYER_CHARLIE;
+                this.#result = PlayerHandService.Result.PLAYER_CHARLIE;
+                return true;
             }
             
-            return PlayerHandService.AfterHit.CONTINUE;
+            return false;
         }
 
         /**
@@ -54,6 +57,14 @@ sap.ui.define([
             // return firstCard.currentValue == secondCard.currentValue;
             //TODO: remove this
             return true;
+        }
+
+        get result() {
+            return this.#result;
+        }
+
+        set result(value) {
+            this.#result = value;
         }
     }
 
