@@ -32,6 +32,10 @@ sap.ui.define([
         isBusted(){
             return this._hand.isBusted();
         }
+
+        isCharlie(){
+            return this._hand.cards.length == 5;
+        }
         /**
          * Calculate and save the total value of this hand.
          * @returns current total value of this hand.

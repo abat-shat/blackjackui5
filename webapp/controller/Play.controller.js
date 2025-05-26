@@ -226,8 +226,6 @@ function(Controller, JSONModel, MessageBox,
                     let dealerSrc = this._getCardImgSrc(dealerCard.toString());
                     view.byId("playerCard1").setSrc(playerSrc);
                     view.byId("dealerCard1").setSrc(dealerSrc);
-                    
-                    this._enableButton("surrender", true);
                     break;
                 case 1:
                     dealerCard = this._deckService.draw();
@@ -250,8 +248,11 @@ function(Controller, JSONModel, MessageBox,
                     this._enableButton("doubleDown", true);
                     this._enableButton("hit", true);
                     this._enableButton("stay", true);
+                    this._enableButton("surrender", true);
 
                     this._checkPlayerAndDealerForBlackjack();
+
+                    
                     break;
                 // For split
                 case 2:
@@ -285,6 +286,7 @@ function(Controller, JSONModel, MessageBox,
 
         onSurrender: function() {
             //TODO: Player surrendered.
+            this._enableButton("surrender", false);
         },
 
         _checkPlayerAndDealerForBlackjack: function() {
@@ -312,6 +314,7 @@ function(Controller, JSONModel, MessageBox,
 
             this._enableButton("doubleDown", false);
             this._enableButton("split", false);
+            this._enableButton("surrender", false);
 
         },
         
@@ -328,7 +331,11 @@ function(Controller, JSONModel, MessageBox,
                 this._enableButton("stay", false);
                 this._enableButton("doubleDown", false);
                 this._enableButton("split", false);
+                this._enableButton("continue", true);
+                this._revealDealerCard();
             }
+
+            this._enableButton("surrender", false);
 
         },
 
@@ -338,7 +345,9 @@ function(Controller, JSONModel, MessageBox,
                 this._checkForBustAndCharlie();
                 this.onStay();
                 this._enableButton("split", false);
+                this._enableButton("surrender", false);
             }
+            
         },
 
         onSplit: function() {
@@ -441,6 +450,44 @@ function(Controller, JSONModel, MessageBox,
             this.coins().setProperty("/bet/split", amount);
             return true;
             
+        },
+
+        /* ================================================================================
+         * On dealer's turn.
+         * ================================================================================
+         */
+
+        onContinue: function() {
+            let dealerAction = this._dealerService.determineDealerAction();
+            switch (dealerAction) {
+                case DealerHandService.DealerAction.DEALER_HIT:
+                    this._addCardToDealerHand();
+                    break;
+                case DealerHandService.DealerAction.DEALER_STAY:
+                    console.log(this._playerServicesConcluded);
+                    break;
+                case DealerHandService.DealerAction.DEALER_BUSTED:
+                    // TODO: dealer busted. conclude game
+                    console.log(this._playerServicesConcluded);
+                    break;
+                case DealerHandService.DealerAction.DEALER_CHARLIE:    
+                    // TODO: dealer charlie. bbno$
+                    break;
+                default:
+                    break;
+            }
+        },
+
+        _addCardToDealerHand: function() {
+            const card = this._deckService.draw();
+            const cardSrc = this._getCardImgSrc(card.toString());
+            let totalValue = this._dealerService.addCard(card);
+            
+            let cardCount = this.tabletop().getProperty("/dealer/cardCount") + 1;
+            this.tabletop().setProperty("/player/cardCount", cardCount);
+
+            this.tabletop().setProperty("/dealer/score", totalValue);
+            this.getView().byId("dealerCard" + cardCount).setSrc(cardSrc);
         },
 
         /* ================================================================================
@@ -547,6 +594,12 @@ function(Controller, JSONModel, MessageBox,
             this.getView().byId("playerSplitHandHBox").setVisible(isEnabled);
             this.getView().byId("playerSplitHandTextHBox").setVisible(isEnabled);
 
+        },
+        _revealDealerCard: function(){
+            let result = this._dealerService.getSecondCardAndTotalValue();
+            let cardSrc = this._getCardImgSrc(result[0].toString());
+            this.getView().byId("dealerCard2").setSrc(cardSrc);
+            this.tabletop().setProperty("/dealer/score", result[1]);
         },
         /* ================================================================================
          * Model getters.

@@ -15,11 +15,11 @@ sap.ui.define([
          * or if the player has 5 cards
          */
         checkAfterHit() {
-            if (this._hand.isBusted()) {
+            if (this.isBusted()) {
                 return PlayerHandService.AfterHit.PLAYER_BUSTED;    
             }
 
-            if (this._hand.cards.length == 5) {
+            if (this.isCharlie()) {
                 return PlayerHandService.AfterHit.PLAYER_CHARLIE;
             }
             
