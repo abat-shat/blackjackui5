@@ -127,7 +127,8 @@ function(Controller, JSONModel, MessageBox,
                 this.getView().byId("playerSplitCard" + index).setSrc(playerSplitFacedownSrc);
                 
             }
-            this.getView().byId("dealerCard1").setSrc(dealerFacedownSrc);
+
+            this._enableSplitHand(false);
             
         },
 
@@ -220,12 +221,8 @@ function(Controller, JSONModel, MessageBox,
                     dealerCard = this._deckService.draw();
                     playerValue = playerService.addCard(playerCard);
                     dealerValue = this._dealerService.addCard(dealerCard);
-                    this.tabletop().setProperty("/player/cardCount", 1);
-                    this.tabletop().setProperty("/dealer/cardCount", 1);
                     this.tabletop().setProperty("/player/score", playerValue);
-
                     this.tabletop().setProperty("/dealer/score", dealerValue);
-                    
                     let dealerSrc = this._getCardImgSrc(dealerCard.toString());
                     view.byId("playerCard1").setSrc(playerSrc);
                     view.byId("dealerCard1").setSrc(dealerSrc);
@@ -247,7 +244,9 @@ function(Controller, JSONModel, MessageBox,
                     this._enableButton("surrender", false);
                     this._enableButton("draw", false);
 
-                    this._enableButton("split", true);
+                    playerService.checkEligibleForSplit() &&
+                        this._enableButton("split", true);
+
                     this._enableButton("doubleDown", true);
                     this._enableButton("hit", true);
                     this._enableButton("stay", true);
@@ -256,7 +255,22 @@ function(Controller, JSONModel, MessageBox,
                     break;
                 // For split
                 case 2:
+                    playerValue = playerService.addCard(playerCard);
+                    this.tabletop().setProperty("/player/score", playerValue);
+                    view.byId("playerCard2").setSrc(playerSrc);
+                    //check for BJ
+                    break;
                 case 3:
+                    playerValue = playerSplitService.addCard(playerCard);
+                    this.tabletop().setProperty("/player/split/score", playerValue);
+                    view.byId("playerSplitCard2").setSrc(playerSrc);
+                    
+                    this._enableButton("draw", false);
+                    this._enableButton("doubleDown", true);
+                    this._enableButton("hit", true);
+                    this._enableButton("stay", true);
+
+                    //check for BJ
 
                     break;
                 default:
@@ -306,7 +320,7 @@ function(Controller, JSONModel, MessageBox,
             this._playerServicesConcluded.push(currentHand);
 
             if (this._playerServices.length != 0) {
-                this.tabletop().setProperty("/players/cardCount", 2);
+                this.tabletop().setProperty("/player/cardCount", 2);
                 this._enableButton("doubleDown", true);
             }
             else {
@@ -323,12 +337,36 @@ function(Controller, JSONModel, MessageBox,
                 this._addCardToPlayerHand();
                 this._checkForBustAndCharlie();
                 this.onStay();
+                this._enableButton("split", false);
             }
         },
 
         onSplit: function() {
             if (this._isSplitSuccessful()) {
+                let splitHand = new PlayerHandService();
+                let mainHand = this._playerServices[0];
+                let splitResult = mainHand.onSplit(splitHand);
+                console.log(splitResult)
+                this._playerServices.push(splitHand);
+
+
+                //UI stuff
+                // remove 2nd card from main
+                let playerFacedownSrc = this.getOwnerComponent().getModel("img").getProperty("/decks/green");
+                this.getView().byId("playerCard2").setSrc(playerFacedownSrc);
+                this.tabletop().setProperty("/player/score", splitResult[1]);
                 
+                
+                //add 1st card to split 
+                const cardSrc = this._getCardImgSrc(splitResult[0].toString());
+                this.getView().byId("playerSplitCard1").setSrc(cardSrc);
+                this.tabletop().setProperty("/player/split/score", splitResult[2]);
+
+
+                this._enableSplitHand(true);
+
+                this._resetAllPlayButtons();
+                this._enableButton("draw", true);
             }
 
         },
@@ -479,7 +517,6 @@ function(Controller, JSONModel, MessageBox,
             }
            
             let self = this;
-            debugger;
             oDataModel.submitBatch("availableCoin").then(
                 function success() {
                     console.log("Update successful");
@@ -506,6 +543,11 @@ function(Controller, JSONModel, MessageBox,
         _isCurrentHandMainHand: function(){
             return this._playerServicesConcluded.length == 0;
         },
+        _enableSplitHand: function(isEnabled) {
+            this.getView().byId("playerSplitHandHBox").setVisible(isEnabled);
+            this.getView().byId("playerSplitHandTextHBox").setVisible(isEnabled);
+
+        },
         /* ================================================================================
          * Model getters.
          * ================================================================================
@@ -524,7 +566,9 @@ function(Controller, JSONModel, MessageBox,
         },
 
         onTest: function() {
-            this.getView().byId("playerHandTextOutput").setText("100");
+            let a = [];
+            a.push(1, 2, 3);
+            console.log(a);
         }
     });
 });

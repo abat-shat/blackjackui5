@@ -17,7 +17,7 @@ sap.ui.define([
          */
         addCard(card){
             this._hand.cards.push(card);
-            return this.#calculateTotalValue();
+            return this._calculateTotalValue();
         }
 
         /**
@@ -36,7 +36,7 @@ sap.ui.define([
          * Calculate and save the total value of this hand.
          * @returns current total value of this hand.
          */
-        #calculateTotalValue() {
+        _calculateTotalValue() {
             const aces = this.#sumCardsInHandExceptAces();
             const totalValue = this.#sumCardsInHand(aces);
             this._hand.totalValue = totalValue;

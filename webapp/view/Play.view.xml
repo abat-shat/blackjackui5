@@ -57,7 +57,7 @@
                     <HBox id="playerSplitHandTextHBox" visible="false">
                         <Text id="playerSplitHandTextInfo" text="{i18n>playerSplitHandText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
-                        <Text id="playerSplitHandTextOutput" text="{tabletop>/player/score}"></Text>
+                        <Text id="playerSplitHandTextOutput" text="{tabletop>/player/split/score}"></Text>
                     </HBox>
                     
                 </VBox>
