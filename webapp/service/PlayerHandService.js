@@ -11,10 +11,15 @@ sap.ui.define([
             PLAYER_CHARLIE : "PLAYER_CHARLIE",
             PLAYER_BLACKJACK : "PLAYER_BLACKJACK"
         }
-        static i18nText = {
+        static I18nText = {
             HAND_LOST : "HandLost",
             HAND_WON : "HandWon",
             HAND_PUSH : "HandPush"
+        }
+        static ResultText = {
+            LOST : "LOST",
+            WON : "WON",
+            PUSH : "PUSH"
         }
         /**
          * check if player is busted,
@@ -87,26 +92,31 @@ sap.ui.define([
          * `Index 0`: The according i18n Text, missing the prefix "main"/"split"
          * 
          * `Index 1`: The amount to be credited to the user.
+         * 
+         * `Index 2`: ResultText: PUSH, WON, LOST
          */
         calculateResult(dealer, betAmount) {
             let results = [];
             let resultI18nText;
             let amount = 0;
+            let resultText;
 
             if (this._hand.totalValue < dealer._hand.totalValue) {
-                resultI18nText = PlayerHandService.i18nText.HAND_LOST;
+                resultI18nText = PlayerHandService.I18nText.HAND_LOST;
+                resultText = PlayerHandService.ResultText.LOST;
             } 
             else if (this._hand.totalValue > dealer._hand.totalValue) {
-                resultI18nText = PlayerHandService.i18nText.HAND_WON;
+                resultI18nText = PlayerHandService.I18nText.HAND_WON;
                 amount = betAmount * 2;
+                resultText = PlayerHandService.ResultText.WON;
             }
             else {
-                debugger;
-                resultI18nText = PlayerHandService.i18nText.HAND_PUSH;
+                resultI18nText = PlayerHandService.I18nText.HAND_PUSH;
                 amount = betAmount;
+                resultText = PlayerHandService.ResultText.PUSH
             }
 
-            results.push(resultI18nText, amount);
+            results.push(resultI18nText, amount, resultText);
             return results;
         }
     }

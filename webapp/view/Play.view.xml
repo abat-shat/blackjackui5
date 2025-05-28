@@ -8,15 +8,15 @@
                 <VBox id="cardSideVBox">
                     <HBox id="dealerHandHBox" class="sapUiMediumMarginTop">
                         <Image id="dealerCard1"   
-                            src="{img>/jokers/baseball_card}" ></Image>
+                            src="{img>/decks/red}" ></Image>
                         <Image id="dealerCard2"  
-                            src="{img>/jokers/baseball_card}"></Image>
+                            src="{img>/decks/red}"></Image>
                         <Image id="dealerCard3"  
-                        src="{img>/jokers/baseball_card}"></Image>
+                        src="{img>/decks/red}"></Image>
                         <Image id="dealerCard4"  
-                        src="{img>/jokers/baseball_card}"></Image>
+                        src="{img>/decks/red}"></Image>
                         <Image id="dealerCard5"  
-                        src="{img>/jokers/baseball_card}"></Image>
+                        src="{img>/decks/red}"></Image>
                     </HBox>
                     <HBox id="dealerHandTextHBox">
                         <Text id="dealerHandTextInfo" text="{i18n>dealerHandText}"
@@ -26,38 +26,46 @@
 
                     <HBox id="playerHandHBox" class="sapUiMediumMarginTop">
                         <Image id="playerCard1"  
-                            src="{img>/jokers/blueprint}"></Image>
+                            src="{img>/decks/green}"></Image>
                         <Image id="playerCard2"  
-                            src="{img>/jokers/blueprint}"></Image>
+                            src="{img>/decks/green}"></Image>
                         <Image id="playerCard3"  
-                        src="{img>/jokers/blueprint}"></Image>
+                        src="{img>/decks/green}"></Image>
                         <Image id="playerCard4"  
-                        src="{img>/jokers/blueprint}"></Image>
+                        src="{img>/decks/green}"></Image>
                         <Image id="playerCard5"  
-                        src="{img>/jokers/blueprint}"></Image>
+                        src="{img>/decks/green}"></Image>
                     </HBox>
                     <HBox id="playerHandTextHBox">
                         <Text id="playerHandTextInfo" text="{i18n>playerHandText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
                         <Text id="playerHandTextOutput" text="{tabletop>/player/score}"></Text>
+                        <Text id="mainHandTextResult" text="{tabletop>/result/main/text}"
+                            class="sapUiTinyMarginBeginEnd" visible="false"></Text>
+                        <Text id="mainHandCoinResult" text="{tabletop>/result/main/coin}"
+                            visible="false"></Text>
                     </HBox>
                     <HBox id="playerSplitHandHBox" visible="false"
                         class="sapUiMediumMarginTop">
                         <Image id="playerSplitCard1"  
-                            src="{img>/jokers/joker}"></Image>
+                            src="{img>/decks/green}"></Image>
                         <Image id="playerSplitCard2"  
-                            src="{img>/jokers/joker}"></Image>
+                            src="{img>/decks/green}"></Image>
                         <Image id="playerSplitCard3"  
-                        src="{img>/jokers/joker}"></Image>
+                        src="{img>/decks/green}"></Image>
                         <Image id="playerSplitCard4"  
-                        src="{img>/jokers/joker}"></Image>
+                        src="{img>/decks/green}"></Image>
                         <Image id="playerSplitCard5"  
-                        src="{img>/jokers/joker}"></Image>
+                        src="{img>/decks/green}"></Image>
                     </HBox>
                     <HBox id="playerSplitHandTextHBox" visible="false">
                         <Text id="playerSplitHandTextInfo" text="{i18n>playerSplitHandText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
                         <Text id="playerSplitHandTextOutput" text="{tabletop>/player/split/score}"></Text>
+                        <Text id="splitHandTextResult" text="{tabletop>/result/split/text}"
+                            class="sapUiTinyMarginBeginEnd" visible="false"></Text>
+                        <Text id="splitHandCoinResult" text="{tabletop>/result/split/coin}"
+                            visible="false"></Text>
                     </HBox>
                     
                 </VBox>
@@ -91,7 +99,8 @@
                             press=".onAddToBetAmount(50)" enabled="false"></Button>
                         <Button id="add100Button" text="100" class="sapUiTinyMarginBegin"
                             press=".onAddToBetAmount(100)" enabled="false"></Button>
-                        
+                        <Button id="allInButton" text="{i18n>allInButton}" class="sapUiTinyMarginBegin"
+                            press=".onAllIn" enabled="false"></Button>
                     </HBox>
                     
 

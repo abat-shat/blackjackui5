@@ -31,6 +31,15 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             PLAYER_HANDS_CONCLUDED : "PLAYER_HANDS_CONCLUDED",
             BOTH_HANDS_BLACKJACK : "BOTH_HANDS_BLACKJACK"
         },
+        RESULT : {
+            WON : "WON",
+            LOST : "LOST",
+            PUSH : "PUSH",
+            BLACKJACK : "BLACKJACK",
+            SURRENDERED : "SURRENDERED",
+            BUSTED : "BUSTED",
+            CHARLIE : "5-CARD CHARLIE"
+        },
         _deckService : undefined,
         _playerServices : [],
         _playerServicesConcluded : [],
@@ -60,19 +69,20 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          */
 
         onNewRound: function(){
-            this._resetModel();
+            let betAmountLastRound = this.coins().getProperty("/bet/amount");
+            this._resetModel(betAmountLastRound);
             this._resetViewResources();
             this._resetServiceResources();            
-            
+            this._enableResult(false);
         },
-        _resetModel: function(){
+        _resetModel: function(betAmount = 0){
             const coinsData = {
                 "user" : {
                     "available" : 0,
                     "bonus" : 0
                 },
                 "bet" : {
-                    "amount" : 0,
+                    "amount" : betAmount,
                     "split" : 0
                 }
             };
@@ -93,6 +103,16 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 "dealer" : {
                     "score" : 0,
                     "cardCount" : 0
+                },
+                "result" : {
+                    "main" : {
+                        "text" : "",
+                        "coins" : 0
+                    },
+                    "split" : {
+                        "text" : "",
+                        "coins" : 0
+                    }
                 }
             };
             const tabletopModel = new JSONModel(tabletopData);
@@ -182,8 +202,14 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         onAddToBetAmount: function(amount){
             const currentAmount = this.coins().getProperty("/bet/amount");
             const parsedCurrentAmount = Number(currentAmount) || 0;
-            this.coins().setProperty("/bet/amount/", parsedCurrentAmount + amount);
+            this.coins().setProperty("/bet/amount", parsedCurrentAmount + amount);
             
+        },
+
+        onAllIn: function(){
+            let available = Number(this.coins().getProperty("/user/available")) || 0;
+            let bonus = Number(this.coins().getProperty("/user/bonus")) || 0;
+            this.coins().setProperty("/bet/amount", available + bonus);
         },
         /**
          * Prevents user from inputting anything other than a digit.
@@ -316,16 +342,12 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             let isPlayerBj = this._playerServices[this.MAIN_HAND].hasBlackjack();
 
             if (isDealerBj && isPlayerBj) {
-                //TODO: Push draw
                 this._onPrematureRoundEnd(this.PREMATURE_CONCLUSION.BOTH_HAS_BLACKJACK);
-
             }
             else if (isDealerBj) {
-                //TODO: Dealer BJ
                 this._onPrematureRoundEnd(this.PREMATURE_CONCLUSION.DEALER_HAS_BLACKJACK);
             }
             else if (isPlayerBj) {
-                //TODO: Player BJ
                 this._onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_HAS_BLACKJACK);
             }
 
@@ -517,30 +539,44 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          * ================================================================================
          */
         /**
-         * TODO: contemplating moving this to logic.
+         * called when the round should end before dealers turn. Used for natural Blackjack,
+         * Busting and 5-Card Charlie.
+         * 
+         * However this will not be called when there are 2 hands, one of which has not concluded yet.
          * @param {string} reason 
          */
         _onPrematureRoundEnd: function(reason) {
             let betAmount = Number(this.coins().getProperty("/bet/amount"));
             let msg;
             let amount = 0;
+
+            let mainText = "";
+            let splitText = "";
+            let mainCoin = 0;
+            let splitCoin = 0;
+
+
             switch (reason) {
                 case this.PREMATURE_CONCLUSION.BOTH_HAS_BLACKJACK:
                     amount = betAmount;
                     msg = this.i18n().getText("bothHasBlackjack", [amount]);
+                    mainText = this.RESULT.PUSH;
+                    mainCoin = amount;
                     break;
                 case this.PREMATURE_CONCLUSION.DEALER_HAS_BLACKJACK:
                     msg = this.i18n().getText("dealerHasBlackjack");
-
+                    mainText = this.RESULT.LOST;
                     break;
                 case this.PREMATURE_CONCLUSION.PLAYER_HAS_BLACKJACK:
                     amount = Math.round(betAmount * 1.5);
                     msg = this.i18n().getText("playerHasBlackjack", [amount]);
-
+                    mainText = this.RESULT.BLACKJACK;
+                    mainCoin = amount;
                     break;
                 case this.PREMATURE_CONCLUSION.PLAYER_SURRENDERED:
                     amount = Math.round(betAmount * 0.5);
                     msg = this.i18n().getText("playerSurrendered", [amount]);
+                    mainText = this.RESULT.SURRENDERED;
                     break;
                 case this.PREMATURE_CONCLUSION.PLAYER_HANDS_CONCLUDED:
                     let firstHandResult = this._playerServicesConcluded.shift().result;
@@ -548,13 +584,18 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                         case PlayerHandService.Result.PLAYER_BLACKJACK:
                             amount = Math.round(betAmount * 1.5);
                             msg = this.i18n().getText("resolveMainHandBlackjack", [amount]);
+                            mainText = this.RESULT.BLACKJACK;
+                            mainCoin = amount;
                             break;
                         case PlayerHandService.Result.PLAYER_BUSTED:
                             msg = this.i18n().getText("mainHandBusted");
+                            mainText = this.RESULT.BUSTED;
                             break;
                         case PlayerHandService.Result.PLAYER_CHARLIE:
                             amount = betAmount * 2;
                             msg = this.i18n().getText("mainHandCharlie", [amount]);
+                            mainText = this.RESULT.CHARLIE;
+                            mainCoin = amount;
                             break;
                         default:
                             MessageBox.error("Hand is not prematurely ended. Rewrite logic.");
@@ -565,12 +606,15 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                         switch (secondHand.result) {
                             case PlayerHandService.Result.PLAYER_BUSTED:
                                 msg += "\n" + this.i18n().getText("splitHandBusted");
+                                splitText = this.RESULT.BUSTED;
                                 break;
                             case PlayerHandService.Result.PLAYER_CHARLIE:
                                 betAmount = Number(this.coins().getProperty("/bet/split"));
                                 let splitAmount = betAmount * 2;
                                 msg = this.i18n().getText("splitHandCharlie", [splitAmount]);
                                 amount += splitAmount;
+                                splitText = this.RESULT.CHARLIE
+                                splitCoin = betAmount;
                                 break;
                             default:
                                 MessageBox.error("Hand is not prematurely ended. Rewrite logic.");
@@ -581,21 +625,28 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 case this.PREMATURE_CONCLUSION.BOTH_HANDS_BLACKJACK:
                     amount = Math.round(Number(betAmount) * 1.5);
                     msg = this.i18n().getText("resolveMainHandBlackjack", [amount]);
+                    mainText = this.RESULT.BLACKJACK;
+                    mainCoin = amount;
 
                     let splitAmount = this.coins().getProperty("/bet/split");
                     let bjSplitAmount = Math.round(Number(splitAmount) * 1.5);
                     msg += "\n" + this.i18n().getText("splitHandBlackjack", [bjSplitAmount]);
+                    splitText = this.RESULT.BLACKJACK;
+                    splitCoin = bjSplitAmount;
+
                     amount += bjSplitAmount;
                     break;
                 default:
                     break;
                 
             }
+            this._setResult(mainText, splitText, mainCoin, splitCoin);
             this._revealDealerCard();
             MessageToast.show(msg);
             this._addCoinsToPlayer(amount);
             this._resetAllPlayButtons();
             this._enableButton("newRound", true);
+            this._enableResult(true);
         },
 
         _onRoundEnd: function(dealerAction) {
@@ -608,6 +659,13 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             /** @type {string} */
             let msg = "";
             let result;
+
+            let resultText;
+            let resultCoin;
+            let mainText = "";
+            let splitText = "";
+            let mainCoin = 0;
+            let splitCoin = 0;
 
             for (let index = 0; index < 2; index++) {
                 if (index == 0) {
@@ -627,13 +685,18 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                     case PlayerHandService.Result.PLAYER_BLACKJACK:
                         tempAmount = Math.round(betAmount * 1.5);
                         tempMsg = this.i18n().getText("resolveMainHandBlackjack", [tempAmount]);
+                        resultText = this.RESULT.BLACKJACK;
+                        resultCoin = tempAmount;
                         break;
                     case PlayerHandService.Result.PLAYER_BUSTED:
                         tempMsg = this.i18n().getText(prefix + "HandBusted");
+                        resultText = this.RESULT.BUSTED;
                         break;
                     case PlayerHandService.Result.PLAYER_CHARLIE:
                         tempAmount = betAmount * 2;
                         tempMsg = this.i18n().getText(prefix + "HandCharlie", [tempAmount]);
+                        resultText = this.RESULT.CHARLIE;
+                        resultCoin = tempAmount;
                         break;
                     default:
                         switch (dealerAction) {
@@ -641,22 +704,35 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                                 result = currentHand.calculateResult(this._dealerService, betAmount);
                                 tempAmount = result[1];
                                 tempMsg = this.i18n().getText(prefix + result[0], [tempAmount]);
+                                resultText = result[2];
+                                resultCoin = tempAmount;
                                 break;
                             case DealerHandService.DealerAction.DEALER_BUSTED:
                                 tempAmount = betAmount * 2;
                                 tempMsg = this.i18n().getText(prefix + "HandDealerBusted", [tempAmount]);
+                                resultText = this.RESULT.WON;
+                                resultCoin = tempAmount;
                                 break;
                             case DealerHandService.DealerAction.DEALER_CHARLIE:    
                                 tempMsg = this.i18n().getText(prefix + "HandDealerCharlie");
+                                resultText = this.RESULT.LOST;
                                 break;
                         }
                         break;
+                }
+                if (index == this.MAIN_HAND) {
+                    mainText = resultText;
+                    mainCoin = resultCoin;
+                }
+                else {
+                    splitText = resultText;
+                    splitCoin = resultCoin;
                 }
                 amount += tempAmount;
                 msg += tempMsg + '\n'; 
                 }       
             }
-
+            this._setResult(mainText, splitText, mainCoin, splitCoin);
             MessageToast.show(msg);
             this._addCoinsToPlayer(amount);
             this._resetAllPlayButtons();
@@ -718,6 +794,13 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             this._setBusy(true);
             console.log("updated");
         },
+        _setResult: function(mainText, splitText, mainCoin, splitCoin) {
+            let tabletop = this.tabletop();
+            tabletop.setProperty("/result/main/text", mainText);
+            tabletop.setProperty("/result/split/text", splitText);
+            tabletop.setProperty("/result/main/coin", mainCoin);
+            tabletop.setProperty("/result/split/coin", splitCoin);
+        },
 
         /* ================================================================================
          * Helper functions.
@@ -743,6 +826,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             view.byId("add10Button").setEnabled(isEnabled);
             view.byId("add50Button").setEnabled(isEnabled);
             view.byId("add100Button").setEnabled(isEnabled);
+            view.byId("allInButton").setEnabled(isEnabled);
         },
         /**
          * 
@@ -803,7 +887,6 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                     console.error("Update failed", err);
                     MessageBox.error(self.i18n().getText("exceptionSubmitBatchFailed"));
                     self._setBusy(false);
-                    // TODO: handle refund
                 }
             );
             this._setBusy(true);
@@ -829,6 +912,13 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             let cardSrc = this._getCardImgSrc(result[0].toString());
             this.getView().byId("dealerCard2").setSrc(cardSrc);
             this.tabletop().setProperty("/dealer/score", result[1]);
+        },
+        _enableResult: function(isEnabled) {
+            let view = this.getView();
+            view.byId("mainHandTextResult").setVisible(isEnabled);
+            view.byId("mainHandCoinResult").setVisible(isEnabled);
+            view.byId("splitHandTextResult").setVisible(isEnabled);
+            view.byId("splitHandCoinResult").setVisible(isEnabled);
         },
         /* ================================================================================
          * Model getters.
