@@ -456,31 +456,28 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 amount = Number(this.coins().getProperty("/bet/split"));
             }
             
-            if (!this._subtractCoinsFromPlayer(amount)) {
+            if (this._subtractCoinsFromPlayer(amount)) {
                 if (this._isCurrentHandMainHand()) {
                     this.coins().setProperty("/bet/amount", amount * 2);
                 }
                 else {
                     this.coins().setProperty("/bet/split", amount * 2);
                 }
-                return false;
+                return true;
             }
 
-            return true;
-
-            
+            return false;
             
         },
 
         _isSplitSuccessful: function() {
             let amount = Number(this.coins().getProperty("/bet/amount"));
             
-            if (!this._subtractCoinsFromPlayer(amount)) {
-                return false;
+            if (this._subtractCoinsFromPlayer(amount)) {
+                this.coins().setProperty("/bet/split", amount);
+                return true;
             } 
-
-            this.coins().setProperty("/bet/split", amount);
-            return true;
+            return false;
             
         },
 
@@ -507,7 +504,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             let totalValue = this._dealerService.addCard(card);
             
             let cardCount = this.tabletop().getProperty("/dealer/cardCount") + 1;
-            this.tabletop().setProperty("/player/cardCount", cardCount);
+            this.tabletop().setProperty("/dealer/cardCount", cardCount);
 
             this.tabletop().setProperty("/dealer/score", totalValue);
             this.getView().byId("dealerCard" + cardCount).setSrc(cardSrc);
@@ -517,7 +514,10 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          * on End Phase.
          * ================================================================================
          */
-
+        /**
+         * TODO: contemplating moving this to logic.
+         * @param {string} reason 
+         */
         _onPrematureRoundEnd: function(reason) {
             let betAmount = Number(this.coins().getProperty("/bet/amount"));
             let msg;
@@ -591,70 +591,65 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             this._resetAllPlayButtons();
             this._enableButton("newRound", true);
         },
+
         _onRoundEnd: function(dealerAction) {
-            let mainHand = this._playerServicesConcluded[this.MAIN_HAND];
-            let splitHand = this._playerServicesConcluded[this.SPLIT_HAND];
-            let betAmount = Number(this.coins().getProperty("/bet/amount"));
-            let splitAmount = Number(this.coins().getProperty("/bet/split"));
+            let currentHand;
+            let prefix;
+            let betAmount;
             let amount = 0;
             let tempAmount = 0;
-            let msg;
+            let tempMsg;
+            /** @type {string} */
+            let msg = "";
             let result;
 
-            switch (mainHand.result) {
-                case PlayerHandService.Result.PLAYER_BLACKJACK:
-                    tempAmount = Math.round(betAmount * 1.5);
-                    msg = this.i18n().getText("resolveMainHandBlackjack", [tempAmount]);
-                    break;
-                case PlayerHandService.Result.PLAYER_BUSTED:
-                    msg = this.i18n().getText("mainHandBusted");
-                    break;
-                case PlayerHandService.Result.PLAYER_CHARLIE:
-                    tempAmount = betAmount * 2;
-                    msg = this.i18n().getText("resolveMainHandCharlie", [tempAmount]);
-                    break;
-                default:
-                    switch (dealerAction) {
-                        case DealerHandService.DealerAction.DEALER_STAY:
-                            result = mainHand.calculateResult(this._dealerService, betAmount);
-                            break;
-                        case DealerHandService.DealerAction.DEALER_BUSTED:
-                            tempAmount = betAmount * 2;
-                            msg = this.i18n().getText("dealerBustedMainHand", [tempAmount]);
-                            break;
-                        case DealerHandService.DealerAction.DEALER_CHARLIE:    
-                            msg = this.i18n().getText("dealerCharlie");
-                            break;
-                    }
-                    break;
-            }
-            amount += tempAmount;
-
-
-
-            if (mainHand.result == PlayerHandService.Result.PLAYER_BLACKJACK) {
-                amount = Math.round(Number(betAmount) * 1.5);
-                msg = this.i18n().getText("resolveMainHandBlackjack", [amount]);
-            }
-            else {
-                switch (dealerAction) {
-                    case DealerHandService.DealerAction.DEALER_STAY:
-                        //Dealer stood. conclude game.
-                        console.log(this._playerServicesConcluded);
-                        break;
-                    case DealerHandService.DealerAction.DEALER_BUSTED:
-                        // TODO: dealer busted. conclude game
-                        console.log(this._playerServicesConcluded);
-                        break;
-                    case DealerHandService.DealerAction.DEALER_CHARLIE:    
-                        // TODO: dealer charlie. bbno$
-                        break;
+            for (let index = 0; index < 2; index++) {
+                if (index == 0) {
+                    currentHand = this._playerServicesConcluded[this.MAIN_HAND];
+                    prefix = "main";
+                    betAmount = Number(this.coins().getProperty("/bet/amount"));
+                }
+                else {
+                    currentHand = this._playerServicesConcluded[this.SPLIT_HAND];
+                    prefix = "split";
+                    betAmount = Number(this.coins().getProperty("/bet/split"));
+                }
                 
+                if (currentHand) {
+                    switch (currentHand.result) {
+                    // only happens on main Hand
+                    case PlayerHandService.Result.PLAYER_BLACKJACK:
+                        tempAmount = Math.round(betAmount * 1.5);
+                        tempMsg = this.i18n().getText("resolveMainHandBlackjack", [tempAmount]);
+                        break;
+                    case PlayerHandService.Result.PLAYER_BUSTED:
+                        tempMsg = this.i18n().getText(prefix + "HandBusted");
+                        break;
+                    case PlayerHandService.Result.PLAYER_CHARLIE:
+                        tempAmount = betAmount * 2;
+                        tempMsg = this.i18n().getText(prefix + "HandCharlie", [tempAmount]);
+                        break;
                     default:
+                        switch (dealerAction) {
+                            case DealerHandService.DealerAction.DEALER_STAY:
+                                result = currentHand.calculateResult(this._dealerService, betAmount);
+                                tempAmount = result[1];
+                                tempMsg = this.i18n().getText(prefix + result[0], [tempAmount]);
+                                break;
+                            case DealerHandService.DealerAction.DEALER_BUSTED:
+                                tempAmount = betAmount * 2;
+                                tempMsg = this.i18n().getText(prefix + "HandDealerBusted", [tempAmount]);
+                                break;
+                            case DealerHandService.DealerAction.DEALER_CHARLIE:    
+                                tempMsg = this.i18n().getText(prefix + "HandDealerCharlie");
+                                break;
+                        }
                         break;
                 }
+                amount += tempAmount;
+                msg += tempMsg + '\n'; 
+                }       
             }
-
 
             MessageToast.show(msg);
             this._addCoinsToPlayer(amount);

@@ -11,6 +11,11 @@ sap.ui.define([
             PLAYER_CHARLIE : "PLAYER_CHARLIE",
             PLAYER_BLACKJACK : "PLAYER_BLACKJACK"
         }
+        static i18nText = {
+            HAND_LOST : "HandLost",
+            HAND_WON : "HandWon",
+            HAND_PUSH : "HandPush"
+        }
         /**
          * check if player is busted,
          * 
@@ -73,20 +78,31 @@ sap.ui.define([
             return false;
         }
 
+        /**
+         * Used when both hands score are checked to find the winner.
+         * @param dealer The service to dealer's hand
+         * @param betAmount Coins betted for this hand.
+         * @returns An array of results:
+         * 
+         * `Index 0`: The according i18n Text, missing the prefix "main"/"split"
+         * 
+         * `Index 1`: The amount to be credited to the user.
+         */
         calculateResult(dealer, betAmount) {
             let results = [];
             let resultI18nText;
             let amount = 0;
 
             if (this._hand.totalValue < dealer._hand.totalValue) {
-                resultI18nText = "mainHandLost";
+                resultI18nText = PlayerHandService.i18nText.HAND_LOST;
             } 
             else if (this._hand.totalValue > dealer._hand.totalValue) {
-                resultI18nText = "mainHandWon";
+                resultI18nText = PlayerHandService.i18nText.HAND_WON;
                 amount = betAmount * 2;
             }
             else {
-                resultI18nText = "mainHandPush";
+                debugger;
+                resultI18nText = PlayerHandService.i18nText.HAND_PUSH;
                 amount = betAmount;
             }
 
