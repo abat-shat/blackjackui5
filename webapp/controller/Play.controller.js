@@ -438,8 +438,10 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             if (this._playerServices[0].checkAfterHit()) {
                 this.onStay();
                 if (this._playerServices.length == 0) {
-                    //TODO
-                    this._onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_HANDS_CONCLUDED);
+                    if (this._playerServicesConcluded[0].result) {
+                        this._onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_HANDS_CONCLUDED);    
+                    }
+                    
                 }
                 return true;
             }
@@ -543,6 +545,10 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 case this.PREMATURE_CONCLUSION.PLAYER_HANDS_CONCLUDED:
                     let firstHandResult = this._playerServicesConcluded.shift().result;
                     switch (firstHandResult) {
+                        case PlayerHandService.Result.PLAYER_BLACKJACK:
+                            amount = Math.round(betAmount * 1.5);
+                            msg = this.i18n().getText("resolveMainHandBlackjack", [amount]);
+                            break;
                         case PlayerHandService.Result.PLAYER_BUSTED:
                             msg = this.i18n().getText("mainHandBusted");
                             break;
@@ -845,6 +851,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             // this._deckService.manipulateSplitBlackjack();
             // this._deckService.manipulateBothBlackjack();
             this._deckService.manipulateBlackjack();
+            // this._deckService.manipulatePush();
 
         }
     });

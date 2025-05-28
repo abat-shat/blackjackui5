@@ -26,6 +26,12 @@ sap.ui.define(["./Card"],
 
                 this.#cards.unshift(ace, two, ten);
             }
+
+            manipulatePush(){
+                const queen = new Card("Q", "H");
+
+                this.#cards.unshift(queen, queen, queen, queen);
+            }
         }
         return Deck;
 });

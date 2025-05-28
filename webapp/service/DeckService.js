@@ -29,6 +29,10 @@ sap.ui.define([
             this.#deck.manipulateBlackjack();
         }
 
+        manipulatePush(){
+            this.#deck.manipulatePush();
+        }
+
         #cut(){
             let deckLength = this.#deck.cards.length;
             let cuttingPoint = RandomGenerator.nextInt(deckLength);
