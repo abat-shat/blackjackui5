@@ -36,14 +36,19 @@
                         <Image id="playerCard5"  
                         src="{img>/decks/green}"></Image>
                     </HBox>
-                    <HBox id="playerHandTextHBox">
-                        <Text id="playerHandTextInfo" text="{i18n>playerHandText}"
-                            class="sapUiTinyMarginBeginEnd"></Text>
-                        <Text id="playerHandTextOutput" text="{tabletop>/player/score}"></Text>
-                        <Text id="mainHandTextResult" text="{tabletop>/result/main/text}"
-                            class="sapUiTinyMarginBeginEnd" visible="false"></Text>
-                        <Text id="mainHandCoinResult" text="{tabletop>/result/main/coin}"
-                            visible="false"></Text>
+                    <HBox id="playerHandTextHBox" justifyContent="SpaceBetween">
+                        <HBox id="playerHandTextInfoHBox">
+                            <Text id="playerHandTextInfo" text="{i18n>playerHandText}"
+                                class="sapUiTinyMarginBeginEnd"></Text>
+                            <Text id="playerHandTextOutput" text="{tabletop>/player/score}"></Text>
+                        </HBox>
+
+                        <HBox id="playerHandResultHBox" visible="false">
+                            <Text id="mainHandTextResult" text="{tabletop>/result/main/text}"
+                                class="sapUiTinyMarginBeginEnd"></Text>
+                            <Text id="mainHandCoinResult" text="{tabletop>/result/main/coin}"></Text>    
+                        </HBox>
+                        
                     </HBox>
                     <HBox id="playerSplitHandHBox" visible="false"
                         class="sapUiMediumMarginTop">
@@ -58,14 +63,19 @@
                         <Image id="playerSplitCard5"  
                         src="{img>/decks/green}"></Image>
                     </HBox>
+
                     <HBox id="playerSplitHandTextHBox" visible="false">
-                        <Text id="playerSplitHandTextInfo" text="{i18n>playerSplitHandText}"
-                            class="sapUiTinyMarginBeginEnd"></Text>
-                        <Text id="playerSplitHandTextOutput" text="{tabletop>/player/split/score}"></Text>
-                        <Text id="splitHandTextResult" text="{tabletop>/result/split/text}"
-                            class="sapUiTinyMarginBeginEnd" visible="false"></Text>
-                        <Text id="splitHandCoinResult" text="{tabletop>/result/split/coin}"
-                            visible="false"></Text>
+                        <HBox id="playerSplitTextInfoHBox">
+                            <Text id="playerSplitHandTextInfo" text="{i18n>playerSplitHandText}"
+                                class="sapUiTinyMarginBeginEnd"></Text>
+                            <Text id="playerSplitHandTextOutput" text="{tabletop>/player/split/score}"></Text>
+                        </HBox>
+                        <HBox id="playerSplitResultHBox" visible="false">
+                            <Text id="splitHandTextResult" text="{tabletop>/result/split/text}"
+                                class="sapUiTinyMarginBeginEnd"></Text>
+                            <Text id="splitHandCoinResult" text="{tabletop>/result/split/coin}"></Text>
+                        </HBox>
+                        
                     </HBox>
                     
                 </VBox>

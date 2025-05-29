@@ -646,7 +646,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             this._addCoinsToPlayer(amount);
             this._resetAllPlayButtons();
             this._enableButton("newRound", true);
-            this._enableResult(true);
+            
         },
 
         _onRoundEnd: function(dealerAction) {
@@ -800,6 +800,8 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             tabletop.setProperty("/result/split/text", splitText);
             tabletop.setProperty("/result/main/coin", mainCoin);
             tabletop.setProperty("/result/split/coin", splitCoin);
+
+            this._enableResult(true);
         },
 
         /* ================================================================================
@@ -915,10 +917,8 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         },
         _enableResult: function(isEnabled) {
             let view = this.getView();
-            view.byId("mainHandTextResult").setVisible(isEnabled);
-            view.byId("mainHandCoinResult").setVisible(isEnabled);
-            view.byId("splitHandTextResult").setVisible(isEnabled);
-            view.byId("splitHandCoinResult").setVisible(isEnabled);
+            view.byId("playerHandResultHBox").setVisible(isEnabled);
+            view.byId("playerSplitResultHBox").setVisible(isEnabled);
         },
         /* ================================================================================
          * Model getters.
