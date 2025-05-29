@@ -64,7 +64,7 @@
                         src="{img>/decks/green}"></Image>
                     </HBox>
 
-                    <HBox id="playerSplitHandTextHBox" visible="false">
+                    <HBox id="playerSplitHandTextHBox" visible="false" justifyContent="SpaceBetween">
                         <HBox id="playerSplitTextInfoHBox">
                             <Text id="playerSplitHandTextInfo" text="{i18n>playerSplitHandText}"
                                 class="sapUiTinyMarginBeginEnd"></Text>
@@ -141,6 +141,7 @@
                             press=".onNewRound"></Button>
                         
                     </HBox>
+                    <!-- TODO: REMOVE -->
                     <Button id="test" press=".onTest"></Button>
                 </VBox>
             </HBox>

@@ -796,8 +796,20 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         },
         _setResult: function(mainText, splitText, mainCoin, splitCoin) {
             let tabletop = this.tabletop();
-            tabletop.setProperty("/result/main/text", mainText);
-            tabletop.setProperty("/result/split/text", splitText);
+
+            let mainTextI18n = "";
+            let splitTextI18n = "";
+
+            if (mainText) {
+                mainTextI18n = this.i18n().getText("result" + mainText);
+            }
+
+            if (splitText) {
+                splitTextI18n = this.i18n().getText("result" + splitText);
+            }
+
+            tabletop.setProperty("/result/main/text", mainTextI18n);
+            tabletop.setProperty("/result/split/text", splitTextI18n);
             tabletop.setProperty("/result/main/coin", mainCoin);
             tabletop.setProperty("/result/split/coin", splitCoin);
 
@@ -940,8 +952,14 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         onTest: function() {      
             // this._deckService.manipulateSplitBlackjack();
             // this._deckService.manipulateBothBlackjack();
-            this._deckService.manipulateBlackjack();
+            // this._deckService.manipulateBlackjack();
             // this._deckService.manipulatePush();
+
+            let emptyString = "";
+            if (emptyString) {
+                console.log(true);
+            }
+            console.log(false);
 
         }
     });
