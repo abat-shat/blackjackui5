@@ -51,15 +51,21 @@ function(Controller, JSONModel, MessageBox, MessageToast,
 
         onInit: function(){    
             this._resetModel();
+            this.onUsername();
         },
 
         onUsername: function(){
+            let self = this;
             sap.ui.require(["sap/ushell/Container"], async function (Container) {
                 const userInfo = await Container.getServiceAsync("UserInfo");
                 const userId = userInfo.getId();
-                // @ts-ignore
-                sap.m.MessageBox.show(userId);
-              });
+                const usernameData = {
+                    "name" : userId
+                };
+                const usernameModel = new JSONModel(usernameData);
+                usernameModel.setDefaultBindingMode("OneWay");
+                self.getView().setModel(usernameModel, "user");
+            });
             
         },
 
@@ -143,10 +149,12 @@ function(Controller, JSONModel, MessageBox, MessageToast,
 
         _requestAvailableAndBonusCoin: function() {
             const oDataModel = this.getOwnerComponent().getModel();
-            const oContext = oDataModel.bindContext("/Coin('SHAT')");
+            //TODO
+            const oContext = oDataModel.bindContext("/Coin('SHIT')");
             oContext.requestObject("AbatCoin").then((availableCoin) => {
                 this.coins().setProperty("/user/available", availableCoin);
-            });
+            })
+            .catch(() => MessageBox.error("User not registered."));
             oContext.requestObject("Bonus").then((bonus) => {
                 this.coins().setProperty("/user/bonus", bonus);
             });

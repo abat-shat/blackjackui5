@@ -81,6 +81,7 @@
                 </VBox>
 
                 <VBox id="actionSideVBox" class="sapUiMediumMarginTop">
+                    <Text id="usernameText" class="sapUiTinyMargin" text="{user>/name}" ></Text>
                     <HBox id="playerCoinHBox">
                         <Text id="playerCoinsTextInfo" text="{i18n>playerCoinsText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
