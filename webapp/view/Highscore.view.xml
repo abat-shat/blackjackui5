@@ -5,7 +5,12 @@
         <content>
             <Table id="highscoreTable"
                 width="100%"
-                items="{/Coin}"
+                items="{
+                    path: '/Coin',
+                    sorter: [
+                        {path: 'AbatCoin', descending: true}
+                    ]
+                }"
                 growing="true"
                 growingThreshold="10"
 
@@ -35,10 +40,6 @@
                     </ColumnListItem>
                 </items>
             </Table>
-
-            <!-- <Table id="highscoreUserTable"
-                width="100%"
-                items="{/Coins}"></Table> -->
             <form:SimpleForm id="highscoreSimpleForm">
                 <Toolbar id="hsSFToolbar">
                     <Title id="hsSFToolbarTitle" text="{i18n>highscoreSFToolbarTitle}"></Title>
@@ -47,7 +48,6 @@
                 <Text id="hsSFLabel2" text="{/Coin('SHAT')/AbatCoin}"></Text>
                 <Text id="hsSFLabel3" text="{/Coin('SHAT')/Bonus}"></Text>
             </form:SimpleForm>
-            <Button id="hsbtn" press=".onPresser"></Button>
         </content>
     </Page>
 </mvc:View>
