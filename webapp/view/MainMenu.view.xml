@@ -17,6 +17,9 @@
                         <ActionListItem id="mainMenuAction3"
                             text="{i18n>mainMenuRegisterButton}"
                             press=".onPressRegister" visible="{= !${user>/isRegistered} }"></ActionListItem>
+                        <ActionListItem id="mainMenusAction4"
+                            text="{i18n>mainMenuDailyLoginButton}"
+                            press=".onDailyLogin"></ActionListItem>
                     </List>
                 </items>
             </VBox>

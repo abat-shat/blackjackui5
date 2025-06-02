@@ -40,6 +40,9 @@ function(Controller, MessageBox) {
                 .then(this._userIsCreated.bind(this))
                 .catch(this._userIsNotCreated.bind(this));
         },
+        onDailyLogin: function() {
+            
+        },
 
         _checkIsUserRegistered: function() {
             let oDataModel = this.getOwnerComponent().getModel();
