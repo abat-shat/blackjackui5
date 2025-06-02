@@ -1,0 +1,31 @@
+sap.ui.define([
+    "sap/ui/core/mvc/Controller"
+], function(Controller) {
+    "use strict";
+
+    return Controller.extend("blackjackui5.controller.BaseController", {
+        /**
+         * Convenience method for accessing the router.
+         * @public
+         * @returns {sap.ui.core.routing.Router} the router for this component
+         */
+        getRouter: function() {
+            return sap.ui.core.UIComponent.getRouterFor(this);
+        },
+
+        /**
+         * Convenience method for getting the resource bundle.
+         * @public
+         * @returns {sap.ui.model.resource.ResourceModel} the resourceModel of the component
+         */
+        i18n: function() {
+            return this.getOwnerComponent().getModel("i18n").getResourceBundle();
+        },
+        user: function() {
+            return this.getOwnerComponent().getModel("user");
+        },
+        username: function() {
+            return this.user().getProperty("/name");
+        }
+    });
+});

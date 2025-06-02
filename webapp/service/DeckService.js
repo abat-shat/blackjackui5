@@ -23,7 +23,7 @@ sap.ui.define([
         }
         /**
          * stricly for testing.
-         * TODO: remove this.
+         * remove this.
          */
         manipulateBlackjack(){
             this.#deck.manipulateBlackjack();

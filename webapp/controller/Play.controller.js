@@ -1,5 +1,5 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller",
+    "./BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
@@ -51,22 +51,6 @@ function(Controller, JSONModel, MessageBox, MessageToast,
 
         onInit: function(){    
             this._resetModel();
-            this.onUsername();
-        },
-
-        onUsername: function(){
-            let self = this;
-            sap.ui.require(["sap/ushell/Container"], async function (Container) {
-                const userInfo = await Container.getServiceAsync("UserInfo");
-                const userId = userInfo.getId();
-                const usernameData = {
-                    "name" : userId
-                };
-                const usernameModel = new JSONModel(usernameData);
-                usernameModel.setDefaultBindingMode("OneWay");
-                self.getView().setModel(usernameModel, "user");
-            });
-            
         },
 
         /* ================================================================================
@@ -149,12 +133,14 @@ function(Controller, JSONModel, MessageBox, MessageToast,
 
         _requestAvailableAndBonusCoin: function() {
             const oDataModel = this.getOwnerComponent().getModel();
-            //TODO
-            const oContext = oDataModel.bindContext("/Coin('SHIT')");
+            const oContext = oDataModel.bindContext("/Coin('" + this.username() + "')");
             oContext.requestObject("AbatCoin").then((availableCoin) => {
                 this.coins().setProperty("/user/available", availableCoin);
             })
-            .catch(() => MessageBox.error("User not registered."));
+            .catch(() => {
+                let exMsg = this.i18n().getText("exceptionNotRegistered");
+                MessageBox.error(exMsg);
+            });
             oContext.requestObject("Bonus").then((bonus) => {
                 this.coins().setProperty("/user/bonus", bonus);
             });
@@ -780,7 +766,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             }
 
             const oDataModel = this.getView().getModel();
-            const oContext = oDataModel.bindContext("/Coin('SHAT')", null, {
+            const oContext = oDataModel.bindContext("/Coin('" + this.username() + "')", null, {
                 $$updateGroupId: "addCoin"
             });
             let abatCoin = this.coins().getProperty("/user/available");
@@ -795,7 +781,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 },
                 function failed(err) {
                     console.error("Update failed", err);
-                    MessageBox.error(self.i18n().getText("exceptionSubmitBatchFailedRefundPlayer", [newCoinBalance, 'SHAT']));
+                    MessageBox.error(self.i18n().getText("exceptionSubmitBatchFailedRefundPlayer", [newCoinBalance, this.username()]));
                     self._setBusy(false);
                 }
             );
@@ -883,7 +869,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             }
 
             const oDataModel = this.getView().getModel();
-            const oContext = oDataModel.bindContext("/Coin('SHAT')", null, {
+            const oContext = oDataModel.bindContext("/Coin('" + this.username() + "')", null, {
                 $$updateGroupId: "availableCoin"
             });
  
@@ -953,21 +939,15 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             return this.getView().getModel("coins");
         },
 
-        i18n() {
-            return this.getOwnerComponent().getModel("i18n").getResourceBundle();
-        },
+        // i18n() {
+        //     return this.getOwnerComponent().getModel("i18n").getResourceBundle();
+        // },
 
         onTest: function() {      
             // this._deckService.manipulateSplitBlackjack();
             // this._deckService.manipulateBothBlackjack();
             // this._deckService.manipulateBlackjack();
             // this._deckService.manipulatePush();
-
-            let emptyString = "";
-            if (emptyString) {
-                console.log(true);
-            }
-            console.log(false);
 
         }
     });

@@ -1,7 +1,6 @@
 <mvc:View controllerName="de.abatgroup.blackjackui5.controller.MainMenu"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m"
-    xmlns:f="sap.f">
+    xmlns="sap.m">
     <Page id="mainMenuPage" title="{i18n>mainMenuTitle}">
         <content>
             <VBox id="mainMenuVBox" fitContainer="false"
@@ -15,6 +14,9 @@
                         <ActionListItem id="mainMenuAction2"
                             text="{i18n>mainMenuHighscoreButton}"
                             press=".onPressHighscoreButton" />
+                        <ActionListItem id="mainMenuAction3"
+                            text="{i18n>mainMenuRegisterButton}"
+                            press=".onPressRegister" visible="{= !${user>/isRegistered} }"></ActionListItem>
                     </List>
                 </items>
             </VBox>

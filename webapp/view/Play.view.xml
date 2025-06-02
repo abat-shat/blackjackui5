@@ -81,7 +81,12 @@
                 </VBox>
 
                 <VBox id="actionSideVBox" class="sapUiMediumMarginTop">
-                    <Text id="usernameText" class="sapUiTinyMargin" text="{user>/name}" ></Text>
+                    <HBox id="usernameHBox">
+                        <Text id="usernameText" class="sapUiTinyMarginBeginEnd" text="{i18n>usernameText}" ></Text>
+                        <Text id="usernameValue" text="{user>/name}"></Text>
+
+                    </HBox>
+                    
                     <HBox id="playerCoinHBox">
                         <Text id="playerCoinsTextInfo" text="{i18n>playerCoinsText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
@@ -142,8 +147,6 @@
                             press=".onNewRound"></Button>
                         
                     </HBox>
-                    <!-- TODO: REMOVE -->
-                    <Button id="test" press=".onTest"></Button>
                 </VBox>
             </HBox>
         </content>
