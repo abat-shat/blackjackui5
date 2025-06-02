@@ -814,14 +814,6 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          * Helper functions.
          * ================================================================================
          */
-
-        /**
-         * 
-         * @param {boolean} isBusy 
-         */
-        _setBusy: function(isBusy){
-            this.getView().setBusy(isBusy);
-        },
         /**
          * Helper function to en-/disable betting money. Enabled on start of new round and
          * disabled when user inputted an amount of money.

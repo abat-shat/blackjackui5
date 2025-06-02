@@ -26,6 +26,13 @@ sap.ui.define([
         },
         username: function() {
             return this.user().getProperty("/name");
-        }
+        },
+        /**
+         * 
+         * @param {boolean} isBusy 
+         */
+        _setBusy: function(isBusy){
+            this.getView().setBusy(isBusy);
+        },
     });
 });
