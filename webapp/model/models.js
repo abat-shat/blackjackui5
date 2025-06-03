@@ -24,6 +24,17 @@ function (JSONModel, Device) {
             const imgModel = new JSONModel(sap.ui.require.toUrl("de/abatgroup/blackjackui5/model/img.json"));
             imgModel.setDefaultBindingMode("OneWay");
             return imgModel;
+        },
+        /**
+         * Fix to display Images on Fiori Launchpad.
+         * Source {@link https://community.sap.com/t5/technology-q-a/images-not-showing-in-sapui5-application-after-deployed-in-fiori-launchpad/qaq-p/362913 SAP Community}
+         */
+        createModulePathModel: function() {
+            let oRootPath = jQuery.sap.getModulePath("de.abatgroup.blackjackui5");
+            let rootModel = new JSONModel({
+                "path" : oRootPath
+            });
+            return rootModel;
         }
     };
 

@@ -24,6 +24,8 @@ sap.ui.define([
 
             this.createUserModel();
 
+            this.setModel(models.createModulePathModel(), "module");
+
             // enable routing
             this.getRouter().initialize();
         },
@@ -34,7 +36,8 @@ sap.ui.define([
                 const userInfo = await Container.getServiceAsync("UserInfo");
                 const userId = userInfo.getId();
                 const usernameData = {
-                    "name" : userId,
+                    // FIX
+                    "name" : "SHAT",
                     "isRegistered" : false
                 };
                 const usernameModel = new JSONModel(usernameData);
