@@ -40,7 +40,7 @@
                     </ColumnListItem>
                 </items>
             </Table>
-            <form:SimpleForm id="highscoreSimpleForm">
+            <form:SimpleForm id="highscoreSimpleForm" visible="false">
                 <Toolbar id="hsSFToolbar">
                     <Title id="hsSFToolbarTitle" text="{i18n>highscoreSFToolbarTitle}"></Title>
                 </Toolbar>
