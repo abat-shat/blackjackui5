@@ -50,6 +50,9 @@ function(Controller, MessageBox) {
                 });
 
         },
+        onInviteFriend: function() {
+
+        },
 
         _checkIsUserRegistered: function() {
             let oDataModel = this.getOwnerComponent().getModel();

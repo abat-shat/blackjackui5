@@ -17,9 +17,12 @@
                         <ActionListItem id="mainMenuAction3"
                             text="{i18n>mainMenuRegisterButton}"
                             press=".onPressRegister" visible="{= !${user>/isRegistered} }"></ActionListItem>
-                        <ActionListItem id="mainMenusAction4"
+                        <ActionListItem id="mainMenuAction4"
                             text="{i18n>mainMenuDailyLoginButton}"
                             press=".onDailyLogin"></ActionListItem>
+                        <ActionListItem id="mainMenuAction5"
+                            text="{i18n>mainMenuInviteFriend}"
+                            press=".onInviteFriend" visible="false"></ActionListItem>
                     </List>
                 </items>
             </VBox>
