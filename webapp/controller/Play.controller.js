@@ -32,6 +32,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             BOTH_HANDS_BLACKJACK : "BOTH_HANDS_BLACKJACK"
         },
         RESULT : {
+            STAYED : "STAYED",
             WON : "WON",
             LOST : "LOST",
             PUSH : "PUSH",
@@ -39,6 +40,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             SURRENDERED : "SURRENDERED",
             BUSTED : "BUSTED",
             CHARLIE : "5-CARD CHARLIE"
+
         },
         _deckService : undefined,
         _playerServices : [],
@@ -365,6 +367,13 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         },
         
         onStay: function() {
+            if (this._isCurrentHandMainHand()) {
+                this._setResult(this.RESULT.STAYED, null, null, null);
+            }
+            else {
+                this._setResult(null, this.RESULT.STAYED, null, null);
+            }
+
             const currentHand = this._playerServices.shift();
             this._playerServicesConcluded.push(currentHand);
 
@@ -451,8 +460,12 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          * @returns True if player's current Hand really is busted or has 5 cards.
          */
         _checkForBustAndCharlie: function() {
-            if (this._playerServices[0].checkAfterHit()) {
+            let result = this._playerServices[0].checkAfterHit();
+            if (result) {
                 this.onStay();
+                if (this._isCurrentHandMainHand()) {
+                    
+                }
                 if (this._playerServices.length == 0) {
                     if (this._playerServicesConcluded[0].result) {
                         this._onPrematureRoundEnd(this.PREMATURE_CONCLUSION.PLAYER_HANDS_CONCLUDED);    
@@ -571,6 +584,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                     amount = Math.round(betAmount * 0.5);
                     msg = this.i18n().getText("playerSurrendered", [amount]);
                     mainText = this.RESULT.SURRENDERED;
+                    mainCoin = amount;
                     break;
                 case this.PREMATURE_CONCLUSION.PLAYER_HANDS_CONCLUDED:
                     let firstHandResult = this._playerServicesConcluded.shift().result;

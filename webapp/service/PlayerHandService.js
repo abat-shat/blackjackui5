@@ -65,9 +65,8 @@ sap.ui.define([
         checkEligibleForSplit() {
             let firstCard = this._hand.cards[0];
             let secondCard = this._hand.cards[1];
-            // return firstCard.currentValue == secondCard.currentValue;
-            //TODO: remove this
-            return true;
+            return firstCard.currentValue == secondCard.currentValue;
+
         }
 
         get result() {
