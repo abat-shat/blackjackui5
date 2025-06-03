@@ -147,10 +147,10 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         },
 
         _resetPlayerAndDealerHand: function() {
-
-            let dealerFacedownSrc = this.getOwnerComponent().getModel("img").getProperty("/decks/red");
-            let playerFacedownSrc = this.getOwnerComponent().getModel("img").getProperty("/decks/green");
-            let playerSplitFacedownSrc = this.getOwnerComponent().getModel("img").getProperty("/decks/green");
+            let oComponent = this.getOwnerComponent();
+            let dealerFacedownSrc = oComponent.getModel("module").getProperty("/path") + oComponent.getModel("img").getProperty("/decks/red");
+            let playerFacedownSrc = oComponent.getModel("module").getProperty("/path") + this.getOwnerComponent().getModel("img").getProperty("/decks/green");
+            let playerSplitFacedownSrc = oComponent.getModel("module").getProperty("/path") + this.getOwnerComponent().getModel("img").getProperty("/decks/green");
             for (let index = 1; index <= this.NUMBER_OF_CARDS_IN_A_HAND; index++) {
                 this.getView().byId("dealerCard" + index).setSrc(dealerFacedownSrc);
                 this.getView().byId("playerCard" + index).setSrc(playerFacedownSrc);
@@ -409,7 +409,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
 
                 //UI stuff
                 // remove 2nd card from main
-                let playerFacedownSrc = this.getOwnerComponent().getModel("img").getProperty("/decks/green");
+                let playerFacedownSrc = oComponent.getModel("module").getProperty("/path") + this.getOwnerComponent().getModel("img").getProperty("/decks/green");
                 this.getView().byId("playerCard2").setSrc(playerFacedownSrc);
                 this.tabletop().setProperty("/player/score", splitResult[1]);
                 
@@ -842,7 +842,9 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          * @returns Relative path to the corresponding card image.
          */
         _getCardImgSrc: function(sCard){
-            return this.getOwnerComponent().getModel("img").getProperty("/cards/" + sCard);
+            let oComponent = this.getOwnerComponent();
+            let cardSrc = oComponent.getModel("img").getProperty("/cards/" + sCard);
+            return oComponent.getModel("module").getProperty("/path") + cardSrc;
         },
         /**
          * Update user's coin in the OData. The model coins will be automatically
