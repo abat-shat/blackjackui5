@@ -36,8 +36,7 @@ sap.ui.define([
                 const userInfo = await Container.getServiceAsync("UserInfo");
                 const userId = userInfo.getId();
                 const usernameData = {
-                    // FIX
-                    "name" : "SHAT",
+                    "name" : userId,
                     "isRegistered" : false
                 };
                 const usernameModel = new JSONModel(usernameData);
