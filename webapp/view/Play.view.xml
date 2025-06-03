@@ -8,7 +8,7 @@
                 <VBox id="cardSideVBox">
                     <HBox id="dealerHandHBox" class="sapUiMediumMarginTop">
                         <Image id="dealerCard1"   
-                            src="{module>/path}{module>/path}{img>/decks/red}" ></Image>
+                            src="{module>/path}{img>/decks/red}" ></Image>
                         <Image id="dealerCard2"  
                             src="{module>/path}{img>/decks/red}"></Image>
                         <Image id="dealerCard3"  
