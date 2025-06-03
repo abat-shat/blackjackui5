@@ -61,7 +61,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          */
 
         onNewRound: function(){
-            let betAmountLastRound = this.coins().getProperty("/bet/amount");
+            let betAmountLastRound = this.coins().getProperty("/bet/previous");
             this._resetModel(betAmountLastRound);
             this._resetViewResources();
             this._resetServiceResources();            
@@ -75,7 +75,8 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 },
                 "bet" : {
                     "amount" : betAmount,
-                    "split" : 0
+                    "split" : 0,
+                    "previous" : 0
                 }
             };
             const coinsModel = new JSONModel(coinsData);
@@ -186,6 +187,8 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         onConfirmBetCoinsAmount: function(){
             
             if (this._isBetSuccessful()) {
+                let betAmount = this.coins().getProperty("/bet/amount");
+                this.coins().setProperty("/bet/previous", betAmount);
                 this._enableBettingOptions(false);
                 this._enableButton("draw", true);
             }
@@ -417,8 +420,9 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 this._playerServices.push(splitHand);
 
                 //UI stuff
+                let oComponent = this.getOwnerComponent();
                 // remove 2nd card from main
-                let playerFacedownSrc = oComponent.getModel("module").getProperty("/path") + this.getOwnerComponent().getModel("img").getProperty("/decks/green");
+                let playerFacedownSrc = oComponent.getModel("module").getProperty("/path") + oComponent.getModel("img").getProperty("/decks/green");
                 this.getView().byId("playerCard2").setSrc(playerFacedownSrc);
                 this.tabletop().setProperty("/player/score", splitResult[1]);
                 
