@@ -8,15 +8,15 @@
                 <VBox id="cardSideVBox">
                     <HBox id="dealerHandHBox" class="sapUiMediumMarginTop">
                         <Image id="dealerCard1"   
-                            src="{img>/decks/red}" ></Image>
+                            src="{module>/path}{module>/path}{img>/decks/red}" ></Image>
                         <Image id="dealerCard2"  
-                            src="{img>/decks/red}"></Image>
+                            src="{module>/path}{img>/decks/red}"></Image>
                         <Image id="dealerCard3"  
-                        src="{img>/decks/red}"></Image>
+                        src="{module>/path}{img>/decks/red}"></Image>
                         <Image id="dealerCard4"  
-                        src="{img>/decks/red}"></Image>
+                        src="{module>/path}{img>/decks/red}"></Image>
                         <Image id="dealerCard5"  
-                        src="{img>/decks/red}"></Image>
+                        src="{module>/path}{img>/decks/red}"></Image>
                     </HBox>
                     <HBox id="dealerHandTextHBox">
                         <Text id="dealerHandTextInfo" text="{i18n>dealerHandText}"
@@ -26,15 +26,15 @@
 
                     <HBox id="playerHandHBox" class="sapUiMediumMarginTop">
                         <Image id="playerCard1"  
-                            src="{img>/decks/green}"></Image>
+                            src="{module>/path}{img>/decks/green}"></Image>
                         <Image id="playerCard2"  
-                            src="{img>/decks/green}"></Image>
+                            src="{module>/path}{img>/decks/green}"></Image>
                         <Image id="playerCard3"  
-                        src="{img>/decks/green}"></Image>
+                        src="{module>/path}{img>/decks/green}"></Image>
                         <Image id="playerCard4"  
-                        src="{img>/decks/green}"></Image>
+                        src="{module>/path}{img>/decks/green}"></Image>
                         <Image id="playerCard5"  
-                        src="{img>/decks/green}"></Image>
+                        src="{module>/path}{img>/decks/green}"></Image>
                     </HBox>
                     <HBox id="playerHandTextHBox" justifyContent="SpaceBetween">
                         <HBox id="playerHandTextInfoHBox">
@@ -53,15 +53,15 @@
                     <HBox id="playerSplitHandHBox" visible="false"
                         class="sapUiMediumMarginTop">
                         <Image id="playerSplitCard1"  
-                            src="{img>/decks/green}"></Image>
+                            src="{module>/path}{img>/decks/green}"></Image>
                         <Image id="playerSplitCard2"  
-                            src="{img>/decks/green}"></Image>
+                            src="{module>/path}{img>/decks/green}"></Image>
                         <Image id="playerSplitCard3"  
-                        src="{img>/decks/green}"></Image>
+                        src="{module>/path}{img>/decks/green}"></Image>
                         <Image id="playerSplitCard4"  
-                        src="{img>/decks/green}"></Image>
+                        src="{module>/path}{img>/decks/green}"></Image>
                         <Image id="playerSplitCard5"  
-                        src="{img>/decks/green}"></Image>
+                        src="{module>/path}{img>/decks/green}"></Image>
                     </HBox>
 
                     <HBox id="playerSplitHandTextHBox" visible="false" justifyContent="SpaceBetween">
