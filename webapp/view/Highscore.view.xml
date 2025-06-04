@@ -20,7 +20,7 @@
                         <content>
                             <Title id="hsHeaderTitle" text="{i18n>highscoreHeaderTitle}"></Title>
                             <ToolbarSpacer id="hsHeaderToolbarSpacer"></ToolbarSpacer>
-                            <SearchField width="40%" id="hsHeaderSearchField" search=".onFilterPlayers"></SearchField>
+                            <SearchField width="20%" id="hsHeaderSearchField" search=".onFilterPlayers"></SearchField>
                         </content>
                     </OverflowToolbar>
                 </headerToolbar>

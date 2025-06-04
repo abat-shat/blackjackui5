@@ -160,7 +160,6 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 this.getView().byId("playerSplitCard" + index).setSrc(playerSplitFacedownSrc);
                 
             }
-
             this._enableSplitHand(false);
             
         },

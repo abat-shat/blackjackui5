@@ -23,6 +23,9 @@
                         <ActionListItem id="mainMenuAction5"
                             text="{i18n>mainMenuInviteFriend}"
                             press=".onInviteFriend" visible="false"></ActionListItem>
+                        <ActionListItem id="mainMenuAction6"
+                            text="{i18n>mainMenuBankVault}"
+                            press=".onEnteringBankVault" visible="{admin>/admin}"></ActionListItem>
                     </List>
                 </items>
             </VBox>

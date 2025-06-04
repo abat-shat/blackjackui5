@@ -28,6 +28,8 @@ sap.ui.define([
 
             // enable routing
             this.getRouter().initialize();
+            console.log("Component");
+            
         },
 
         createUserModel: function() {

@@ -38,6 +38,7 @@ function(Controller, MessageBox) {
             oBinding.created()
                 .then(this._userIsCreated.bind(this))
                 .catch(this._userIsNotCreated.bind(this));
+            this._setBusy(true);
         },
         onDailyLogin: function() {
             let oDataModel = this.getView().getModel();
@@ -47,11 +48,15 @@ function(Controller, MessageBox) {
                 .catch(() => {
                     let msg = this.i18n().getText("exceptionDailyLoginFailed");
                     MessageBox.error(msg);
+                    this._setBusy(false);
                 });
-
+            this._setBusy(true);
         },
         onInviteFriend: function() {
             
+        },
+        onEnteringBankVault: function() {
+            this.getRouter().navTo("bankVault");
         },
 
         _checkIsUserRegistered: function() {
@@ -77,11 +82,13 @@ function(Controller, MessageBox) {
             this.user().setProperty("/isRegistered", true);
             let msg = this.i18n().getText("createdUser");
             MessageBox.success(msg);
+            this._setBusy(false);
         },
 
         _userIsNotCreated: function(error) {
             let msg = this.i18n().getText("notCreatedUser", [error]);
             MessageBox.error(msg);
+            this._setBusy(false);
         },
         _addDailyBonusToUser: function(oData) {
             let daysBetween = this._daysBetween(oData.LastLoginDate, this._getTodaysDate());
@@ -122,7 +129,6 @@ function(Controller, MessageBox) {
                     MessageBox.error("exceptionDailyLoginFailed");
                     this._setBusy(false);
                 });
-            this._setBusy(true);
 
         },
         /**

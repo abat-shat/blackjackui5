@@ -1,9 +1,15 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller"
-], function(Controller) {
+],
+/**
+ * 
+ * @param {typeof sap.ui.core.mvc.Controller} Controller 
+ * @returns 
+ */
+function(Controller) {
     "use strict";
 
-    return Controller.extend("blackjackui5.controller.BaseController", {
+    return Controller.extend("de.abatgroup.blackjackui5.controller.BaseController", {
         /**
          * Convenience method for accessing the router.
          * @public
@@ -26,6 +32,9 @@ sap.ui.define([
         },
         username: function() {
             return this.user().getProperty("/name");
+        },
+        isAdmin: function() {
+            return this.getOwnerComponent().getModel("admin").getProperty("/admin");
         },
         /**
          * 

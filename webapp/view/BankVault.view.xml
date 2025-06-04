@@ -1,0 +1,27 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    controllerName="de.abatgroup.blackjackui5.controller.BankVault"
+    xmlns:form="sap.ui.layout.form">
+
+    <Page title="Bank Vault" id="bankVaultPage">
+        <content>
+            <!-- Add your UI controls here -->
+            <form:SimpleForm id="bankSF">
+                <Toolbar id="bankSFToolbar">
+                    <Title id="bankSFToolbarTitle" text="{i18n>bankSFToolbarTitle}"></Title>
+                </Toolbar>
+                <Label text="{i18n>bankUsernameInput}" id="bankUsernameInputLabel" />
+                <Input id="bankUsernameInput" width="20%" />
+
+                <Label text="{i18n>bankCoinInput}" id="bankCoinInputLabel" />
+                <Input id="bankCoinInput" type="Number" width="20%" />
+
+                <Button text="{i18n>submitTopUp}" press="onSubmit" width="40%"
+                    id="bankSubmitTopUpButton" />
+                <Text id="bankResult"></Text>
+            </form:SimpleForm>
+        </content>
+    </Page>
+    
+</mvc:View>

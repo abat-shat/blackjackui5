@@ -108,6 +108,11 @@
           "pattern": "highscore",
           "name": "highscore",
           "target": "TargetHighscore"
+        },
+        {
+          "pattern": "bankVault",
+          "name": "bankVault",
+          "target": "TargetBankVault"
         }
       ],
       "targets": {
@@ -133,6 +138,13 @@
               "contextPath": "/HS('{Abbreviation}')"
             }
           }
+        },
+        "TargetBankVault": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "bankVaultPage",
+          "viewName": "BankVault"
         }
       }
     },
