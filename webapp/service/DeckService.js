@@ -33,6 +33,10 @@ sap.ui.define([
             this.#deck.manipulatePush();
         }
 
+        manipulateCharlie(){
+            this.#deck.manipulateCharlie();
+        }
+
         #cut(){
             let deckLength = this.#deck.cards.length;
             let cuttingPoint = RandomGenerator.nextInt(deckLength);

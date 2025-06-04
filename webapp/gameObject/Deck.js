@@ -32,6 +32,11 @@ sap.ui.define(["./Card"],
 
                 this.#cards.unshift(queen, queen, queen, queen);
             }
+
+            manipulateCharlie(){
+                const two = new Card("2", "C");
+                this.#cards.unshift(two, two, two, two, two, two, two);
+            }
         }
         return Deck;
 });

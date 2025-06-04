@@ -147,6 +147,8 @@
                             press=".onNewRound"></Button>
                         
                     </HBox>
+                    <Button id="adminTestButton" text="Manipulate" class="sapUiTinyMargin"
+                        press=".onTest" visible="{admin>/admin}"></Button>
                 </VBox>
             </HBox>
         </content>
