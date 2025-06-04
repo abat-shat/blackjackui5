@@ -81,10 +81,6 @@ sap.ui.define([
             }
             return totalValue;
         }
-
-
-
     }
-
     return HandService;
 });

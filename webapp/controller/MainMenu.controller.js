@@ -51,7 +51,7 @@ function(Controller, MessageBox) {
 
         },
         onInviteFriend: function() {
-
+            
         },
 
         _checkIsUserRegistered: function() {
