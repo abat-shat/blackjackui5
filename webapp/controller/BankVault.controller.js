@@ -23,7 +23,7 @@ function(Controller) {
             });
             oContext.requestObject("Bonus")
                 .then((bonus) => this._addToBonus(oDataModel, oContext, bonus, coin))
-                .catch();
+                .catch(this._displayError.bind(this));
             this._setBusy(true);
         },
         /**
@@ -42,13 +42,11 @@ function(Controller) {
                     this.getView().byId("bankResult").setText(msg);
                     this._setBusy(false);
                 })
-                .catch((error) => {
-                    this.getView().byId("bankResult").setText(error);
-                    this._setBusy(false);        
-                });
-            
-            
-
+                .catch(this._displayError.bind(this));
+        },
+        _displayError: function(error) {
+            this.getView().byId("bankResult").setText(error);
+            this._setBusy(false);   
         }
     });
 });
