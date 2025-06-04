@@ -40,13 +40,15 @@
                     </ColumnListItem>
                 </items>
             </Table>
-            <form:SimpleForm id="highscoreSimpleForm" visible="false">
+            <form:SimpleForm id="highscoreSimpleForm" visible="true">
                 <Toolbar id="hsSFToolbar">
                     <Title id="hsSFToolbarTitle" text="{i18n>highscoreSFToolbarTitle}"></Title>
                 </Toolbar>
-                <Text id="hsSFLabel1" text="{/Coin('SHAT')/Abbreviation}"></Text>
-                <Text id="hsSFLabel2" text="{/Coin('SHAT')/AbatCoin}"></Text>
-                <Text id="hsSFLabel3" text="{/Coin('SHAT')/Bonus}"></Text>
+                <Text id="hsSFLabel1" text="{user>/name}"></Text>
+                <Text id="hsSFLabel2" text="0 abatCoins"></Text>
+                <Text id="hsSFLabel3" text="0 Bonus"></Text>
+                <Button id="hsRefreshBalanceButton" text="{i18n>refreshBalance}" icon="sap-icon://refresh"
+                    press=".onRefreshBalance"></Button>
             </form:SimpleForm>
         </content>
     </Page>
