@@ -26,6 +26,10 @@ function(Controller) {
                 .catch(this._displayError.bind(this));
             this._setBusy(true);
         },
+        onAdminAbuseChange: function(event){
+            this.getOwnerComponent().getModel("admin")
+                .setProperty("/abuse", event.getSource().getState());
+        },
         /**
          * 
          * @param {sap.ui.model.odata.v4.ODataModel} oDataModel 

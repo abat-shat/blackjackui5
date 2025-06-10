@@ -6,6 +6,12 @@
 
     <Page title="Bank Vault" id="bankVaultPage">
         <content>
+            <HBox id="adminAbuseHBox">
+                <Text id="adminAbuseInfo" text="{i18n>adminAbuseInfo}"
+                    class="sapUiTinyMarginBeginEnd"></Text>
+                <Switch id="adminAbuseSwitch" change=".onAdminAbuseChange"></Switch>
+            </HBox>
+            
             <!-- Add your UI controls here -->
             <form:SimpleForm id="bankSF">
                 <Toolbar id="bankSFToolbar">
@@ -20,6 +26,7 @@
                 <Button text="{i18n>submitTopUp}" press="onSubmit" width="40%"
                     id="bankSubmitTopUpButton" />
                 <Text id="bankResult"></Text>
+                
             </form:SimpleForm>
         </content>
     </Page>

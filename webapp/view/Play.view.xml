@@ -155,7 +155,7 @@
                         
                     </HBox>
                     <Button id="adminTestButton" text="Manipulate" class="sapUiTinyMargin"
-                        press=".onTest" visible="{admin>/admin}"></Button>
+                        press=".onTest" visible="{admin>/abuse}"></Button>
                 </VBox>
             </HBox>
         </content>

@@ -18,7 +18,8 @@ function(Controller, Filter, FilterOperator, JSONModel) {
   return Controller.extend("de.abatgroup.blackjackui5.controller.App", {
       onInit() {
         let adminModel = new JSONModel({
-          "admin" : false
+          "admin" : false,
+          "abuse" : false
         });
         this.getOwnerComponent().setModel(adminModel, "admin");
 
