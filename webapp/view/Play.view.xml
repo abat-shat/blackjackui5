@@ -90,6 +90,10 @@
                               class="sapUiTinyMarginBeginEnd"></Text>
                         <Text id="playerHighscoreAmount" text="{coins>/user/highscore}"></Text>
                     </HBox>
+
+                    <Toolbar id="horizontalLine" width="100%" height="1px"
+                        class="sapUiTinyMargin"></Toolbar>
+
                     <HBox id="playerCoinHBox">
                         <Text id="playerCoinsTextInfo" text="{i18n>playerCoinsText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
