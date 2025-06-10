@@ -52,7 +52,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          */
 
         onInit: function(){    
-            this._resetModel();
+            this._initModel();
             this._requestAvailable_BonusCoin_AndHighscore();
         },
 
@@ -62,18 +62,38 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          */
 
         onNewRound: function(){
-            let betAmountLastRound = this.coins().getProperty("/bet/previous");
-            this._resetModel(betAmountLastRound);
+            this._initModel(
+                this.coins().getProperty("/bet/previous"),
+                this.coins().getProperty("/user/available"),
+                this.coins().getProperty("/user/bonus"),
+                this.coins().getProperty("/user/highscore")
+            );
             this._resetViewResources();
             this._resetServiceResources();            
             this._enableResult(false);
         },
-        _resetModel: function(betAmount = 0){
+        _initModel: function(
+            betAmount = 0,
+            available = 0,
+            bonus = 0,
+            highscore = 0
+        ){
+            this._initCoins(betAmount, available, bonus, highscore);
+
+            this._initTabletop();
+        },
+
+        _initCoins: function(
+            betAmount = 0,
+            available = 0,
+            bonus = 0,
+            highscore = 0
+        ) {
             const coinsData = {
                 "user" : {
-                    "available" : 0,
-                    "bonus" : 0,
-                    "highscore" : 0
+                    "available" : available,
+                    "bonus" : bonus,
+                    "highscore" : highscore
                 },
                 "bet" : {
                     "amount" : betAmount,
@@ -83,7 +103,9 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             };
             const coinsModel = new JSONModel(coinsData);
             this.getView().setModel(coinsModel, "coins");
+        },
 
+        _initTabletop: function() {
             const tabletopData = {
                 "draw" : {
                     "counter" : 0
