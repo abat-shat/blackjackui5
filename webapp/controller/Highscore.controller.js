@@ -2,7 +2,8 @@ sap.ui.define([
     "./BaseController",
     "sap/ui/model/Sorter",
     "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
+    "sap/ui/model/FilterOperator",
+    "sap/m/MessageToast"
 ], 
 /**
  * 
@@ -10,16 +11,29 @@ sap.ui.define([
  * @param {typeof sap.ui.model.Sorter} Sorter
  * @param {typeof sap.ui.model.Filter} Filter
  * @param {typeof sap.ui.model.FilterOperator} FilterOperator
+ * @param {typeof sap.m.MessageToast} MessageToast
  */
-function(Controller, Sorter, Filter, FilterOperator) {
+function(Controller, Sorter, Filter, FilterOperator, MessageToast) {
     "use strict";
 
     Controller.extend("de.abatgroup.blackjackui5.controller.Highscore", {
         onInit: function(){
         },
+        onFilterChange: function(event){
+            let msg = "";
+            if (event.getSource().getState()) {
+                this._sortPlayers("Highscore");
+                msg = this.i18n().getText("sortByHighscore");
+                
+            } else {
+                this._sortPlayers("AbatCoin");
+                msg = this.i18n().getText("sortByAbatCoin");
+            }
+            MessageToast.show(msg);
+        },
 
-        sortPlayers: function(){
-            let coinSorter = new Sorter("AbatCoin");
+        _sortPlayers: function(sortCriteria){
+            let coinSorter = new Sorter(sortCriteria, true);
             let sorters = [];
             sorters.push(coinSorter);
 
@@ -43,6 +57,7 @@ function(Controller, Sorter, Filter, FilterOperator) {
         _bindContextToSimpleForm: function(oData) {
             this.getView().byId("hsSFLabel2").setText(oData.AbatCoin + " abatCoins");
             this.getView().byId("hsSFLabel3").setText(oData.Bonus + " Bonus");
+            this.getView().byId("hsSFLabel4").setText(oData.Highscore + " Highscore");
         }
 
         

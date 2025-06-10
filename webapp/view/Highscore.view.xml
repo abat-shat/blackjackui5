@@ -21,6 +21,8 @@
                             <content>
                                 <Title id="hsHeaderTitle" text="{i18n>highscoreHeaderTitle}"></Title>
                                 <ToolbarSpacer id="hsHeaderToolbarSpacer"></ToolbarSpacer>
+                                <Switch id="hsHeaderSwitch" customTextOff="A" customTextOn="H"
+                                    change=".onFilterChange"></Switch>
                                 <SearchField width="20%" id="hsHeaderSearchField" search=".onFilterPlayers"></SearchField>
                             </content>
                         </OverflowToolbar>
@@ -32,6 +34,9 @@
                         <Column id="hsCol2">
                             <Text id="hsColText2" text="{i18n>highscoreColumnText2}"></Text>
                         </Column>
+                        <Column id="hsCol3">
+                            <Text id="hsColText3" text="{i18n>highscoreColumnText3}"></Text>
+                        </Column>
                     </columns>
                     <items>
                         <ColumnListItem id="hsCLI1" >
@@ -39,11 +44,11 @@
 
                                 <ObjectIdentifier id="hsOI1" text="{Abbreviation}"></ObjectIdentifier>
                                 <Text id="hsText2" text="{AbatCoin}"></Text>
+                                <Text id="hsText3" text="{Highscore}"></Text>
                             </cells>
                         </ColumnListItem>
                     </items>
                 </Table>
-                <Table id="mostMoneyTable"></Table>
             </HBox>
             
             <form:SimpleForm id="highscoreSimpleForm" visible="true">
@@ -53,6 +58,7 @@
                 <Text id="hsSFLabel1" text="{user>/name}"></Text>
                 <Text id="hsSFLabel2" text="0 abatCoins"></Text>
                 <Text id="hsSFLabel3" text="0 Bonus"></Text>
+                <Text id="hsSFLabel4" text="0 Highscore"></Text>
                 <Button id="hsRefreshBalanceButton" text="{i18n>refreshBalance}" icon="sap-icon://refresh"
                     press=".onRefreshBalance"></Button>
             </form:SimpleForm>
