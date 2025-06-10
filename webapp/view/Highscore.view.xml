@@ -3,45 +3,49 @@
     xmlns="sap.m">
     <Page id="highscorePage" title="{i18n>highscoreTitle}">
         <content>
-            <Table id="highscoreTable"
-                width="100%"
-                items="{
-                    path: '/Coin',
-                    sorter: [
-                        {path: 'AbatCoin', descending: true}
-                    ]
-                }"
-                growing="true"
-                growingThreshold="10"
+            <HBox id="highscoreHBox">
+                <Table id="highscoreTable"
+                    width="100%"
+                    items="{
+                        path: '/Coin',
+                        sorter: [
+                            {path: 'AbatCoin', descending: true}
+                        ]
+                    }"
+                    growing="true"
+                    growingThreshold="10"
 
-                >
-                <headerToolbar>
-                    <OverflowToolbar id="hsHeaderOT">
-                        <content>
-                            <Title id="hsHeaderTitle" text="{i18n>highscoreHeaderTitle}"></Title>
-                            <ToolbarSpacer id="hsHeaderToolbarSpacer"></ToolbarSpacer>
-                            <SearchField width="20%" id="hsHeaderSearchField" search=".onFilterPlayers"></SearchField>
-                        </content>
-                    </OverflowToolbar>
-                </headerToolbar>
-                <columns>
-                    <Column id="hsCol1">
-                        <Text id="hsColText1" text="{i18n>highscoreColumnText1}"></Text>
-                    </Column>
-                    <Column id="hsCol2">
-                        <Text id="hsColText2" text="{i18n>highscoreColumnText2}"></Text>
-                    </Column>
-                </columns>
-                <items>
-                    <ColumnListItem id="hsCLI1" >
-                        <cells>
+                    >
+                    <headerToolbar>
+                        <OverflowToolbar id="hsHeaderOT">
+                            <content>
+                                <Title id="hsHeaderTitle" text="{i18n>highscoreHeaderTitle}"></Title>
+                                <ToolbarSpacer id="hsHeaderToolbarSpacer"></ToolbarSpacer>
+                                <SearchField width="20%" id="hsHeaderSearchField" search=".onFilterPlayers"></SearchField>
+                            </content>
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column id="hsCol1">
+                            <Text id="hsColText1" text="{i18n>highscoreColumnText1}"></Text>
+                        </Column>
+                        <Column id="hsCol2">
+                            <Text id="hsColText2" text="{i18n>highscoreColumnText2}"></Text>
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem id="hsCLI1" >
+                            <cells>
 
-                            <ObjectIdentifier id="hsOI1" text="{Abbreviation}"></ObjectIdentifier>
-                            <Text id="hsText2" text="{AbatCoin}"></Text>
-                        </cells>
-                    </ColumnListItem>
-                </items>
-            </Table>
+                                <ObjectIdentifier id="hsOI1" text="{Abbreviation}"></ObjectIdentifier>
+                                <Text id="hsText2" text="{AbatCoin}"></Text>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+                <Table id="mostMoneyTable"></Table>
+            </HBox>
+            
             <form:SimpleForm id="highscoreSimpleForm" visible="true">
                 <Toolbar id="hsSFToolbar">
                     <Title id="hsSFToolbarTitle" text="{i18n>highscoreSFToolbarTitle}"></Title>

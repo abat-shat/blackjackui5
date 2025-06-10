@@ -54,15 +54,42 @@
                 </Key>
                 <Property Name="Abbreviation" Type="Edm.String" Nullable="false" MaxLength="12"/>
                 <Property Name="AbatCoin" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="Highscore" Type="Edm.Int64" Nullable="false"/>
                 <Property Name="Bonus" Type="Edm.Int64" Nullable="false"/>
                 <Property Name="LocalLastChangedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="LastLoginDate" Type="Edm.Date"/>
+                <Property Name="LoginStreak" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="SAP__Messages" Type="Collection(com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.SAP__Message)" Nullable="false"/>
             </EntityType>
+            <EntityType Name="AdminType">
+                <Key>
+                    <PropertyRef Name="Abbreviation"/>
+                </Key>
+                <Property Name="Abbreviation" Type="Edm.String" Nullable="false" MaxLength="12"/>
+            </EntityType>
+            <ComplexType Name="SAP__Message">
+                <Property Name="code" Type="Edm.String" Nullable="false"/>
+                <Property Name="message" Type="Edm.String" Nullable="false"/>
+                <Property Name="target" Type="Edm.String"/>
+                <Property Name="additionalTargets" Type="Collection(Edm.String)" Nullable="false"/>
+                <Property Name="transition" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="numericSeverity" Type="Edm.Byte" Nullable="false"/>
+                <Property Name="longtextUrl" Type="Edm.String"/>
+            </ComplexType>
             <EntityContainer Name="Container">
+                <EntitySet Name="Admin" EntityType="com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.AdminType"/>
                 <EntitySet Name="Coin" EntityType="com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.CoinType"/>
             </EntityContainer>
             <Annotations Target="SAP__self.CoinType/Abbreviation">
+                <Annotation Term="SAP__core.Immutable"/>
                 <Annotation Term="SAP__common.IsUpperCase"/>
                 <Annotation Term="SAP__common.Label" String="Benutzername"/>
+            </Annotations>
+            <Annotations Target="SAP__self.CoinType/LocalLastChangedAt">
+                <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__common.Label" String="Geändert am"/>
+                <Annotation Term="SAP__common.Heading" String="Geänd. am"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Datum und Uhrzeit der letzten Änderung der lokalen Instanz"/>
             </Annotations>
             <Annotations Target="SAP__self.CoinType">
                 <Annotation Term="SAP__common.Label" String="Projection View for ZI_SHAT_ABJ_COIN"/>
@@ -74,8 +101,46 @@
                 <Annotation Term="Communication.Contact">
                     <Record/>
                 </Annotation>
+                <Annotation Term="SAP__common.Messages" Path="SAP__Messages"/>
             </Annotations>
             <Annotations Target="SAP__self.Container/Coin">
+                <Annotation Term="SAP__capabilities.SearchRestrictions">
+                    <Record>
+                        <PropertyValue Property="Searchable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="RequiredProperties">
+                            <Collection>
+                                <PropertyPath>Abbreviation</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__core.OptimisticConcurrency">
+                    <Collection>
+                        <PropertyPath>LocalLastChangedAt</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="QueryOptions">
+                            <Record>
+                                <PropertyValue Property="SelectSupported" Bool="true"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="SAP__self.AdminType/Abbreviation">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Benutzername"/>
+            </Annotations>
+            <Annotations Target="SAP__self.AdminType">
+                <Annotation Term="SAP__common.Label" String="Admin Interface"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Container/Admin">
                 <Annotation Term="SAP__capabilities.SearchRestrictions">
                     <Record>
                         <PropertyValue Property="Searchable" Bool="false"/>
@@ -167,14 +232,21 @@
                 <Annotation Term="SAP__common.Label" String="abatcoins"/>
                 <Annotation Term="SAP__common.QuickInfo" String="abatcoin"/>
             </Annotations>
+            <Annotations Target="SAP__self.CoinType/Highscore">
+                <Annotation Term="SAP__common.Label" String="Highscore"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Highest coins a player ever achieved"/>
+            </Annotations>
             <Annotations Target="SAP__self.CoinType/Bonus">
                 <Annotation Term="SAP__common.Label" String="abatcoins"/>
                 <Annotation Term="SAP__common.QuickInfo" String="abatcoin"/>
             </Annotations>
-            <Annotations Target="SAP__self.CoinType/LocalLastChangedAt">
-                <Annotation Term="SAP__common.Label" String="Geändert am"/>
-                <Annotation Term="SAP__common.Heading" String="Geänd. am"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Datum und Uhrzeit der letzten Änderung der lokalen Instanz"/>
+            <Annotations Target="SAP__self.CoinType/LastLoginDate">
+                <Annotation Term="SAP__common.Label" String="Last login date"/>
+                <Annotation Term="SAP__common.QuickInfo" String="last login date"/>
+            </Annotations>
+            <Annotations Target="SAP__self.CoinType/LoginStreak">
+                <Annotation Term="SAP__common.Label" String="Login streak"/>
+                <Annotation Term="SAP__common.QuickInfo" String="login streak"/>
             </Annotations>
         </Schema>
     </edmx:DataServices>
