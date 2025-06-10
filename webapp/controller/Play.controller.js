@@ -53,6 +53,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
 
         onInit: function(){    
             this._resetModel();
+            this._requestAvailable_BonusCoin_AndHighscore();
         },
 
         /* ================================================================================
@@ -71,7 +72,8 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             const coinsData = {
                 "user" : {
                     "available" : 0,
-                    "bonus" : 0
+                    "bonus" : 0,
+                    "highscore" : 0
                 },
                 "bet" : {
                     "amount" : betAmount,
@@ -115,8 +117,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          * Reset FE resources
          */
         _resetViewResources: function() {
-           
-            this._requestAvailableAndBonusCoin();
+            this._requestAvailable_BonusCoin_AndHighscore();
             this._resetPlayerAndDealerHand();
             this._resetAllPlayButtons();
             this._enableBettingOptions(true);
@@ -134,7 +135,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             this._playerServicesConcluded.length = 0;
         },
 
-        _requestAvailableAndBonusCoin: function() {
+        _requestAvailable_BonusCoin_AndHighscore: function() {
             const oDataModel = this.getOwnerComponent().getModel();
             const oContext = oDataModel.bindContext("/Coin('" + this.username() + "')");
             oContext.requestObject("AbatCoin").then((availableCoin) => {
@@ -146,6 +147,9 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             });
             oContext.requestObject("Bonus").then((bonus) => {
                 this.coins().setProperty("/user/bonus", bonus);
+            });
+            oContext.requestObject("Highscore").then((highscore) => {
+                this.coins().setProperty("/user/highscore", highscore);
             });
         },
 
@@ -789,12 +793,15 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             let abatCoin = this.coins().getProperty("/user/available");
             let newCoinBalance = Number(abatCoin) + amount; 
             oContext.getBoundContext().setProperty("AbatCoin", newCoinBalance.toString());
+            if (newCoinBalance > Number(this.coins().getProperty("/user/highscore"))) {
+                oContext.getBoundContext().setProperty("Highscore", newCoinBalance.toString());
+            }
             let self = this;
             oDataModel.submitBatch("addCoin").then(
                 function success() {
                     console.log("Update successful");
                     self._setBusy(false);
-                    self._requestAvailableAndBonusCoin();
+                    self._requestAvailable_BonusCoin_AndHighscore();
                 },
                 function failed(err) {
                     console.error("Update failed", err);
@@ -900,7 +907,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 function success() {
                     console.log("Update successful");
                     self._setBusy(false);
-                    self._requestAvailableAndBonusCoin();
+                    self._requestAvailable_BonusCoin_AndHighscore();
                 },
                 function failed(err) {
                     console.error("Update failed", err);

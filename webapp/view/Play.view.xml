@@ -85,7 +85,11 @@
                         <Text id="usernameText" class="sapUiTinyMarginBeginEnd" text="{i18n>usernameText}" ></Text>
                         <Text id="usernameValue" text="{user>/name}"></Text>
                     </HBox>
-                    <HBox id="playerHighscoreHBox"></HBox>
+                    <HBox id="playerHighscoreHBox">
+                        <Text id="playerHighscoreTextInfo" text="{i18n>playerHighscoreText}"
+                              class="sapUiTinyMarginBeginEnd"></Text>
+                        <Text id="playerHighscoreAmount" text="{coins>/user/highscore}"></Text>
+                    </HBox>
                     <HBox id="playerCoinHBox">
                         <Text id="playerCoinsTextInfo" text="{i18n>playerCoinsText}"
                             class="sapUiTinyMarginBeginEnd"></Text>
