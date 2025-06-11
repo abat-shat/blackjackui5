@@ -37,6 +37,10 @@ sap.ui.define([
             this.#deck.manipulateCharlie();
         }
 
+        manipulateSplitBlackjack(){
+            this.#deck.manipulateSplitBlackjack();
+        }
+
         #cut(){
             let deckLength = this.#deck.cards.length;
             let cuttingPoint = RandomGenerator.nextInt(deckLength);

@@ -37,6 +37,14 @@ sap.ui.define(["./Card"],
                 const two = new Card("2", "C");
                 this.#cards.unshift(two, two, two, two, two, two, two);
             }
+
+            manipulateSplitBlackjack(){
+                const king = new Card("K", "C");
+                const ace = new Card("A", "S");
+                const two = new Card("2", "C");
+
+                this.#cards.unshift(king, two, king, two, ace, ace);
+            }
         }
         return Deck;
 });

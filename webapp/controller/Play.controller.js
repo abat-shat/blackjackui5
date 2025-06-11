@@ -984,11 +984,11 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         // },
 
         onTest: function() {      
-            // this._deckService.manipulateSplitBlackjack();
+            this._deckService.manipulateSplitBlackjack();
             // this._deckService.manipulateBothBlackjack();
             // this._deckService.manipulateBlackjack();
             // this._deckService.manipulatePush();
-
+            
         }
     });
 });
