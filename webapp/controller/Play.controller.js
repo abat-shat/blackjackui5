@@ -39,7 +39,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             BLACKJACK : "BLACKJACK",
             SURRENDERED : "SURRENDERED",
             BUSTED : "BUSTED",
-            CHARLIE : "5-CARD CHARLIE"
+            CHARLIE : "CHARLIE"
 
         },
         _deckService : undefined,
