@@ -711,7 +711,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             let result;
 
             let resultText;
-            let resultCoin;
+            let resultCoin = 0;
             let mainText = "";
             let splitText = "";
             let mainCoin = 0;
