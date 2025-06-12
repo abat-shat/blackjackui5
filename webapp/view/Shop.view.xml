@@ -6,13 +6,158 @@
 
     <Page id="shopPage" title="Shop">
         <content>
-            <custom:ImageTextTile id="tile"
-                src="{module>/path}{img>/decks/red}"
-                text1="Hello"
-                text2="Hi"
-                width="200px"
-                height="300px"
-                press=".onTilePress" />
+            <!-- Black Tile -->
+            <custom:ImageTextTile id="shopBlackItem"
+                            src="{module>/path}{img>/decks/black}"
+                            text1="Black Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('BLACK')" />
+
+            <!-- Blue Tile -->
+            <custom:ImageTextTile id="shopBlueItem"
+                            src="{module>/path}{img>/decks/blue}"
+                            text1="Blue Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('BLUE')" />
+
+            <!-- Green Tile -->
+            <custom:ImageTextTile id="shopGreenItem"
+                            src="{module>/path}{img>/decks/green}"
+                            text1="Green Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('GREEN')" />
+
+            <!-- Red Tile -->
+            <custom:ImageTextTile id="shopRedItem"
+                            src="{module>/path}{img>/decks/red}"
+                            text1="Red Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('RED')" />
+
+            <!-- Yellow Tile -->
+            <custom:ImageTextTile id="shopYellowItem"
+                            src="{module>/path}{img>/decks/yellow}"
+                            text1="Yellow Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('YELLOW')" />
+
+            <!-- Abandoned Tile -->
+            <custom:ImageTextTile id="shopAbandonedItem"
+                            src="{module>/path}{img>/decks/abandoned}"
+                            text1="Abandoned Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('ABANDONED')" />
+
+            <!-- Anaglyph Tile -->
+            <custom:ImageTextTile id="shopAnaglyphItem"
+                            src="{module>/path}{img>/decks/anaglyph}"
+                            text1="Anaglyph Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('ANAGLYPH')" />
+
+            <!-- Braided Tile -->
+            <custom:ImageTextTile id="shopBraidedItem"
+                            src="{module>/path}{img>/decks/braided}"
+                            text1="Braided Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('BRAIDED')" />
+
+            <!-- Challenge Tile -->
+            <custom:ImageTextTile id="shopChallengeItem"
+                            src="{module>/path}{img>/decks/challenge}"
+                            text1="Challenge Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('CHALLENGE')" />
+
+            <!-- Erratic Tile -->
+            <custom:ImageTextTile id="shopErraticItem"
+                            src="{module>/path}{img>/decks/erratic}"
+                            text1="Erratic Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('ERRATIC')" />
+
+            <!-- Ghost Tile -->
+            <custom:ImageTextTile id="shopGhostItem"
+                            src="{module>/path}{img>/decks/ghost}"
+                            text1="Ghost Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('GHOST')" />
+
+            <!-- Magic Tile -->
+            <custom:ImageTextTile id="shopMagicItem"
+                            src="{module>/path}{img>/decks/magic}"
+                            text1="Magic Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('MAGIC')" />
+
+            <!-- Nebula Tile -->
+            <custom:ImageTextTile id="shopNebulaItem"
+                            src="{module>/path}{img>/decks/nebula}"
+                            text1="Nebula Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('NEBULA')" />
+
+            <!-- Painted Tile -->
+            <custom:ImageTextTile id="shopPaintedItem"
+                            src="{module>/path}{img>/decks/painted}"
+                            text1="Painted Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('PAINTED')" />
+
+            <!-- Plasma Tile -->
+            <custom:ImageTextTile id="shopPlasmaItem"
+                            src="{module>/path}{img>/decks/plasma}"
+                            text1="Plasma Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('PLASMA')" />
+
+            <!-- Silver Tile -->
+            <custom:ImageTextTile id="shopSilverItem"
+                            src="{module>/path}{img>/decks/silver}"
+                            text1="Silver Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('SILVER')" />
+
+            <!-- Zodiac Tile -->
+            <custom:ImageTextTile id="shopZodiacItem"
+                            src="{module>/path}{img>/decks/zodiac}"
+                            text1="Zodiac Deck"
+                            text2="100"
+                            width="200px"
+                            height="300px"
+                            press=".onPurchasingDeck('ZODIAC')" />
         </content>
     </Page>
 

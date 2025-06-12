@@ -59,7 +59,22 @@
         "joker" : "/media/jokers/joker.png"
     },
     "decks": {
-        "green" : "/media/decks/green_deck.png",
-        "red" : "/media/decks/red_deck.png"
+        "black": "/media/decks/black_deck.png",
+        "blue": "/media/decks/blue_deck.png",
+        "green": "/media/decks/green_deck.png",
+        "red": "/media/decks/red_deck.png",
+        "yellow": "/media/decks/yellow_deck.png",
+        "abandoned": "/media/decks/abandoned_deck.png",
+        "anaglyph": "/media/decks/anaglyph_deck.png",
+        "braided": "/media/decks/braided_deck.png",
+        "challenge": "/media/decks/challenge_deck.png",
+        "erratic": "/media/decks/erratic_deck.png",
+        "ghost": "/media/decks/ghost_deck.png",
+        "magic": "/media/decks/magic_deck.png",
+        "nebula": "/media/decks/nebula_deck.png",
+        "painted": "/media/decks/painted_deck.png",
+        "plasma": "/media/decks/plasma_deck.png",
+        "silver": "/media/decks/silver_deck.png",
+        "zodiac": "/media/decks/zodiac_deck.png"
     }
 }
