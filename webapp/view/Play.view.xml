@@ -116,14 +116,25 @@
                             enabled="false"></Button>
                     </HBox>
                     <HBox id="coinInputFixedValueHBox">
-                        <Button id="add10Button" text="10" class="sapUiTinyMarginBegin"
-                            press=".onAddToBetAmount(10)" enabled="false"></Button>
-                        <Button id="add50Button" text="50" class="sapUiTinyMarginBegin"
-                            press=".onAddToBetAmount(50)" enabled="false"></Button>
-                        <Button id="add100Button" text="100" class="sapUiTinyMarginBegin"
-                            press=".onAddToBetAmount(100)" enabled="false"></Button>
+                        <Button id="fixed1Button" text="1" class="sapUiTinyMarginBegin"
+                            press=".onFixedBetAmount(1)" enabled="false"></Button>
+                        <Button id="fixed10Button" text="10" class="sapUiTinyMarginBegin"
+                            press=".onFixedBetAmount(10)" enabled="false"></Button>
+                        <Button id="fixed100Button" text="100" class="sapUiTinyMarginBegin"
+                            press=".onFixedBetAmount(100)" enabled="false"></Button>
+                        <Button id="fixed1000Button" text="1000" class="sapUiTinyMarginBegin"
+                            press=".onFixedBetAmount(1000)" enabled="false"></Button>
                         <Button id="allInButton" text="{i18n>allInButton}" class="sapUiTinyMarginBegin"
                             press=".onAllIn" enabled="false"></Button>
+                    </HBox>
+                    <HBox id="coinInputAddValueHBox">
+                        <Button id="add10Button" text="+10" class="sapUiTinyMarginBegin"
+                            press=".onAddToBetAmount(10)" enabled="false"></Button>
+                        <Button id="add50Button" text="+50" class="sapUiTinyMarginBegin"
+                            press=".onAddToBetAmount(50)" enabled="false"></Button>
+                        <Button id="add100Button" text="+100" class="sapUiTinyMarginBegin"
+                            press=".onAddToBetAmount(100)" enabled="false"></Button>
+                        
                     </HBox>
                     
 

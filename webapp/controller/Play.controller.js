@@ -223,6 +223,9 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                 this._enableButton("draw", true);
             }
         },
+        onFixedBetAmount: function(amount){
+            this.coins().setProperty("/bet/amount", amount);
+        },
         
         /**
          * 
@@ -883,6 +886,10 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             view.byId("add50Button").setEnabled(isEnabled);
             view.byId("add100Button").setEnabled(isEnabled);
             view.byId("allInButton").setEnabled(isEnabled);
+            view.byId("fixed1Button").setEnabled(isEnabled);
+            view.byId("fixed10Button").setEnabled(isEnabled);
+            view.byId("fixed100Button").setEnabled(isEnabled);
+            view.byId("fixed1000Button").setEnabled(isEnabled);
         },
         /**
          * 

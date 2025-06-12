@@ -7,7 +7,7 @@
                 alignItems="Center">
                 <items>
                     <List id="mainMenuList"
-                        headerText="{i18n>mainMenuListTitle}" >
+                        headerText="{i18n>mainMenuListTitle}">
                         <ActionListItem id="mainMenuAction1"
                             text="{i18n>mainMenuPlayButton}"
                             press=".onPressPlayButton" />
