@@ -23,8 +23,9 @@ sap.ui.define(["./Card"],
                 const ace = new Card("A", "S");
                 const two = new Card("2", "S");
                 const ten = new Card("K", "S");
+                const nine = new Card("9", "D");
 
-                this.#cards.unshift(ace, two, ten);
+                this.#cards.unshift(ace, two, ace, ten, ten, nine);
             }
 
             manipulatePush(){
@@ -44,6 +45,14 @@ sap.ui.define(["./Card"],
                 const two = new Card("2", "C");
 
                 this.#cards.unshift(king, two, king, two, ace, ace);
+            }
+
+            manipulateMainWinSplitLose() {
+                const king = new Card("K", "C");
+                const seven = new Card("7", "D");
+                const six = new Card("6", "H");
+
+                this.#cards.unshift(king, king, king, seven, king, six);
             }
         }
         return Deck;

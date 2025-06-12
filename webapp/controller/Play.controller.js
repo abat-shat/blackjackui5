@@ -46,6 +46,9 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         _playerServices : [],
         _playerServicesConcluded : [],
         _dealerService : undefined,
+        /** Both are for onDraw func */
+        _playerService : undefined,
+        _playerSplitService : undefined,
         /* ================================================================================
          * View initialization
          * ================================================================================
@@ -149,6 +152,8 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          * Reset BE resources
          */
         _resetServiceResources: function() {
+            this._playerService = undefined;
+            this._playerSplitService = undefined;
             this._deckService = new DeckService();
             this._deckService.shuffle();
             this._dealerService = new DealerHandService();
@@ -270,11 +275,18 @@ function(Controller, JSONModel, MessageBox, MessageToast,
          * ================================================================================
          */
         onDraw: function() {
+            if (!this._playerService) {
+                this._playerService = this._playerServices[this.MAIN_HAND]; 
+            }
+
+            if (this._playerServices.length > 1 && !this._playerSplitService) {
+                this._playerSplitService = this._playerServices[this.SPLIT_HAND];
+            }
+
             const view = this.getView();
             let drawCounter = this.tabletop().getProperty("/draw/counter");
 
-            const playerService = this._playerServices[this.MAIN_HAND];
-            const playerSplitService = this._playerServices[this.SPLIT_HAND];
+            
             const playerCard = this._deckService.draw();
             let playerSrc = this._getCardImgSrc(playerCard.toString());
     
@@ -285,7 +297,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             switch (drawCounter) {
                 case 0:
                     dealerCard = this._deckService.draw();
-                    playerValue = playerService.addCard(playerCard);
+                    playerValue = this._playerService.addCard(playerCard);
                     dealerValue = this._dealerService.addCard(dealerCard);
                     this.tabletop().setProperty("/player/score", playerValue);
                     this.tabletop().setProperty("/dealer/score", dealerValue);
@@ -295,7 +307,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                     break;
                 case 1:
                     dealerCard = this._deckService.draw();
-                    playerValue = playerService.addCard(playerCard);
+                    playerValue = this._playerService.addCard(playerCard);
                     dealerValue = this._dealerService.addCard(dealerCard);
                     this.tabletop().setProperty("/player/cardCount", 2);
                     this.tabletop().setProperty("/dealer/cardCount", 2);
@@ -308,7 +320,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                     this._enableButton("surrender", false);
                     this._enableButton("draw", false);
 
-                    playerService.checkEligibleForSplit() &&
+                    this._playerService.checkEligibleForSplit() &&
                         this._enableButton("split", true);
 
                     this._enableButton("doubleDown", true);
@@ -322,16 +334,16 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                     break;
                 // For split
                 case 2:
-                    playerValue = playerService.addCard(playerCard);
+                    playerValue = this._playerService.addCard(playerCard);
                     this.tabletop().setProperty("/player/score", playerValue);
                     view.byId("playerCard2").setSrc(playerSrc);
-                    if (playerService.checkForBlackjack()) {
+                    if (this._playerService.checkForBlackjack()) {
                         this._onMainHandBlackjack();
                     }
                     
                     break;
                 case 3:
-                    playerValue = playerSplitService.addCard(playerCard);
+                    playerValue = this._playerSplitService.addCard(playerCard);
                     this.tabletop().setProperty("/player/split/score", playerValue);
                     view.byId("playerSplitCard2").setSrc(playerSrc);
                     
@@ -341,7 +353,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                     this._enableButton("stay", true);
 
                     //check for BJ
-                    if (playerSplitService.checkForBlackjack()) {
+                    if (this._playerSplitService.checkForBlackjack()) {
                         this._onSplitHandBlackjack();
                     }
 
@@ -406,6 +418,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             this._playerServicesConcluded.push(currentHand);
 
             if (this._playerServices.length != 0) {
+                MessageToast.show(this.i18n().getText("switchToSplitHand"));
                 this.tabletop().setProperty("/player/cardCount", 2);
                 this._enableButton("doubleDown", true);
             }
@@ -723,7 +736,6 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                         tempAmount = Math.round(betAmount * 1.5);
                         tempMsg = this.i18n().getText("resolveMainHandBlackjack", [tempAmount]);
                         resultText = this.RESULT.BLACKJACK;
-                        resultCoin = tempAmount;
                         break;
                     case PlayerHandService.Result.PLAYER_BUSTED:
                         tempMsg = this.i18n().getText(prefix + "HandBusted");
@@ -733,7 +745,6 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                         tempAmount = betAmount * 2;
                         tempMsg = this.i18n().getText(prefix + "HandCharlie", [tempAmount]);
                         resultText = this.RESULT.CHARLIE;
-                        resultCoin = tempAmount;
                         break;
                     default:
                         switch (dealerAction) {
@@ -742,13 +753,11 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                                 tempAmount = result[1];
                                 tempMsg = this.i18n().getText(prefix + result[0], [tempAmount]);
                                 resultText = result[2];
-                                resultCoin = tempAmount;
                                 break;
                             case DealerHandService.DealerAction.DEALER_BUSTED:
                                 tempAmount = betAmount * 2;
                                 tempMsg = this.i18n().getText(prefix + "HandDealerBusted", [tempAmount]);
                                 resultText = this.RESULT.WON;
-                                resultCoin = tempAmount;
                                 break;
                             case DealerHandService.DealerAction.DEALER_CHARLIE:    
                                 tempMsg = this.i18n().getText(prefix + "HandDealerCharlie");
@@ -757,6 +766,7 @@ function(Controller, JSONModel, MessageBox, MessageToast,
                         }
                         break;
                 }
+                resultCoin = tempAmount;
                 if (index == this.MAIN_HAND) {
                     mainText = resultText;
                     mainCoin = resultCoin;
@@ -984,10 +994,11 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         // },
 
         onTest: function() {      
-            this._deckService.manipulateSplitBlackjack();
+            // this._deckService.manipulateSplitBlackjack();
             // this._deckService.manipulateBothBlackjack();
             // this._deckService.manipulateBlackjack();
             // this._deckService.manipulatePush();
+            this._deckService.manipulateMainWinSplitLose();
             
         }
     });
