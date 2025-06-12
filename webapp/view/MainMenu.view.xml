@@ -26,6 +26,9 @@
                         <ActionListItem id="mainMenuAction6"
                             text="{i18n>mainMenuBankVault}"
                             press=".onEnteringBankVault" visible="{admin>/admin}"></ActionListItem>
+                        <ActionListItem id="mainMenuAction7"
+                            text="{i18n>mainMenuShop}"
+                            press=".onPressShopButton"></ActionListItem>
                     </List>
                 </items>
             </VBox>

@@ -113,6 +113,11 @@
           "pattern": "bankVault",
           "name": "bankVault",
           "target": "TargetBankVault"
+        },
+        {
+          "pattern": "shop",
+          "name": "shop",
+          "target": "TargetShop"
         }
       ],
       "targets": {
@@ -145,6 +150,13 @@
           "clearControlAggregation": false,
           "viewId": "bankVaultPage",
           "viewName": "BankVault"
+        },
+        "TargetShop": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "shopPage",
+          "viewName": "Shop"
         }
       }
     },

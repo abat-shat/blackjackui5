@@ -1,0 +1,12 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    controllerName="de.abatgroup.blackjackui5.controller.Shop">
+
+    <Page id="shopPage" title="Shop">
+        <content>
+
+        </content>
+    </Page>
+
+</mvc:View>
