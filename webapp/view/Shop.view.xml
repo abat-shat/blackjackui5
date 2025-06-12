@@ -1,11 +1,18 @@
 <mvc:View
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
-    controllerName="de.abatgroup.blackjackui5.controller.Shop">
+    controllerName="de.abatgroup.blackjackui5.controller.Shop"
+    xmlns:custom="de.abatgroup.blackjackui5.control">
 
     <Page id="shopPage" title="Shop">
         <content>
-
+            <custom:ImageTextTile id="tile"
+                src="{module>/path}{img>/decks/red}"
+                text1="Hello"
+                text2="Hi"
+                width="200px"
+                height="300px"
+                press=".onTilePress" />
         </content>
     </Page>
 

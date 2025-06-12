@@ -58,6 +58,9 @@ function(Controller, MessageBox) {
         onEnteringBankVault: function() {
             this.getRouter().navTo("bankVault");
         },
+        onPressShopButton: function() {
+            this.getRouter().navTo("shop");
+        },
 
         _checkIsUserRegistered: function() {
             let oDataModel = this.getOwnerComponent().getModel();
