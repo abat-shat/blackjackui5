@@ -2,10 +2,20 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     controllerName="de.abatgroup.blackjackui5.controller.Shop"
-    xmlns:custom="de.abatgroup.blackjackui5.control">
+    xmlns:custom="de.abatgroup.blackjackui5.control"
+    xmlns:form="sap.ui.layout.form">
 
     <Page id="shopPage" title="Shop">
         <content>
+            <form:SimpleForm id="shopSimpleForm" visible="true">
+                <Toolbar id="shopSFToolbar">
+                    <Title id="shopSFToolbarTitle" text="{i18n>highscoreSFToolbarTitle}"></Title>
+                </Toolbar>
+                <Text id="shopSFLabel1" text="{user>/name}"></Text>
+                <Text id="shopSFLabel2" text="{shop>/available} abatCoins"></Text>
+                <Button id="shopRefreshBalanceButton" text="{i18n>refreshBalance}" icon="sap-icon://refresh"
+                    press=".onRefreshBalance"></Button>
+            </form:SimpleForm>
             <Label id="shopBasicLabel" text="{i18n>shopBasicText}"
                design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBeginEnd"></Label>
             <Toolbar id="horizontalLineShop1" width="100%" height="1px"
