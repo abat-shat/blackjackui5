@@ -6,6 +6,10 @@
 
     <Page id="shopPage" title="Shop">
         <content>
+            <Label id="shopBasicLabel" text="{i18n>shopBasicText}"
+               design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBeginEnd"></Label>
+            <Toolbar id="horizontalLineShop1" width="100%" height="1px"
+                        class="sapUiTinyMarginTopBottom"></Toolbar>
             <HBox id="shopBasicHBox">
                 <!-- Black Tile -->
                 <custom:ImageTextTile id="shopBlackItem"
@@ -52,6 +56,10 @@
                                 height="300px"
                                 press=".onPurchasingDeck('YELLOW')" />
             </HBox>
+            <Label id="shopMediumLabel" text="{i18n>shopMediumText}"
+               design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBeginEnd"></Label>
+            <Toolbar id="horizontalLineShop2" width="100%" height="1px"
+                        class="sapUiTinyMarginTopBottom"></Toolbar>
             <HBox id="shopMediumHBox" >
                 <!-- Abandoned Tile -->
                 <custom:ImageTextTile id="shopAbandonedItem"
@@ -61,23 +69,6 @@
                                 width="200px"
                                 height="300px"
                                 press=".onPurchasingDeck('ABANDONED')" />
-                <!-- Braided Tile -->
-                <custom:ImageTextTile id="shopBraidedItem"
-                                src="{module>/path}{img>/decks/braided}"
-                                text1="Braided Deck"
-                                text2="100"
-                                width="200px"
-                                height="300px"
-                                press=".onPurchasingDeck('BRAIDED')" />
-
-                <!-- Challenge Tile -->
-                <custom:ImageTextTile id="shopChallengeItem"
-                                src="{module>/path}{img>/decks/challenge}"
-                                text1="Challenge Deck"
-                                text2="100"
-                                width="200px"
-                                height="300px"
-                                press=".onPurchasingDeck('CHALLENGE')" />
                 <!-- Silver Tile -->
                 <custom:ImageTextTile id="shopSilverItem"
                                 src="{module>/path}{img>/decks/silver}"
@@ -86,7 +77,48 @@
                                 width="200px"
                                 height="300px"
                                 press=".onPurchasingDeck('SILVER')" />
+                <custom:ImageTextTile id="shopPolychromeItem"
+                    src="{module>/path}{img>/decks/polychrome}"
+                    text1="Polychrome Deck"
+                    text2="100"
+                    width="200px"
+                    height="300px"
+                    press=".onPurchasingDeck('POLYCHROME')" />
             </HBox>
+            <Label id="shopPatternLabel" text="{i18n>shopPatternText}"
+               design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBeginEnd"></Label>
+            <Toolbar id="horizontalLineShop5" width="100%" height="1px"
+                        class="sapUiTinyMarginTopBottom"></Toolbar>
+            <HBox id="shopPatternHBox" >
+                <!-- Braided Tile -->
+                <custom:ImageTextTile id="shopBraidedItem"
+                                src="{module>/path}{img>/decks/braided}"
+                                text1="Braided Deck"
+                                text2="100"
+                                width="200px"
+                                height="300px"
+                                press=".onPurchasingDeck('BRAIDED')" />
+                <!-- Challenge Tile -->
+                <custom:ImageTextTile id="shopChallengeItem"
+                                src="{module>/path}{img>/decks/challenge}"
+                                text1="Challenge Deck"
+                                text2="100"
+                                width="200px"
+                                height="300px"
+                                press=".onPurchasingDeck('CHALLENGE')" />
+                <custom:ImageTextTile id="shopCheckeredItem"
+                                src="{module>/path}{img>/decks/checkered}"
+                                text1="Checkered Deck"
+                                text2="100"
+                                width="200px"
+                                height="300px"
+                                press=".onPurchasingDeck('CHECKERED')" />
+                
+            </HBox>
+            <Label id="shopSymbolLabel" text="{i18n>shopSymbolText}"
+               design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBeginEnd"></Label>
+            <Toolbar id="horizontalLineShop3" width="100%" height="1px"
+                        class="sapUiTinyMarginTopBottom"></Toolbar>
             <HBox id="shopSymbolHBox">
                 <!-- Anaglyph Tile -->
                 <custom:ImageTextTile id="shopAnaglyphItem"
@@ -114,6 +146,10 @@
                                 press=".onPurchasingDeck('ZODIAC')" />
                 
             </HBox>
+            <Label id="shopFreeHandLabel" text="{i18n>shopFreeHandText}"
+               design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBeginEnd"></Label>
+            <Toolbar id="horizontalLineShop4" width="100%" height="1px"
+                        class="sapUiTinyMarginTopBottom"></Toolbar>
             <HBox id="shopFreeHandHBox">
                 <!-- Ghost Tile -->
                 <custom:ImageTextTile id="shopGhostItem"

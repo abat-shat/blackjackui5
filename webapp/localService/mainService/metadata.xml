@@ -60,12 +60,28 @@
                 <Property Name="LastLoginDate" Type="Edm.Date"/>
                 <Property Name="LoginStreak" Type="Edm.Int32" Nullable="false"/>
                 <Property Name="SAP__Messages" Type="Collection(com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.SAP__Message)" Nullable="false"/>
+                <NavigationProperty Name="_Deck" Type="Collection(com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.DeckType)" Partner="_Coin">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
             </EntityType>
             <EntityType Name="AdminType">
                 <Key>
                     <PropertyRef Name="Abbreviation"/>
                 </Key>
                 <Property Name="Abbreviation" Type="Edm.String" Nullable="false" MaxLength="12"/>
+            </EntityType>
+            <EntityType Name="DeckType">
+                <Key>
+                    <PropertyRef Name="Abbreviation"/>
+                    <PropertyRef Name="Deck"/>
+                </Key>
+                <Property Name="Abbreviation" Type="Edm.String" Nullable="false" MaxLength="12"/>
+                <Property Name="Deck" Type="Edm.String" Nullable="false" MaxLength="20"/>
+                <Property Name="LocalLastChangedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="SAP__Messages" Type="Collection(com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.SAP__Message)" Nullable="false"/>
+                <NavigationProperty Name="_Coin" Type="com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.CoinType" Nullable="false" Partner="_Deck">
+                    <ReferentialConstraint Property="Abbreviation" ReferencedProperty="Abbreviation"/>
+                </NavigationProperty>
             </EntityType>
             <ComplexType Name="SAP__Message">
                 <Property Name="code" Type="Edm.String" Nullable="false"/>
@@ -78,7 +94,12 @@
             </ComplexType>
             <EntityContainer Name="Container">
                 <EntitySet Name="Admin" EntityType="com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.AdminType"/>
-                <EntitySet Name="Coin" EntityType="com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.CoinType"/>
+                <EntitySet Name="Coin" EntityType="com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.CoinType">
+                    <NavigationPropertyBinding Path="_Deck" Target="Deck"/>
+                </EntitySet>
+                <EntitySet Name="Deck" EntityType="com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.DeckType">
+                    <NavigationPropertyBinding Path="_Coin" Target="Coin"/>
+                </EntitySet>
             </EntityContainer>
             <Annotations Target="SAP__self.CoinType/Abbreviation">
                 <Annotation Term="SAP__core.Immutable"/>
@@ -91,19 +112,26 @@
                 <Annotation Term="SAP__common.Heading" String="Geänd. am"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Datum und Uhrzeit der letzten Änderung der lokalen Instanz"/>
             </Annotations>
-            <Annotations Target="SAP__self.CoinType">
-                <Annotation Term="SAP__common.Label" String="Projection View for ZI_SHAT_ABJ_COIN"/>
-                <Annotation Term="SAP__common.SemanticKey">
-                    <Collection>
-                        <PropertyPath>Abbreviation</PropertyPath>
-                    </Collection>
-                </Annotation>
-                <Annotation Term="Communication.Contact">
-                    <Record/>
-                </Annotation>
-                <Annotation Term="SAP__common.Messages" Path="SAP__Messages"/>
+            <Annotations Target="SAP__self.CoinType/_Deck">
+                <Annotation Term="SAP__common.Composition"/>
             </Annotations>
             <Annotations Target="SAP__self.Container/Coin">
+                <Annotation Term="SAP__capabilities.NavigationRestrictions">
+                    <Record>
+                        <PropertyValue Property="RestrictedProperties">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="NavigationProperty" NavigationPropertyPath="_Deck"/>
+                                    <PropertyValue Property="InsertRestrictions">
+                                        <Record>
+                                            <PropertyValue Property="Insertable" Bool="true"/>
+                                        </Record>
+                                    </PropertyValue>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
                 <Annotation Term="SAP__capabilities.SearchRestrictions">
                     <Record>
                         <PropertyValue Property="Searchable" Bool="false"/>
@@ -132,6 +160,18 @@
                         </PropertyValue>
                     </Record>
                 </Annotation>
+            </Annotations>
+            <Annotations Target="SAP__self.CoinType">
+                <Annotation Term="SAP__common.Label" String="Projection View for ZI_SHAT_ABJ_COIN"/>
+                <Annotation Term="SAP__common.SemanticKey">
+                    <Collection>
+                        <PropertyPath>Abbreviation</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="Communication.Contact">
+                    <Record/>
+                </Annotation>
+                <Annotation Term="SAP__common.Messages" Path="SAP__Messages"/>
             </Annotations>
             <Annotations Target="SAP__self.AdminType/Abbreviation">
                 <Annotation Term="SAP__common.IsUpperCase"/>
@@ -168,6 +208,47 @@
                 </Annotation>
                 <Annotation Term="SAP__core.OptimisticConcurrency">
                     <Collection/>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="SAP__self.DeckType/Abbreviation">
+                <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Benutzername"/>
+            </Annotations>
+            <Annotations Target="SAP__self.DeckType/Deck">
+                <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Deck"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Deck name"/>
+            </Annotations>
+            <Annotations Target="SAP__self.DeckType">
+                <Annotation Term="SAP__common.Label" String="Consumer view for deck"/>
+                <Annotation Term="SAP__common.Messages" Path="SAP__Messages"/>
+            </Annotations>
+            <Annotations Target="SAP__self.Container/Deck">
+                <Annotation Term="SAP__capabilities.SearchRestrictions">
+                    <Record>
+                        <PropertyValue Property="Searchable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__core.OptimisticConcurrency">
+                    <Collection>
+                        <PropertyPath>LocalLastChangedAt</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="SAP__capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="QueryOptions">
+                            <Record>
+                                <PropertyValue Property="SelectSupported" Bool="true"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
                 </Annotation>
             </Annotations>
             <Annotations Target="SAP__self.Container">
@@ -247,6 +328,11 @@
             <Annotations Target="SAP__self.CoinType/LoginStreak">
                 <Annotation Term="SAP__common.Label" String="Login streak"/>
                 <Annotation Term="SAP__common.QuickInfo" String="login streak"/>
+            </Annotations>
+            <Annotations Target="SAP__self.DeckType/LocalLastChangedAt">
+                <Annotation Term="SAP__common.Label" String="Geändert am"/>
+                <Annotation Term="SAP__common.Heading" String="Geänd. am"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Datum und Uhrzeit der letzten Änderung der lokalen Instanz"/>
             </Annotations>
         </Schema>
     </edmx:DataServices>
