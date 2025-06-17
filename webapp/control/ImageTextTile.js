@@ -12,6 +12,7 @@ sap.ui.define([
                 "src": { type: "string", defaultValue: "" },
                 "text1": { type: "string", defaultValue: "" },
                 "text2": { type: "string", defaultValue: "" },
+                "enabled": {type : "boolean", defaultValue: true},
                 "width": { type: "sap.ui.core.CSSSize", defaultValue: "auto" },
                 "height": { type: "sap.ui.core.CSSSize", defaultValue: "auto" }
             },
@@ -57,6 +58,15 @@ sap.ui.define([
             return this;
         },
 
+        setEnabled: function(isEnabled) {
+            this.setProperty("enabled", isEnabled, true);
+            return this;
+        },
+
+        getEnabled: function() {
+            return this.getProperty("enabled");
+        },
+
         onkeydown: function(oEvent) {
             if (oEvent.which === KeyCodes.ENTER || oEvent.which === KeyCodes.SPACE) {
                 this._handlePress(oEvent);
@@ -74,13 +84,16 @@ sap.ui.define([
         },
 
         _handlePress: function(oEvent) {
-            // For touch devices, prevent the click event that follows touch
-            if (this._bTouch) {
-                oEvent.preventDefault();
-                this._bTouch = false;
+            if (this.getEnabled()) {
+                // For touch devices, prevent the click event that follows touch
+                if (this._bTouch) {
+                    oEvent.preventDefault();
+                    this._bTouch = false;
+                }
+                
+                this.firePress(); 
             }
             
-            this.firePress();
         },
 
         renderer: {
@@ -88,6 +101,8 @@ sap.ui.define([
             render: function(oRm, oControl) {
                 oRm.openStart("div", oControl)
                     .class("myImageTextTile")
+                    .class("sapUiTinyMargin")
+                    .attr("tabindex", oControl.getEnabled() ? "0" : null)
                     .attr("role", "button")
                     .style("width", oControl.getWidth())
                     .style("height", oControl.getHeight())
