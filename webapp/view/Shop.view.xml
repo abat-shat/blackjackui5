@@ -14,7 +14,7 @@
                 <Text id="shopSFLabel1" text="{user>/name}"></Text>
                 <Text id="shopSFLabel2" text="{shop>/available} abatCoins"></Text>
                 <Button id="shopRefreshBalanceButton" text="{i18n>refreshBalance}" icon="sap-icon://refresh"
-                    press=".onRefreshBalance"></Button>
+                    press=".onTest"></Button>
             </form:SimpleForm>
             <Label id="shopBasicLabel" text="{i18n>shopBasicText}"
                design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBeginEnd"></Label>
@@ -24,47 +24,47 @@
                 <!-- Black Tile -->
                 <custom:ImageTextTile id="shopBlackItem"
                                 src="{module>/path}{img>/decks/black}"
-                                text1="Black Deck"
+                                text1="Black"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('BLACK')" />
+                                press=".onPurchasingDeck" />
 
                 <!-- Blue Tile -->
                 <custom:ImageTextTile id="shopBlueItem"
                                 src="{module>/path}{img>/decks/blue}"
-                                text1="Blue Deck"
+                                text1="Blue"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('BLUE')" />
+                                press=".onPurchasingDeck" />
 
                 <!-- Green Tile -->
                 <custom:ImageTextTile id="shopGreenItem"
                                 src="{module>/path}{img>/decks/green}"
-                                text1="Green Deck"
+                                text1="Green"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('GREEN')" />
+                                press=".onPurchasingDeck" />
 
                 <!-- Red Tile -->
                 <custom:ImageTextTile id="shopRedItem"
                                 src="{module>/path}{img>/decks/red}"
-                                text1="Red Deck"
+                                text1="Red"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('RED')" />
+                                press=".onPurchasingDeck" />
 
                 <!-- Yellow Tile -->
                 <custom:ImageTextTile id="shopYellowItem"
                                 src="{module>/path}{img>/decks/yellow}"
-                                text1="Yellow Deck"
+                                text1="Yellow"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('YELLOW')" />
+                                press=".onPurchasingDeck" />
             </HBox>
             <Label id="shopMediumLabel" text="{i18n>shopMediumText}"
                design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBeginEnd"></Label>
@@ -74,26 +74,26 @@
                 <!-- Abandoned Tile -->
                 <custom:ImageTextTile id="shopAbandonedItem"
                                 src="{module>/path}{img>/decks/abandoned}"
-                                text1="Abandoned Deck"
+                                text1="Abandoned"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('ABANDONED')" />
+                                press=".onPurchasingDeck" />
                 <!-- Silver Tile -->
                 <custom:ImageTextTile id="shopSilverItem"
                                 src="{module>/path}{img>/decks/silver}"
-                                text1="Silver Deck"
+                                text1="Silver"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('SILVER')" />
+                                press=".onPurchasingDeck" />
                 <custom:ImageTextTile id="shopPolychromeItem"
                     src="{module>/path}{img>/decks/polychrome}"
-                    text1="Polychrome Deck"
+                    text1="Polychrome"
                     text2="100"
                     width="200px"
                     height="300px"
-                    press=".onPurchasingDeck('POLYCHROME')" />
+                    press=".onPurchasingDeck" />
             </HBox>
             <Label id="shopPatternLabel" text="{i18n>shopPatternText}"
                design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBeginEnd"></Label>
@@ -103,26 +103,26 @@
                 <!-- Braided Tile -->
                 <custom:ImageTextTile id="shopBraidedItem"
                                 src="{module>/path}{img>/decks/braided}"
-                                text1="Braided Deck"
+                                text1="Braided"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('BRAIDED')" />
+                                press=".onPurchasingDeck" />
                 <!-- Challenge Tile -->
                 <custom:ImageTextTile id="shopChallengeItem"
                                 src="{module>/path}{img>/decks/challenge}"
-                                text1="Challenge Deck"
+                                text1="Challenge"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('CHALLENGE')" />
+                                press=".onPurchasingDeck" />
                 <custom:ImageTextTile id="shopCheckeredItem"
                                 src="{module>/path}{img>/decks/checkered}"
-                                text1="Checkered Deck"
+                                text1="Checkered"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('CHECKERED')" />
+                                press=".onPurchasingDeck" />
                 
             </HBox>
             <Label id="shopSymbolLabel" text="{i18n>shopSymbolText}"
@@ -133,27 +133,27 @@
                 <!-- Anaglyph Tile -->
                 <custom:ImageTextTile id="shopAnaglyphItem"
                                 src="{module>/path}{img>/decks/anaglyph}"
-                                text1="Anaglyph Deck"
+                                text1="Anaglyph"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('ANAGLYPH')" />
+                                press=".onPurchasingDeck" />
                 <!-- Erratic Tile -->
                 <custom:ImageTextTile id="shopErraticItem"
                                 src="{module>/path}{img>/decks/erratic}"
-                                text1="Erratic Deck"
+                                text1="Erratic"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('ERRATIC')" />
+                                press=".onPurchasingDeck" />
                 <!-- Zodiac Tile -->
                 <custom:ImageTextTile id="shopZodiacItem"
                                 src="{module>/path}{img>/decks/zodiac}"
-                                text1="Zodiac Deck"
+                                text1="Zodiac"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('ZODIAC')" />
+                                press=".onPurchasingDeck" />
                 
             </HBox>
             <Label id="shopFreeHandLabel" text="{i18n>shopFreeHandText}"
@@ -164,47 +164,47 @@
                 <!-- Ghost Tile -->
                 <custom:ImageTextTile id="shopGhostItem"
                                 src="{module>/path}{img>/decks/ghost}"
-                                text1="Ghost Deck"
+                                text1="Ghost"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('GHOST')" />
+                                press=".onPurchasingDeck" />
 
                 <!-- Magic Tile -->
                 <custom:ImageTextTile id="shopMagicItem"
                                 src="{module>/path}{img>/decks/magic}"
-                                text1="Magic Deck"
+                                text1="Magic"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('MAGIC')" />
+                                press=".onPurchasingDeck" />
 
                 <!-- Nebula Tile -->
                 <custom:ImageTextTile id="shopNebulaItem"
                                 src="{module>/path}{img>/decks/nebula}"
-                                text1="Nebula Deck"
+                                text1="Nebula"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('NEBULA')" />
+                                press=".onPurchasingDeck" />
 
                 <!-- Painted Tile -->
                 <custom:ImageTextTile id="shopPaintedItem"
                                 src="{module>/path}{img>/decks/painted}"
-                                text1="Painted Deck"
+                                text1="Painted"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('PAINTED')" />
+                                press=".onPurchasingDeck" />
 
                 <!-- Plasma Tile -->
                 <custom:ImageTextTile id="shopPlasmaItem"
                                 src="{module>/path}{img>/decks/plasma}"
-                                text1="Plasma Deck"
+                                text1="Plasma"
                                 text2="100"
                                 width="200px"
                                 height="300px"
-                                press=".onPurchasingDeck('PLASMA')" />
+                                press=".onPurchasingDeck" />
             </HBox>
         </content>
     </Page>

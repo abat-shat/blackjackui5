@@ -18,6 +18,11 @@ function(Controller, Sorter, Filter, FilterOperator, MessageToast) {
 
     Controller.extend("de.abatgroup.blackjackui5.controller.Highscore", {
         onInit: function(){
+            this.getRouter().getRoute("highscore").attachMatched(this._onRouteMatched, this);
+        },
+
+        _onRouteMatched: function() {
+            this.onRefreshBalance();
         },
         onFilterChange: function(event){
             let msg = "";

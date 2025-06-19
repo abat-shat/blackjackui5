@@ -92,6 +92,10 @@
                 <Property Name="numericSeverity" Type="Edm.Byte" Nullable="false"/>
                 <Property Name="longtextUrl" Type="Edm.String"/>
             </ComplexType>
+            <Action Name="getDecks" EntitySetPath="_it" IsBound="true">
+                <Parameter Name="_it" Type="com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.DeckType" Nullable="false"/>
+                <ReturnType Type="Collection(com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.DeckType)" Nullable="true"/>
+            </Action>
             <EntityContainer Name="Container">
                 <EntitySet Name="Admin" EntityType="com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.AdminType"/>
                 <EntitySet Name="Coin" EntityType="com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.CoinType">
@@ -211,18 +215,21 @@
                 </Annotation>
             </Annotations>
             <Annotations Target="SAP__self.DeckType/Abbreviation">
-                <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__core.Immutable"/>
                 <Annotation Term="SAP__common.IsUpperCase"/>
                 <Annotation Term="SAP__common.Label" String="Benutzername"/>
             </Annotations>
             <Annotations Target="SAP__self.DeckType/Deck">
-                <Annotation Term="SAP__core.Computed"/>
+                <Annotation Term="SAP__core.Immutable"/>
                 <Annotation Term="SAP__common.IsUpperCase"/>
                 <Annotation Term="SAP__common.Label" String="Deck"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Deck name"/>
             </Annotations>
             <Annotations Target="SAP__self.DeckType">
                 <Annotation Term="SAP__common.Label" String="Consumer view for deck"/>
+                <Annotation Term="Communication.Contact">
+                    <Record/>
+                </Annotation>
                 <Annotation Term="SAP__common.Messages" Path="SAP__Messages"/>
             </Annotations>
             <Annotations Target="SAP__self.Container/Deck">

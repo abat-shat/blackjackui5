@@ -56,6 +56,10 @@ function(Controller, JSONModel, MessageBox, MessageToast,
 
         onInit: function(){    
             this._initModel();
+            this.getRouter().getRoute("play").attachMatched(this._onRouteMatched, this);
+        },
+
+        _onRouteMatched: function() {
             this._requestAvailable_BonusCoin_AndHighscore();
         },
 

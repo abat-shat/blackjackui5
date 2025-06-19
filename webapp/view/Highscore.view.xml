@@ -59,8 +59,6 @@
                 <Text id="hsSFLabel2" text="0 abatCoins"></Text>
                 <Text id="hsSFLabel3" text="0 Bonus"></Text>
                 <Text id="hsSFLabel4" text="0 Highscore"></Text>
-                <Button id="hsRefreshBalanceButton" text="{i18n>refreshBalance}" icon="sap-icon://refresh"
-                    press=".onRefreshBalance"></Button>
             </form:SimpleForm>
         </content>
     </Page>

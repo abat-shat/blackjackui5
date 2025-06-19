@@ -3,10 +3,19 @@ sap.ui.define([
     "sap/m/Image",
     "sap/m/Text",
     "sap/ui/events/KeyCodes"
-], function(Control, Image, Text, KeyCodes) {
+],
+/**
+ * 
+ * @param {typeof sap.ui.core.Control} Control
+ * @param {typeof sap.m.Image} Image
+ * @param {typeof sap.m.Text} Text
+ * @returns 
+ */
+function(Control, Image, Text, KeyCodes) {
     "use strict";
 
     return Control.extend("de.abatgroup.blackjackui5.control.ImageTextTile", {
+        originalText2 : null,
         metadata: {
             properties: {
                 "src": { type: "string", defaultValue: "" },
@@ -24,7 +33,10 @@ sap.ui.define([
             events: {
                 "press": {
                     allowPreventDefault: true,
-                    parameters: {}
+                    parameters: {
+                        "text1": { type: "string" },
+                        "text2": { type: "string" },
+                    }
                 }
             },
             defaultAggregation: "_image"
@@ -58,8 +70,25 @@ sap.ui.define([
             return this;
         },
 
+        getText1 : function() {
+            return this.getProperty("text1");
+        },
+
+        getText2 : function() {
+            return this.getProperty("text2");
+        },
+
         setEnabled: function(isEnabled) {
             this.setProperty("enabled", isEnabled, true);
+            if (!isEnabled) {
+                if (!this.originalText2) {
+                    this.originalText2 = this.getText2();
+                }
+                
+                this.setText2(this.getModel("i18n").getResourceBundle().getText("deckSold"));
+            } else {
+                this.setText2(this.originalText2);
+            }
             return this;
         },
 
@@ -91,7 +120,10 @@ sap.ui.define([
                     this._bTouch = false;
                 }
                 
-                this.firePress(); 
+                this.firePress({
+                    "text1" : this.getText1(),
+                    "text2" : this.getText2()
+                }); 
             }
             
         },
