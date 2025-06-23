@@ -1,11 +1,34 @@
 <mvc:View
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
-    controllerName="de.abatgroup.blackjackui5.controller.Customize">
+    controllerName="de.abatgroup.blackjackui5.controller.Customize"
+    xmlns:core="sap.ui.core">
 
     <Page id="customizePage" title="Customize">
         <content>
-            <Button id="btn" press=".onTest"></Button>
+            <Text id="dealerSelectText" text="{i18n>dealerDeck}"></Text>
+            <Select id="dealerSelect" change=".onDealerDeckChange"
+                items="{deck>/decks}" >
+                <items>
+                    <core:Item id="dealerDeckNameItem" key="{deck>}" text="{deck>}"></core:Item>
+                </items>
+            </Select>
+
+            <Text id="playerSelectText" text="{i18n>playerDeck}"></Text>
+            <Select id="playerSelect" change=".onPlayerDeckChange"
+                items="{deck>/decks}">
+                <items>
+                    <core:Item id="playerDeckNameItem" key="{deck>}" text="{deck>}"></core:Item>
+                </items>
+            </Select>
+
+            <Text id="playerSplitSelectText" text="{i18n>playerSplitDeck}"></Text>
+            <Select id="playerSplitSelect" change=".onPlayerSplitDeckChange"
+                items="{deck>/decks}">
+                <items>
+                    <core:Item id="playerSplitDeckNameItem" key="{deck>}" text="{deck>}"></core:Item>
+                </items>
+            </Select>
         </content>
     </Page>
 </mvc:View>

@@ -1,13 +1,15 @@
 sap.ui.define([
     "./BaseController",
-    "sap/ui/model/json/JSONModel"
+    "sap/ui/model/json/JSONModel",
+    "sap/m/MessageToast"
 ],
 /**
  * 
  * @param {typeof sap.ui.core.mvc.Controller} Controller 
  * @param {typeof sap.ui.model.json.JSONModel} JSONModel
+ * @param {typeof sap.m.MessageToast} MessageToast
  */
-function (Controller, JSONModel) {
+function (Controller, JSONModel, MessageToast) {
     "use strict";
 
     Controller.extend("de.abatgroup.blackjackui5.controller.Customize", {
@@ -24,6 +26,35 @@ function (Controller, JSONModel) {
             oContext.requestContexts().then((contexts) => {
                 contexts.map(this._requestDeckName.bind(this)).forEach(this._addDeckNameToDeckModel.bind(this));
             });
+        },
+        onDealerDeckChange: function(event) {
+            let deckName = event.getParameter("selectedItem").getProperty("key");
+            this._saveDeckSelection("DealerDeck", deckName);
+        },
+        onPlayerDeckChange: function(event) {
+            let deckName = event.getParameter("selectedItem").getProperty("key");
+            this._saveDeckSelection("PlayerDeck", deckName);
+        },
+        onPlayerSplitDeckChange: function(event) {
+            let deckName = event.getParameter("selectedItem").getProperty("key");
+            this._saveDeckSelection("PlayerSplitDeck", deckName);
+        },
+        _saveDeckSelection: function(deckCustomizing, deckName) {
+            const oDataModel = this.getOwnerComponent().getModel();
+            const oContext = oDataModel.bindContext("/Coin('" + this.username() + "')", null, {
+                $$updateGroupId: "deckChange"
+            });
+            oContext.getBoundContext().setProperty(deckCustomizing, deckName);
+            oDataModel.submitBatch("deckChange")
+            .then(() => {
+                MessageToast.show(this.i18n().getText("changeDeckSuccess", [deckCustomizing, deckName]));
+                this._setBusy(false);
+            })
+            .catch(() => {
+                MessageToast.show(this.i18n().getText("changeDeckFailed", [deckCustomizing]));
+                this._setBusy(false);
+            });
+            this._setBusy(true);
         },
         /**
          * 
