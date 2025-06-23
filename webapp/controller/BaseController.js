@@ -43,5 +43,9 @@ function(Controller) {
         _setBusy: function(isBusy){
             this.getView().setBusy(isBusy);
         },
+        uppercaseToCapitalize: function(str) {
+            if (!str) return "";
+            return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+        }
     });
 });

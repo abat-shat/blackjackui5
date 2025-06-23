@@ -118,6 +118,11 @@
           "pattern": "shop",
           "name": "shop",
           "target": "TargetShop"
+        },
+        {
+          "pattern": "customize",
+          "name": "customize",
+          "target": "TargetCustomize"
         }
       ],
       "targets": {
@@ -137,12 +142,7 @@
           "transition": "slide",
           "clearControlAggregation": false,
           "viewId": "highscorePage",
-          "viewName": "Highscore",
-          "options": {
-            "settings": {
-              "contextPath": "/HS('{Abbreviation}')"
-            }
-          }
+          "viewName": "Highscore"
         },
         "TargetBankVault": {
           "viewType": "XML",
@@ -157,6 +157,13 @@
           "clearControlAggregation": false,
           "viewId": "shopPage",
           "viewName": "Shop"
+        },
+        "TargetCustomize": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "customizePage",
+          "viewName": "Customize"
         }
       }
     },

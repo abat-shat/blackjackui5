@@ -1,0 +1,11 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    controllerName="de.abatgroup.blackjackui5.controller.Customize">
+
+    <Page id="customizePage" title="Customize">
+        <content>
+            <Button id="btn" press=".onTest"></Button>
+        </content>
+    </Page>
+</mvc:View>

@@ -59,6 +59,9 @@
                 <Property Name="LocalLastChangedAt" Type="Edm.DateTimeOffset" Precision="7"/>
                 <Property Name="LastLoginDate" Type="Edm.Date"/>
                 <Property Name="LoginStreak" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="DealerDeck" Type="Edm.String" Nullable="false" MaxLength="20"/>
+                <Property Name="PlayerDeck" Type="Edm.String" Nullable="false" MaxLength="20"/>
+                <Property Name="PlayerSplitDeck" Type="Edm.String" Nullable="false" MaxLength="20"/>
                 <Property Name="SAP__Messages" Type="Collection(com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.SAP__Message)" Nullable="false"/>
                 <NavigationProperty Name="_Deck" Type="Collection(com.sap.gateway.srvd_a2x.zapi_shat_bj_o4.v0001.DeckType)" Partner="_Coin">
                     <OnDelete Action="Cascade"/>
@@ -115,6 +118,21 @@
                 <Annotation Term="SAP__common.Label" String="Geändert am"/>
                 <Annotation Term="SAP__common.Heading" String="Geänd. am"/>
                 <Annotation Term="SAP__common.QuickInfo" String="Datum und Uhrzeit der letzten Änderung der lokalen Instanz"/>
+            </Annotations>
+            <Annotations Target="SAP__self.CoinType/DealerDeck">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Deck"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Deck name"/>
+            </Annotations>
+            <Annotations Target="SAP__self.CoinType/PlayerDeck">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Deck"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Deck name"/>
+            </Annotations>
+            <Annotations Target="SAP__self.CoinType/PlayerSplitDeck">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Deck"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Deck name"/>
             </Annotations>
             <Annotations Target="SAP__self.CoinType/_Deck">
                 <Annotation Term="SAP__common.Composition"/>

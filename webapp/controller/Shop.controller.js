@@ -131,10 +131,6 @@ function(Controller, MessageBox, JSONModel) {
         shop: function (){
             return this.getView().getModel("shop");
         },
-        uppercaseToCapitalize: function(str) {
-            if (!str) return "";
-            return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-        },
         onTest: function() {
             
         }
