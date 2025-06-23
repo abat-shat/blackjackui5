@@ -26,6 +26,8 @@ function (Controller, JSONModel, MessageToast) {
             oContext.requestContexts().then((contexts) => {
                 contexts.map(this._requestDeckName.bind(this)).forEach(this._addDeckNameToDeckModel.bind(this));
             });
+
+            this.getRouter().getRoute("customize").attachMatched(this._onRouteMatched, this);
         },
         onDealerDeckChange: function(event) {
             let deckName = event.getParameter("selectedItem").getProperty("key");
@@ -38,6 +40,19 @@ function (Controller, JSONModel, MessageToast) {
         onPlayerSplitDeckChange: function(event) {
             let deckName = event.getParameter("selectedItem").getProperty("key");
             this._saveDeckSelection("PlayerSplitDeck", deckName);
+        },
+        _onRouteMatched: function() {
+            const oDataModel = this.getOwnerComponent().getModel();
+            const oContext = oDataModel.bindContext("/Coin('" + this.username() + "')");
+            oContext.requestObject().then((oData) => {
+                let dealerDeck = this.uppercaseToCapitalize(oData.DealerDeck);
+                let playerDeck = this.uppercaseToCapitalize(oData.PlayerDeck);
+                let playerSplitDeck = this.uppercaseToCapitalize(oData.PlayerSplitDeck);
+                this.getView().byId("dealerSelect").setSelectedKey(dealerDeck);
+                this.getView().byId("playerSelect").setSelectedKey(playerDeck);
+                this.getView().byId("playerSplitSelect").setSelectedKey(playerSplitDeck);
+
+            });
         },
         _saveDeckSelection: function(deckCustomizing, deckName) {
             const oDataModel = this.getOwnerComponent().getModel();

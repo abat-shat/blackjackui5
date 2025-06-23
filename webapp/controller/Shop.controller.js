@@ -130,9 +130,6 @@ function(Controller, MessageBox, JSONModel) {
 
         shop: function (){
             return this.getView().getModel("shop");
-        },
-        onTest: function() {
-            
         }
         
     });
