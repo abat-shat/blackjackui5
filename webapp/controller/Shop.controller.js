@@ -33,6 +33,10 @@ function(Controller, MessageBox, JSONModel) {
                 );
         },
 
+        onCustomize: function() {
+            this.getRouter().navTo("customize");
+        },
+
         onPurchasingDeck: function(event) {
             let deckName = event.getParameter("text1");
             let price = Number(event.getParameter("text2"));
