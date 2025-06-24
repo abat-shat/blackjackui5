@@ -81,7 +81,7 @@
                         <custom:ImageTextTile id="shopAbandonedItem"
                                         src="{module>/path}{img>/decks/abandoned}"
                                         text1="Abandoned"
-                                        text2="300"
+                                        text2="200"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
@@ -155,14 +155,14 @@
                         <custom:ImageTextTile id="shopErraticItem"
                                         src="{module>/path}{img>/decks/erratic}"
                                         text1="Erratic"
-                                        text2="100"
+                                        text2="3000"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
                         <custom:ImageTextTile id="shopIntersectionItem"
                                         src="{module>/path}{img>/decks/intersection}"
                                         text1="Intersection"
-                                        text2="100"
+                                        text2="3500"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
@@ -170,7 +170,7 @@
                         <custom:ImageTextTile id="shopZodiacItem"
                                         src="{module>/path}{img>/decks/zodiac}"
                                         text1="Zodiac"
-                                        text2="100"
+                                        text2="5000"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
@@ -185,7 +185,7 @@
                         <custom:ImageTextTile id="shopGhostItem"
                                         src="{module>/path}{img>/decks/ghost}"
                                         text1="Ghost"
-                                        text2="100"
+                                        text2="10000"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
@@ -194,7 +194,7 @@
                         <custom:ImageTextTile id="shopMagicItem"
                                         src="{module>/path}{img>/decks/magic}"
                                         text1="Magic"
-                                        text2="100"
+                                        text2="10000"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
@@ -203,7 +203,7 @@
                         <custom:ImageTextTile id="shopNebulaItem"
                                         src="{module>/path}{img>/decks/nebula}"
                                         text1="Nebula"
-                                        text2="100"
+                                        text2="20000"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
@@ -212,7 +212,7 @@
                         <custom:ImageTextTile id="shopPaintedItem"
                                         src="{module>/path}{img>/decks/painted}"
                                         text1="Painted"
-                                        text2="100"
+                                        text2="10000"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
@@ -221,7 +221,7 @@
                         <custom:ImageTextTile id="shopPlasmaItem"
                                         src="{module>/path}{img>/decks/plasma}"
                                         text1="Plasma"
-                                        text2="100"
+                                        text2="10000"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
