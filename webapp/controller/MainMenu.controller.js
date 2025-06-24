@@ -1,6 +1,7 @@
 sap.ui.define([
     "./BaseController",
-    "sap/m/MessageBox"
+    "sap/m/MessageBox",
+    "../gameObject/RandomGenerator"
 ], 
 /**
  * 
@@ -8,12 +9,13 @@ sap.ui.define([
  * @param {typeof sap.m.MessageBox} MessageBox 
  * @returns 
  */
-function(Controller, MessageBox) {
+function(Controller, MessageBox, RandomGenerator) {
     "use strict";
 
     return Controller.extend("de.abatgroup.blackjackui5.controller.MainMenu", {
         BASE_DAILY_BONUS : 500,
         BASE_DATE : "1970-01-01",
+        BASIC_DECKS : ["BLACK", "BLUE", "GREEN", "RED", "YELLOW"],
         onInit() {
             this._checkIsUserRegistered();
         },
@@ -28,12 +30,16 @@ function(Controller, MessageBox) {
         onPressRegister: function(){
             let oDataModel = this.getView().getModel();
             const oContext = oDataModel.bindList("/Coin");
+            let starterDeck = this.BASIC_DECKS[RandomGenerator.nextInt(this.BASIC_DECKS.length)];
             let oBinding = oContext.create({
                 "Abbreviation" : this.username(),
                 "AbatCoin" : "0",
                 "Bonus" : "1000",
                 "LastLoginDate" : this._getTodaysDate(),
-                "LoginStreak" : 1
+                "LoginStreak" : 1,
+                "DealerDeck" : starterDeck,
+                "PlayerDeck" : starterDeck,
+                "PlayerSplitDeck" : starterDeck
             });
             oBinding.created()
                 .then(this._userIsCreated.bind(this))
