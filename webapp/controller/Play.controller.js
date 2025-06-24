@@ -56,11 +56,30 @@ function(Controller, JSONModel, MessageBox, MessageToast,
 
         onInit: function(){    
             this._initModel();
+            this._initCustomization();
             this.getRouter().getRoute("play").attachMatched(this._onRouteMatched, this);
         },
 
         _onRouteMatched: function() {
             this._requestAvailable_BonusCoin_AndHighscore();
+            this._requestCustomization();
+        },
+        _requestCustomization: function() {
+            const oDataModel = this.getOwnerComponent().getModel();
+            const oContext = oDataModel.bindContext("/Coin('" + this.username() + "')");
+            oContext.requestObject().then((oData) => {
+                let dealerDeck = oData.DealerDeck.toLowerCase();
+                let playerDeck = oData.PlayerDeck.toLowerCase();
+                let playerSplitDeck = oData.PlayerSplitDeck.toLowerCase();
+                this._setDeckImgSrc(dealerDeck, "dealer");
+                this._setDeckImgSrc(playerDeck, "player");
+                this._setDeckImgSrc(playerSplitDeck, "playerSplit");
+
+            });
+        },
+        _setDeckImgSrc: function(deckName, customizationPath) {
+            let qualifiedDeckSrc = this.getDeckImgSrc(deckName);
+            this.customization().setProperty("/deck/" + customizationPath, qualifiedDeckSrc);
         },
 
         /* ================================================================================
@@ -142,6 +161,17 @@ function(Controller, JSONModel, MessageBox, MessageToast,
             const tabletopModel = new JSONModel(tabletopData);
             this.getView().setModel(tabletopModel, "tabletop");
         },
+        _initCustomization: function(){
+            const customizationModel = new JSONModel({
+                "deck" : {
+                    "dealer" : "",
+                    "player" : "",
+                    "playerSplit" : ""
+                }
+            });
+            customizationModel.setDefaultBindingMode("OneWay");
+            this.getView().setModel(customizationModel, "customization");
+        },
         /**
          * Reset FE resources
          */
@@ -185,10 +215,9 @@ function(Controller, JSONModel, MessageBox, MessageToast,
         },
 
         _resetPlayerAndDealerHand: function() {
-            let oComponent = this.getOwnerComponent();
-            let dealerFacedownSrc = oComponent.getModel("module").getProperty("/path") + oComponent.getModel("img").getProperty("/decks/red");
-            let playerFacedownSrc = oComponent.getModel("module").getProperty("/path") + this.getOwnerComponent().getModel("img").getProperty("/decks/green");
-            let playerSplitFacedownSrc = oComponent.getModel("module").getProperty("/path") + this.getOwnerComponent().getModel("img").getProperty("/decks/green");
+            let dealerFacedownSrc = this.customization().getProperty("/deck/dealer");
+            let playerFacedownSrc = this.customization().getProperty("/deck/player");
+            let playerSplitFacedownSrc = this.customization().getProperty("/deck/playerSplit");
             for (let index = 1; index <= this.NUMBER_OF_CARDS_IN_A_HAND; index++) {
                 this.getView().byId("dealerCard" + index).setSrc(dealerFacedownSrc);
                 this.getView().byId("playerCard" + index).setSrc(playerFacedownSrc);
@@ -998,6 +1027,9 @@ function(Controller, JSONModel, MessageBox, MessageToast,
 
         coins() {
             return this.getView().getModel("coins");
+        },
+        customization() {
+            return this.getView().getModel("customization");
         },
 
         // i18n() {

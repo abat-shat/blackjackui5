@@ -46,6 +46,11 @@ function(Controller) {
         uppercaseToCapitalize: function(str) {
             if (!str) return "";
             return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+        },
+        getDeckImgSrc: function(deckName){
+            let oComponent = this.getOwnerComponent();
+            let deckSrc = oComponent.getModel("img").getProperty("/decks/" + deckName);
+            return oComponent.getModel("module").getProperty("/path") + deckSrc;
         }
     });
 });

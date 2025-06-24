@@ -32,14 +32,17 @@ function (Controller, JSONModel, MessageToast) {
         onDealerDeckChange: function(event) {
             let deckName = event.getParameter("selectedItem").getProperty("key");
             this._saveDeckSelection("DealerDeck", deckName);
+            this._setDeckImgSrc(deckName.toLowerCase(), "dealer");
         },
         onPlayerDeckChange: function(event) {
             let deckName = event.getParameter("selectedItem").getProperty("key");
             this._saveDeckSelection("PlayerDeck", deckName);
+            this._setDeckImgSrc(deckName.toLowerCase(), "player");
         },
         onPlayerSplitDeckChange: function(event) {
             let deckName = event.getParameter("selectedItem").getProperty("key");
             this._saveDeckSelection("PlayerSplitDeck", deckName);
+            this._setDeckImgSrc(deckName.toLowerCase(), "playerSplit");
         },
         _onRouteMatched: function() {
             const oDataModel = this.getOwnerComponent().getModel();
@@ -51,6 +54,9 @@ function (Controller, JSONModel, MessageToast) {
                 this.getView().byId("dealerSelect").setSelectedKey(dealerDeck);
                 this.getView().byId("playerSelect").setSelectedKey(playerDeck);
                 this.getView().byId("playerSplitSelect").setSelectedKey(playerSplitDeck);
+                this._setDeckImgSrc(dealerDeck.toLowerCase(), "dealer");
+                this._setDeckImgSrc(playerDeck.toLowerCase(), "player");
+                this._setDeckImgSrc(playerSplitDeck.toLowerCase(), "playerSplit");
 
             });
         },
@@ -97,6 +103,12 @@ function (Controller, JSONModel, MessageToast) {
          */
         deck: function() {
             return this.getView().getModel("deck");
+        },
+        _setDeckImgSrc: function(deckName, imagePrefix) {
+            let qualifiedDeckSrc = this.getDeckImgSrc(deckName);
+            this.getView().byId(imagePrefix + "SelectImage")
+                .setSrc(qualifiedDeckSrc);
         }
+        
     });
 });

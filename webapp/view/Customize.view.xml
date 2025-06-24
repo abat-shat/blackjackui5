@@ -6,29 +6,48 @@
 
     <Page id="customizePage" title="Customize">
         <content>
-            <Text id="dealerSelectText" text="{i18n>dealerDeck}"></Text>
-            <Select id="dealerSelect" change=".onDealerDeckChange"
-                items="{deck>/decks}" >
-                <items>
-                    <core:Item id="dealerDeckNameItem" key="{deck>}" text="{deck>}"></core:Item>
-                </items>
-            </Select>
-
-            <Text id="playerSelectText" text="{i18n>playerDeck}"></Text>
-            <Select id="playerSelect" change=".onPlayerDeckChange"
-                items="{deck>/decks}">
-                <items>
-                    <core:Item id="playerDeckNameItem" key="{deck>}" text="{deck>}"></core:Item>
-                </items>
-            </Select>
-
-            <Text id="playerSplitSelectText" text="{i18n>playerSplitDeck}"></Text>
-            <Select id="playerSplitSelect" change=".onPlayerSplitDeckChange"
-                items="{deck>/decks}">
-                <items>
-                    <core:Item id="playerSplitDeckNameItem" key="{deck>}" text="{deck>}"></core:Item>
-                </items>
-            </Select>
+            <HBox id="dealerSelectHBox">
+                <VBox id="dealerSelectVBox">
+                    <Text id="dealerSelectText" text="{i18n>dealerDeck}"
+                        class="sapUiTinyMarginBeginEnd"></Text>
+                    <Select id="dealerSelect" change=".onDealerDeckChange"
+                        items="{deck>/decks}" >
+                        <items>
+                            <core:Item id="dealerDeckNameItem" key="{deck>}" text="{deck>}"></core:Item>
+                        </items>
+                    </Select>
+                </VBox>
+                
+                <Image id="dealerSelectImage" class="sapUiTinyMarginBeginEnd"></Image>
+            </HBox>
+            <HBox id="playerSelectHBox">
+                <VBox id="playerSelectVBox">
+                    <Text id="playerSelectText" text="{i18n>playerDeck}"
+                        class="sapUiTinyMarginBeginEnd"></Text>
+                    <Select id="playerSelect" change=".onPlayerDeckChange"
+                        items="{deck>/decks}">
+                        <items>
+                            <core:Item id="playerDeckNameItem" key="{deck>}" text="{deck>}"></core:Item>
+                        </items>
+                    </Select>
+                </VBox>
+                
+                <Image id="playerSelectImage" class="sapUiTinyMarginBeginEnd"></Image>
+            </HBox>
+            <HBox id="playerSplitSelectHBox">
+                <VBox id="playerSplitSelectVBox">
+                    <Text id="playerSplitSelectText" text="{i18n>playerSplitDeck}"
+                        class="sapUiTinyMarginBeginEnd"></Text>
+                    <Select id="playerSplitSelect" change=".onPlayerSplitDeckChange"
+                        items="{deck>/decks}">
+                        <items>
+                            <core:Item id="playerSplitDeckNameItem" key="{deck>}" text="{deck>}"></core:Item>
+                        </items>
+                    </Select>
+                </VBox>
+                
+                <Image id="playerSplitSelectImage" class="sapUiTinyMarginBeginEnd"></Image>
+            </HBox>
         </content>
     </Page>
 </mvc:View>
