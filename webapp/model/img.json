@@ -70,6 +70,7 @@
         "challenge": "/media/decks/challenge_deck.png",
         "checkered": "/media/decks/checkered_deck.png",
         "erratic": "/media/decks/erratic_deck.png",
+        "foil": "/media/decks/foil_deck.png",
         "ghost": "/media/decks/ghost_deck.png",
         "magic": "/media/decks/magic_deck.png",
         "nebula": "/media/decks/nebula_deck.png",
@@ -77,6 +78,7 @@
         "plasma": "/media/decks/plasma_deck.png",
         "polychrome" : "/media/decks/polychrome_deck.png",
         "silver": "/media/decks/silver_deck.png",
+        "intersection": "/media/decks/intersection_deck.png",
         "zodiac": "/media/decks/zodiac_deck.png"
     }
 }

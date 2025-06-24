@@ -18,7 +18,8 @@
             </form:SimpleForm>
             <Panel id="shopDeckPanel" 
                 expandable="true" headerText="{i18n>deckPanel}" 
-                width="auto" class="sapUiResponsiveMargin">
+                width="auto" class="sapUiResponsiveMargin"
+                expanded="true">
                 <content>
                     <Label id="shopBasicLabel" text="{i18n>shopBasicText}"
                     design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBeginEnd"></Label>
@@ -80,7 +81,14 @@
                         <custom:ImageTextTile id="shopAbandonedItem"
                                         src="{module>/path}{img>/decks/abandoned}"
                                         text1="Abandoned"
-                                        text2="100"
+                                        text2="300"
+                                        width="200px"
+                                        height="300px"
+                                        press=".onPurchasingDeck" />
+                        <custom:ImageTextTile id="shopFoilItem"
+                                        src="{module>/path}{img>/decks/foil}"
+                                        text1="Foil"
+                                        text2="300"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
@@ -88,17 +96,17 @@
                         <custom:ImageTextTile id="shopSilverItem"
                                         src="{module>/path}{img>/decks/silver}"
                                         text1="Silver"
-                                        text2="100"
+                                        text2="400"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
                         <custom:ImageTextTile id="shopPolychromeItem"
-                            src="{module>/path}{img>/decks/polychrome}"
-                            text1="Polychrome"
-                            text2="100"
-                            width="200px"
-                            height="300px"
-                            press=".onPurchasingDeck" />
+                                        src="{module>/path}{img>/decks/polychrome}"
+                                        text1="Polychrome"
+                                        text2="500"
+                                        width="200px"
+                                        height="300px"
+                                        press=".onPurchasingDeck" />
                     </HBox>
                     <Label id="shopPatternLabel" text="{i18n>shopPatternText}"
                     design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBeginEnd"></Label>
@@ -109,7 +117,7 @@
                         <custom:ImageTextTile id="shopBraidedItem"
                                         src="{module>/path}{img>/decks/braided}"
                                         text1="Braided"
-                                        text2="100"
+                                        text2="1000"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
@@ -117,14 +125,14 @@
                         <custom:ImageTextTile id="shopChallengeItem"
                                         src="{module>/path}{img>/decks/challenge}"
                                         text1="Challenge"
-                                        text2="100"
+                                        text2="1500"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
                         <custom:ImageTextTile id="shopCheckeredItem"
                                         src="{module>/path}{img>/decks/checkered}"
                                         text1="Checkered"
-                                        text2="100"
+                                        text2="1500"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
@@ -139,7 +147,7 @@
                         <custom:ImageTextTile id="shopAnaglyphItem"
                                         src="{module>/path}{img>/decks/anaglyph}"
                                         text1="Anaglyph"
-                                        text2="100"
+                                        text2="2500"
                                         width="200px"
                                         height="300px"
                                         press=".onPurchasingDeck" />
@@ -147,6 +155,13 @@
                         <custom:ImageTextTile id="shopErraticItem"
                                         src="{module>/path}{img>/decks/erratic}"
                                         text1="Erratic"
+                                        text2="100"
+                                        width="200px"
+                                        height="300px"
+                                        press=".onPurchasingDeck" />
+                        <custom:ImageTextTile id="shopIntersectionItem"
+                                        src="{module>/path}{img>/decks/intersection}"
+                                        text1="Intersection"
                                         text2="100"
                                         width="200px"
                                         height="300px"
