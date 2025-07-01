@@ -19,14 +19,6 @@ function (Controller, JSONModel, MessageToast) {
             });
             this.getView().setModel(deckModel, "deck");
 
-            /** @type {sap.ui.model.odata.v4.ODataModel} */
-            const oDataModel = this.getOwnerComponent().getModel();
-            /** @type {sap.ui.model.odata.v4.ODataListBinding} */
-            const oContext = oDataModel.bindList("/Coin('" + this.username() + "')/_Deck");
-            oContext.requestContexts().then((contexts) => {
-                contexts.map(this._requestDeckName.bind(this)).forEach(this._addDeckNameToDeckModel.bind(this));
-            });
-
             this.getRouter().getRoute("customize").attachMatched(this._onRouteMatched, this);
         },
         onDealerDeckChange: function(event) {
@@ -45,6 +37,20 @@ function (Controller, JSONModel, MessageToast) {
             this._setDeckImgSrc(deckName.toLowerCase(), "playerSplit");
         },
         _onRouteMatched: function() {
+            this._loadSelectionList();
+            this._loadDefaultSelection();
+        },
+        _loadSelectionList: function() {
+            /** @type {sap.ui.model.odata.v4.ODataModel} */
+            const oDataModel = this.getOwnerComponent().getModel();
+            /** @type {sap.ui.model.odata.v4.ODataListBinding} */
+            const oContext = oDataModel.bindList("/Coin('" + this.username() + "')/_Deck");
+            oContext.requestContexts().then((contexts) => {
+                this.deck().setProperty("/decks", []);
+                contexts.map(this._requestDeckName.bind(this)).forEach(this._addDeckNameToDeckModel.bind(this));
+            });
+        },
+        _loadDefaultSelection: function(){
             const oDataModel = this.getOwnerComponent().getModel();
             const oContext = oDataModel.bindContext("/Coin('" + this.username() + "')");
             oContext.requestObject().then((oData) => {
@@ -59,6 +65,7 @@ function (Controller, JSONModel, MessageToast) {
                 this._setDeckImgSrc(playerSplitDeck.toLowerCase(), "playerSplit");
 
             });
+            
         },
         _saveDeckSelection: function(deckCustomizing, deckName) {
             const oDataModel = this.getOwnerComponent().getModel();

@@ -2,17 +2,14 @@
     border: 1px solid #ddd;
     border-radius: 0.25rem;
     overflow: hidden;
-    background-color: #fff;
     transition: all 0.3s ease;
 }
 
 .myImageTextTile:hover {
-    background-color: #f5f5f5;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .myImageTextTile:active {
-    background-color: #ebebeb;
     transform: scale(0.98);
 }
 
@@ -29,5 +26,4 @@
 
 .myTextContainer {
     border-top: 1px solid #eee;
-    background-color: #f9f9f9;
 }
