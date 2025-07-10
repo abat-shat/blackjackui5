@@ -10,7 +10,7 @@
 |**Service URL**<br>https://sap-t23.abatgroup.de:44300/sap/opu/odata4/sap/zapi_shat_bj_o4/srvd_a2x/sap/zapi_shat_bj/0001/|
 |**Module Name**<br>blackjackui5|
 |**Application Title**<br>Blackjack|
-|**Namespace**<br>abat.intern.shat|
+|**Namespace**<br>de.abatgroup|
 |**UI5 Theme**<br>sap_horizon|
 |**UI5 Version**<br>1.120.14|
 |**Enable Code Assist Libraries**<br>False|
